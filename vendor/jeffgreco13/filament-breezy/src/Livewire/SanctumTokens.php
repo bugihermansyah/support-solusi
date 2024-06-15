@@ -37,7 +37,7 @@ class SanctumTokens extends MyProfileComponent implements Tables\Contracts\HasTa
 
         return app(Sanctum::$personalAccessTokenModel)->where([
             ['tokenable_id', '=', $auth->id()],
-            ['tokenable_type', '=', get_class($auth->user())],
+            ['tokenable_type', '=', $auth->user()->getMorphClass()],
         ]);
     }
 

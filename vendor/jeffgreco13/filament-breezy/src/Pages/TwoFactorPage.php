@@ -130,6 +130,11 @@ class TwoFactorPage extends SimplePage
             return null;
         }
 
+        // If using a recovery code, unset it so it can only be used once
+        if ($this->usingRecoveryCode) {
+            filament('filament-breezy')->auth()->user()->destroyRecoveryCode($this->code);
+        }
+
         // If it makes it to the bottom, we're going to set the session var and send them to the dashboard.
         filament('filament-breezy')->auth()->user()->setTwoFactorSession();
 
