@@ -22,6 +22,8 @@ class LocationResource extends Resource
 {
     protected static ?string $model = Location::class;
 
+    protected static ?string $modelLabel = 'Lokasi';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
@@ -62,7 +64,7 @@ class LocationResource extends Resource
                                     ->inlineLabel(false)
                                     ->required(),
                                 Forms\Components\Select::make('user_id')
-                                    ->label('User')
+                                    ->label('Staff')
                                     ->options(function () {
                                         $teams = Team::with('users')->get();
                                         $options = [];
@@ -76,6 +78,7 @@ class LocationResource extends Resource
                                     })
                                     ->searchable(),
                                 Forms\Components\ToggleButtons::make('type_contract')
+                                    ->label('Tipe Kontrak')
                                     ->inline()
                                     ->options(TypeContract::class)
                                     ->default('sewa')
@@ -84,6 +87,11 @@ class LocationResource extends Resource
                                     ->inline()
                                     ->options(LocationStatus::class)
                                     ->required(),
+                                Forms\Components\Textarea::make('address')
+                                    ->label('Alamat')
+                                    ->required(),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Deskripsi'),
                             ])
                         ->columns(2),
                     ])
@@ -91,6 +99,13 @@ class LocationResource extends Resource
 
                     Forms\Components\Group::make()
                     ->schema([
+                        Forms\Components\Section::make()
+                            ->schema([
+                                Forms\Components\DatePicker::make('first_project')
+                                    ->label('Tanggal Proyek')
+                                    ->native(false),
+                            ]),
+
                         Forms\Components\Section::make()
                             ->schema([
                                 Forms\Components\Repeater::make('locationcustomers')
@@ -103,6 +118,7 @@ class LocationResource extends Resource
                                             ->searchable()
                                             ->required(),
                                     ])
+                                    ->collapsible()
                                     ->defaultItems(0),
                             ]),
                     ])
@@ -115,8 +131,11 @@ class LocationResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('company.name')
+                    ->label('Perusahaan')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nama')
+                    ->label('Cluster')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contracts.product.name')
                     ->label('Produk')
@@ -129,7 +148,8 @@ class LocationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type_contract')
                     ->label('Tipe Kontrak'),
-                Tables\Columns\TextColumn::make('user.firstname'),
+                Tables\Columns\TextColumn::make('user.firstname')
+                    ->label('Staff'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge(),
                 // Tables\Columns\TextColumn::make('customers.name'),

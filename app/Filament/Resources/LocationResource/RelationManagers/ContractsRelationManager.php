@@ -15,7 +15,9 @@ class ContractsRelationManager extends RelationManager
 {
     protected static string $relationship = 'contracts';
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $recordTitleAttribute = 'product';
+
+    protected static ?string $title = 'Daftar Produk';
 
     public function form(Form $form): Form
     {
@@ -46,7 +48,8 @@ class ContractsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('type_contract')
                     ->label('Kontrak'),
                 Tables\Columns\TextColumn::make('bap')
-                    ->label('BAP'),
+                    ->label('BAP')
+                    ->date(),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Deskripsi'),
                 Tables\Columns\TextColumn::make('status')
@@ -59,8 +62,8 @@ class ContractsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
+                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

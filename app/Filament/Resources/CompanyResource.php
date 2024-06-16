@@ -17,6 +17,8 @@ class CompanyResource extends Resource
 {
     protected static ?string $model = Company::class;
 
+    protected static ?string $modelLabel = 'Perusahaan';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
@@ -28,17 +30,19 @@ class CompanyResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('tlp')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
+                    ->label('Phone')
+                    ->tel()
+                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->unique()
                     ->required()
-                    ->maxLength(100)
-                    ->default(0),
+                    ->maxLength(100),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
             ]);
@@ -49,8 +53,10 @@ class CompanyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tlp')
+                    ->label('Phone')
                     ->numeric(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),

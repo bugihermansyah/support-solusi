@@ -94,4 +94,14 @@ class Location extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the company that owns the Location
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
 }
