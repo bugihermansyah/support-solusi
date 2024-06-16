@@ -8,28 +8,28 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class Login extends BasePage
 {
-    public function mount(): void
-    {
-        parent::mount();
+    // public function mount(): void
+    // {
+    //     parent::mount();
 
-        $this->form->fill([
-            'email' => 'admin@appsupp.com',
-            'password' => 'superadmin',
-        ]);
-    }
+    //     $this->form->fill([
+    //         'email' => 'admin@appsupp.com',
+    //         'password' => 'superadmin',
+    //     ]);
+    // }
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                $this->getEmailFormComponent()->label('Email'),
-                $this->getPasswordFormComponent(),
-                $this->getRememberFormComponent(),
-            ]);
-    }
+    // public function form(Form $form): Form
+    // {
+    //     return $form
+    //         ->schema([
+    //             $this->getEmailFormComponent()->label('Email'),
+    //             $this->getPasswordFormComponent(),
+    //             $this->getRememberFormComponent(),
+    //         ]);
+    // }
 
-    public function getHeading(): string|Htmlable
-    {
-        return '';
-    }
+    // public function getHeading(): string|Htmlable
+    // {
+    //     return '';
+    // }
 }
