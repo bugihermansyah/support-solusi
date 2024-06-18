@@ -39,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
             // ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
             // ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
             ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
-            ->databaseNotifications()->databaseNotificationsPolling('30s')
+            // ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->sidebarCollapsibleOnDesktop()
             // ->viteTheme('resources/css/filament/admin/theme.css')
