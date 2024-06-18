@@ -12,8 +12,8 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
@@ -260,6 +260,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         ),
         'A' => 
         array (
+            'Aymanalhattami\\FilamentSlimScrollbar\\' => 37,
             'App\\' => 4,
             'AnourValar\\EloquentSerialize\\' => 29,
         ),
@@ -723,9 +724,9 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         ),
         'Filament\\' => 
         array (
-            0 => __DIR__ . '/..' . '/filament/spatie-laravel-media-library-plugin/src',
-            1 => __DIR__ . '/..' . '/filament/spatie-laravel-settings-plugin/src',
-            2 => __DIR__ . '/..' . '/filament/filament/src',
+            0 => __DIR__ . '/..' . '/filament/filament/src',
+            1 => __DIR__ . '/..' . '/filament/spatie-laravel-media-library-plugin/src',
+            2 => __DIR__ . '/..' . '/filament/spatie-laravel-settings-plugin/src',
             3 => __DIR__ . '/..' . '/filament/spatie-laravel-tags-plugin/src',
         ),
         'Faker\\' => 
@@ -842,6 +843,10 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         array (
             0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
+        'Aymanalhattami\\FilamentSlimScrollbar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/aymanalhattami/filament-slim-scrollbar/src',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -895,6 +900,11 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Filament\\Resources\\LocationResource\\Pages\\EditLocation' => __DIR__ . '/../..' . '/app/Filament/Resources/LocationResource/Pages/EditLocation.php',
         'App\\Filament\\Resources\\LocationResource\\Pages\\ListLocations' => __DIR__ . '/../..' . '/app/Filament/Resources/LocationResource/Pages/ListLocations.php',
         'App\\Filament\\Resources\\LocationResource\\RelationManagers\\ContractsRelationManager' => __DIR__ . '/../..' . '/app/Filament/Resources/LocationResource/RelationManagers/ContractsRelationManager.php',
+        'App\\Filament\\Resources\\OutstandingResource' => __DIR__ . '/../..' . '/app/Filament/Resources/OutstandingResource.php',
+        'App\\Filament\\Resources\\OutstandingResource\\Pages\\CreateOutstanding' => __DIR__ . '/../..' . '/app/Filament/Resources/OutstandingResource/Pages/CreateOutstanding.php',
+        'App\\Filament\\Resources\\OutstandingResource\\Pages\\EditOutstanding' => __DIR__ . '/../..' . '/app/Filament/Resources/OutstandingResource/Pages/EditOutstanding.php',
+        'App\\Filament\\Resources\\OutstandingResource\\Pages\\ListOutstandings' => __DIR__ . '/../..' . '/app/Filament/Resources/OutstandingResource/Pages/ListOutstandings.php',
+        'App\\Filament\\Resources\\OutstandingResource\\RelationManagers\\ReportingsRelationManager' => __DIR__ . '/../..' . '/app/Filament/Resources/OutstandingResource/RelationManagers/ReportingsRelationManager.php',
         'App\\Filament\\Resources\\ProductResource' => __DIR__ . '/../..' . '/app/Filament/Resources/ProductResource.php',
         'App\\Filament\\Resources\\ProductResource\\Pages\\ManageProducts' => __DIR__ . '/../..' . '/app/Filament/Resources/ProductResource/Pages/ManageProducts.php',
         'App\\Filament\\Resources\\Shield\\RoleResource' => __DIR__ . '/../..' . '/app/Filament/Resources/Shield/RoleResource.php',
@@ -928,9 +938,12 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Models\\Company' => __DIR__ . '/../..' . '/app/Models/Company.php',
         'App\\Models\\Contract' => __DIR__ . '/../..' . '/app/Models/Contract.php',
         'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
+        'App\\Models\\CustomerLocation' => __DIR__ . '/../..' . '/app/Models/CustomerLocation.php',
         'App\\Models\\Location' => __DIR__ . '/../..' . '/app/Models/Location.php',
-        'App\\Models\\LocationCustomer' => __DIR__ . '/../..' . '/app/Models/LocationCustomer.php',
+        'App\\Models\\Outstanding' => __DIR__ . '/../..' . '/app/Models/Outstanding.php',
+        'App\\Models\\OutstandingUnit' => __DIR__ . '/../..' . '/app/Models/OutstandingUnit.php',
         'App\\Models\\Product' => __DIR__ . '/../..' . '/app/Models/Product.php',
+        'App\\Models\\Reporting' => __DIR__ . '/../..' . '/app/Models/Reporting.php',
         'App\\Models\\Team' => __DIR__ . '/../..' . '/app/Models/Team.php',
         'App\\Models\\Unit' => __DIR__ . '/../..' . '/app/Models/Unit.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
@@ -952,6 +965,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Settings\\GeneralSettings' => __DIR__ . '/../..' . '/app/Settings/GeneralSettings.php',
         'App\\Settings\\MailSettings' => __DIR__ . '/../..' . '/app/Settings/MailSettings.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Aymanalhattami\\FilamentSlimScrollbar\\FilamentSlimScrollbarServiceProvider' => __DIR__ . '/..' . '/aymanalhattami/filament-slim-scrollbar/src/FilamentSlimScrollbarServiceProvider.php',
         'BaconQrCode\\Common\\BitArray' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitArray.php',
         'BaconQrCode\\Common\\BitMatrix' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitMatrix.php',
         'BaconQrCode\\Common\\BitUtils' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitUtils.php',

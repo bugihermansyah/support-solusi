@@ -118,7 +118,7 @@ return array(
     'Filament\\Infolists\\' => array($vendorDir . '/filament/infolists/src'),
     'Filament\\Forms\\' => array($vendorDir . '/filament/forms/src'),
     'Filament\\Actions\\' => array($vendorDir . '/filament/actions/src'),
-    'Filament\\' => array($vendorDir . '/filament/spatie-laravel-media-library-plugin/src', $vendorDir . '/filament/spatie-laravel-settings-plugin/src', $vendorDir . '/filament/filament/src', $vendorDir . '/filament/spatie-laravel-tags-plugin/src'),
+    'Filament\\' => array($vendorDir . '/filament/filament/src', $vendorDir . '/filament/spatie-laravel-media-library-plugin/src', $vendorDir . '/filament/spatie-laravel-settings-plugin/src', $vendorDir . '/filament/spatie-laravel-tags-plugin/src'),
     'Faker\\' => array($vendorDir . '/fakerphp/faker/src/Faker'),
     'Egulias\\EmailValidator\\' => array($vendorDir . '/egulias/email-validator/src'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
@@ -147,6 +147,7 @@ return array(
     'BezhanSalleh\\FilamentExceptions\\Database\\Factories\\' => array($vendorDir . '/bezhansalleh/filament-exceptions/database/factories'),
     'BezhanSalleh\\FilamentExceptions\\' => array($vendorDir . '/bezhansalleh/filament-exceptions/src'),
     'BaconQrCode\\' => array($vendorDir . '/bacon/bacon-qr-code/src'),
+    'Aymanalhattami\\FilamentSlimScrollbar\\' => array($vendorDir . '/aymanalhattami/filament-slim-scrollbar/src'),
     'App\\' => array($baseDir . '/app', $vendorDir . '/laravel/pint/app'),
     'AnourValar\\EloquentSerialize\\' => array($vendorDir . '/anourvalar/eloquent-serialize/src'),
 );
