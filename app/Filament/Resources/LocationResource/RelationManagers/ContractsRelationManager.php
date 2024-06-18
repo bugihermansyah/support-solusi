@@ -15,8 +15,6 @@ class ContractsRelationManager extends RelationManager
 {
     protected static string $relationship = 'contracts';
 
-    protected static ?string $recordTitleAttribute = 'product';
-
     protected static ?string $title = 'Daftar Produk';
 
     public function form(Form $form): Form
@@ -39,7 +37,7 @@ class ContractsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('product_id')
+            ->recordTitleAttribute('product.name')
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
                     ->label('Produk'),

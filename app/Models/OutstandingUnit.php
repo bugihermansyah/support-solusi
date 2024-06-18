@@ -2,20 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LocationCustomer extends Model
+class OutstandingUnit extends Model
 {
     use HasFactory;
-
-    /**
-     * @var string
-     */
-    protected $table = 'customer_locations';
+    use HasUlids;
 
     protected $fillable = [
-        'customer_id',
-        'location_id'
+        'outstanding_id',
+        'unit_id',
+        'qty'
     ];
 }

@@ -60,9 +60,9 @@ class Location extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function locationcustomers(): HasMany
+    public function customerlocations(): HasMany
     {
-        return $this->hasMany(LocationCustomer::class, 'location_id');
+        return $this->hasMany(CustomerLocation::class, 'location_id');
     }
 
     /**

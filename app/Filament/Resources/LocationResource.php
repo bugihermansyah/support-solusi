@@ -11,6 +11,7 @@ use App\Models\Customer;
 use App\Models\Location;
 use App\Models\Team;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -40,9 +41,29 @@ class LocationResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('company_id')
                                     ->label('Perusahaan')
-                                    ->options(Company::all()->pluck('name', 'id'))
+                                    ->relationship('company', 'name')
+                                    ->preload()
+                                    ->searchable()
                                     ->required()
-                                    ->searchable(),
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->required()
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('tlp')
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('email')
+                                            ->label('Email address')
+                                            ->required()
+                                            ->email()
+                                            ->maxLength(255)
+                                            ->unique(),
+                                    ])
+                                    ->createOptionAction(function (Action $action) {
+                                        return $action
+                                            ->modalHeading('Buat Perusahaan')
+                                            ->modalSubmitActionLabel('Buat Perusahaan')
+                                            ->modalWidth('lg');
+                                    }),
                                 Forms\Components\TextInput::make('name')
                                     ->label('Nama')
                                     ->required()
@@ -108,15 +129,36 @@ class LocationResource extends Resource
 
                         Forms\Components\Section::make()
                             ->schema([
-                                Forms\Components\Repeater::make('locationcustomers')
-                                    ->label('Klien')
+                                Forms\Components\Repeater::make('customerlocations')
+                                    ->label('Pelanggan')
                                     ->relationship()
                                     ->schema([
                                         Forms\Components\Select::make('customer_id')
                                             ->label('Nama')
-                                            ->options(Customer::query()->pluck('name', 'id'))
+                                            ->relationship('customer', 'name')
+                                            ->preload()
                                             ->searchable()
-                                            ->required(),
+                                            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                            ->required()
+                                            ->createOptionForm([
+                                                Forms\Components\TextInput::make('name')
+                                                    ->required()
+                                                    ->maxLength(255),
+                                                Forms\Components\TextInput::make('tlp')
+                                                    ->maxLength(255),
+                                                Forms\Components\TextInput::make('email')
+                                                    ->label('Email address')
+                                                    ->required()
+                                                    ->email()
+                                                    ->maxLength(255)
+                                                    ->unique(),
+                                            ])
+                                            ->createOptionAction(function (Action $action) {
+                                                return $action
+                                                    ->modalHeading('Buat Pelanggan')
+                                                    ->modalSubmitActionLabel('Buat Pelanggan')
+                                                    ->modalWidth('lg');
+                                            }),
                                     ])
                                     ->collapsible()
                                     ->defaultItems(0),
