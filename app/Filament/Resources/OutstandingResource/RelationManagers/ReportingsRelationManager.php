@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OutstandingResource\RelationManagers;
 
+use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -18,9 +19,60 @@ class ReportingsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('cause')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\DatePicker::make('date_visit')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\Select::make('user_id')
+                            ->label('Staff')
+                            ->options(function () {
+                                $teams = Team::with('users')->get();
+                                $options = [];
+                                foreach ($teams as $team) {
+                                    $teamUsers = $team->users->pluck('name', 'id')->toArray();
+                                    $options[$team->name] = $teamUsers;
+                                }
+                                return $options;
+                            })
+                            ->searchable()
+                            ->required(),
+                        Forms\Components\TextInput::make('work')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('status')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
+
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\TextInput::make('cause')
+                            ->label('Sebab')
+                            ->required(),
+                        Forms\Components\RichEditor::make('action')
+                            ->label('Aksi')
+                            ->toolbarButtons([
+                                'bold',
+                                'bulletList',
+                                'italic',
+                                'orderedList',
+                            ])
+                            ->extraInputAttributes([
+                                'style' => 'min-height: 100px;',
+                            ]),
+                        Forms\Components\RichEditor::make('solution')
+                            ->label('Solusi')
+                            ->toolbarButtons([
+                                'bold',
+                                'bulletList',
+                                'italic',
+                                'orderedList',
+                            ])
+                            ->extraInputAttributes([
+                                'style' => 'min-height: 100px;',
+                            ]),
+                    ]),
             ]);
     }
 
@@ -38,8 +90,8 @@ class ReportingsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
+                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

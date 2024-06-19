@@ -15,7 +15,11 @@ class ListLocations extends ListRecords
     {
         $user = auth()->user();
 
-        return parent::getTableQuery()->where('team_id', $user->team_id);
+        if ($user->hasRole(['head', 'staff'])) {
+            return parent::getTableQuery()->where('team_id', $user->team_id);
+        }
+
+        return parent::getTableQuery();
     }
 
     protected function getHeaderActions(): array

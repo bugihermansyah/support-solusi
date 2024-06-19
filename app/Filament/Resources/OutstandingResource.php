@@ -24,7 +24,11 @@ class OutstandingResource extends Resource
 {
     protected static ?string $model = Outstanding::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Outstanding';
+
+    protected static ?string $recordTitleAttribute = 'title';
+
+    protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
 
     public static function form(Form $form): Form
     {
@@ -216,17 +220,29 @@ class OutstandingResource extends Resource
     {
         return $table
         ->columns([
-            Tables\Columns\TextColumn::make('location.name')
+            Tables\Columns\TextColumn::make('location.team.name')
+                ->label('Tim Area')
                 ->searchable()
                 ->sortable()
-                ->limit(10),
+                ->limit(15),
+            Tables\Columns\TextColumn::make('location.name')
+                ->label('Lokasi')
+                ->searchable()
+                ->sortable()
+                ->limit(15),
+            Tables\Columns\TextColumn::make('product.name')
+                ->label('Produk')
+                ->searchable()
+                ->sortable()
+                ->limit(15),
             Tables\Columns\TextColumn::make('title')
-                ->label('Problem')
+                ->label('Masalah')
                 ->limit(25)
                 ->searchable(),
             Tables\Columns\TextColumn::make('reporter')
-                ->label('Reporter')
+                ->label('Pelapor')
                 // ->formatStateUsing(fn ($state) => Str::headline($state))
+                ->formatStateUsing(fn ($state) => ucwords($state))
                 ->colors([
                     'danger' => 'client',
                     'warning' => 'preventif',
@@ -235,30 +251,31 @@ class OutstandingResource extends Resource
                 ->searchable()
                 ->sortable(),
             Tables\Columns\TextColumn::make('date_in')
-                ->label('Reporting date')
+                ->label('Lapor')
                 ->date()
                 ->sortable(),
-            Tables\Columns\TextColumn::make('date_visit')
-                ->label('Visit date')
-                ->date(),
-            Tables\Columns\TextColumn::make('date_finish')
-                ->label('Finish date')
-                ->date()
-                ->sortable(),
+            // Tables\Columns\TextColumn::make('date_visit')
+            //     ->label('Visit date')
+            //     ->date(),
+            // Tables\Columns\TextColumn::make('date_finish')
+            //     ->label('Finish date')
+            //     ->date()
+            //     ->sortable(),
+            Tables\Columns\TextColumn::make('reportings_count')
+                ->label('Aksi')
+                ->sortable()
+                ->counts('reportings'),
             Tables\Columns\TextColumn::make('status')
                 ->label('Status')
                 ->searchable()
                 ->sortable(),
-            Tables\Columns\TextColumn::make('reportings_count')
-                ->label('Work')
-                ->sortable()
-                ->counts('reportings'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
+                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

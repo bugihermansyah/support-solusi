@@ -17,6 +17,8 @@ class Product extends Model
         'sort'
     ];
 
+    protected $sortable = ['sort'];
+
     /**
      * Get the location that owns the Product
      *
