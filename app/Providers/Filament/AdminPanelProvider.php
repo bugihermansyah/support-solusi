@@ -13,6 +13,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -38,8 +39,14 @@ class AdminPanelProvider extends PanelProvider
             // ->brandName(fn (GeneralSettings $settings) => $settings->brand_name)
             // ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
             // ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
-            ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
+            // ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
             // ->databaseNotifications()->databaseNotificationsPolling('30s')
+            ->navigationGroups([
+                'Main',
+                'Reports',
+                'Access',
+            ])
+            ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->sidebarCollapsibleOnDesktop()
             // ->viteTheme('resources/css/filament/admin/theme.css')
@@ -49,11 +56,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                // Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
