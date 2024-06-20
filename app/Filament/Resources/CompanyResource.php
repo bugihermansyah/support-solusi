@@ -29,11 +29,14 @@ class CompanyResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('alias')
+                    ->label('Alias')
+                    ->required()
+                    ->maxLength(50),
                 Forms\Components\TextInput::make('name')
                     ->label('Nama')
                     ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
+                    ->maxLength(100),
                 Forms\Components\TextInput::make('tlp')
                     ->label('Phone')
                     ->tel()
@@ -52,8 +55,11 @@ class CompanyResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('alias')
+                    ->label('Alias')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nama')
+                    ->label('Nama Perusahaan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tlp')
                     ->label('Phone')

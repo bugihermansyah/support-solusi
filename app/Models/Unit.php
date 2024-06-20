@@ -16,6 +16,7 @@ class Unit extends Model
         'name',
         'parent_id',
         'sort',
+        'image',
         'is_visible'
     ];
 

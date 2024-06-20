@@ -5,6 +5,7 @@ namespace App\Filament\Resources\UnitResource\Pages;
 use App\Filament\Resources\UnitResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Support\Enums\MaxWidth;
 
 class ManageUnits extends ManageRecords
 {
@@ -14,6 +15,7 @@ class ManageUnits extends ManageRecords
     {
         return [
             Actions\CreateAction::make(),
+                // ->modalWidth(MaxWidth::ExtraSmall),
         ];
     }
 }

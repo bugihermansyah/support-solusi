@@ -27,16 +27,36 @@ class UnitResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Nama')
-                    ->required()
-                    ->maxLength(100),
-                Forms\Components\Select::make('parent_id')
-                    ->label('Grup')
-                    ->options(Unit::where('parent_id', null)->pluck('name', 'id'))
-                    ->searchable(),
-                Forms\Components\Toggle::make('is_visible')
-                    ->required(),
+                Forms\Components\Section::make()
+                    ->schema([
+                        Forms\Components\FileUpload::make('image')
+                            ->label('Foto unit')
+                            ->image()
+                            ->imageEditor()
+                            ->resize(20)
+                            ->openable()
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('name')
+                            ->label('Nama')
+                            ->required()
+                            ->maxLength(100),
+                        Forms\Components\Select::make('parent_id')
+                            ->label('Grup')
+                            ->options(Unit::where('parent_id', null)->pluck('name', 'id'))
+                            ->searchable()
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, $set) {
+                                if ($state) {
+                                    $set('is_visible', true);
+                                } else {
+                                    $set('is_visible', false);
+                                }
+                            }),
+                        Forms\Components\Toggle::make('is_visible')
+                            ->label('Terlihat')
+                            ->required(),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -44,6 +64,10 @@ class UnitResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Foto')
+                    ->circular(),
+                    // ->size(50),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')
                     ->searchable(),
@@ -51,6 +75,7 @@ class UnitResource extends Resource
                     ->label('Grup')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_visible')
+                    ->label('Terlihat')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

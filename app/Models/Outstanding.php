@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OutstandingStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,10 @@ class Outstanding extends Model
         'is_implement',
         'is_type_problem',
         'status'
+    ];
+
+    protected $casts = [
+        'status' => OutstandingStatus::class,
     ];
 
     /**

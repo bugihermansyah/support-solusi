@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Location;
 use App\Models\Team;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Form;
@@ -33,6 +34,8 @@ class LocationResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $bdUsers = User::role('BD')->pluck('firstname', 'id');
+
         return $form
             ->schema([
                 Forms\Components\Group::make()
@@ -71,9 +74,10 @@ class LocationResource extends Resource
                                 Forms\Components\Select::make('team_id')
                                     ->label('Tim')
                                     ->options(Team::all()->pluck('name', 'id')),
-                                Forms\Components\TextInput::make('bd')
+                                Forms\Components\Select::make('bd_id')
                                     ->label('Marketing')
-                                    ->maxLength(50),
+                                    ->options($bdUsers)
+                                    ->searchable(),
                                 Forms\Components\Radio::make('area_status')
                                     ->label('Area Lokasi?')
                                     ->options([
@@ -185,13 +189,13 @@ class LocationResource extends Resource
                 Tables\Columns\TextColumn::make('team.name')
                     ->label('Tim Area')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bd')
+                Tables\Columns\TextColumn::make('bd.firstname')
                     ->label('BD')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('user.firstname')
+                    ->label('Support'),
                 Tables\Columns\TextColumn::make('type_contract')
                     ->label('Tipe Kontrak'),
-                Tables\Columns\TextColumn::make('user.firstname')
-                    ->label('Staff'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge(),
                 // Tables\Columns\TextColumn::make('customers.name'),

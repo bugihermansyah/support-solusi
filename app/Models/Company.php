@@ -13,6 +13,7 @@ class Company extends Model
     use HasUlids;
 
     protected $fillable = [
+        'alias',
         'name',
         'tlp',
         'email',

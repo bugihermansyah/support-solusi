@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\OutstandingStatus;
 use App\Filament\Resources\OutstandingResource\Pages;
 use App\Filament\Resources\OutstandingResource\RelationManagers;
 use App\Models\Contract;
@@ -9,6 +10,7 @@ use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Team;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Form;
@@ -135,7 +137,7 @@ class OutstandingResource extends Resource
                                 ->schema([
                                     Forms\Components\Select::make('unit_id')
                                         ->label('Unit')
-                                        ->options(Unit::query()->pluck('name', 'id'))
+                                        ->options(Unit::where('is_visible', 1)->pluck('name', 'id'))
                                         ->placeholder('Pilih unit')
                                         ->searchable()
                                         ->required()
@@ -263,10 +265,12 @@ class OutstandingResource extends Resource
             //     ->sortable(),
             Tables\Columns\TextColumn::make('reportings_count')
                 ->label('Aksi')
+                ->suffix('x')
                 ->sortable()
                 ->counts('reportings'),
             Tables\Columns\TextColumn::make('status')
                 ->label('Status')
+                ->badge()
                 ->searchable()
                 ->sortable(),
             ])
@@ -307,8 +311,9 @@ class OutstandingResource extends Resource
             ->collapsible()
             ->schema([
                 Forms\Components\DatePicker::make('date_visit')
-                    ->label('Tanggal visit')
+                    ->label('Tanggal visit/Remote')
                     ->native(false)
+                    ->default(Carbon::now())
                     ->required(),
                 Forms\Components\Select::make('user_id')
                     ->label('Staff')
@@ -321,36 +326,59 @@ class OutstandingResource extends Resource
                         }
                         return $options;
                     })
-                    ->searchable(),
-                Forms\Components\TextInput::make('work')
-                    ->label('Work')
+                    ->searchable()
                     ->required(),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\Select::make('work')
+                    ->label('Visit/Remote')
+                    ->options([
+                        'visit' => 'Visit',
+                        'remote' => 'Remote',
+                    ])
+                    ->default('visit')
+                    ->required(),
+                Forms\Components\Select::make('status')
                     ->label('Status')
+                    ->options([
+                        '0' => 'Pending',
+                        '1' => 'Finish',
+                    ])
+                    ->default('1')
                     ->required(),
                 Forms\Components\RichEditor::make('cause')
+                    ->label('Sebab')
                     ->toolbarButtons([
                         'bold',
                         'bulletList',
                         'italic',
                         'orderedList',
                         'underline',
+                    ])
+                    ->extraInputAttributes([
+                        'style' => 'min-height: 100px;',
                     ]),
                 Forms\Components\RichEditor::make('action')
+                    ->label('Aksi')
                     ->toolbarButtons([
                         'bold',
                         'bulletList',
                         'italic',
                         'orderedList',
                         'underline',
+                    ])
+                    ->extraInputAttributes([
+                        'style' => 'min-height: 100px;',
                     ]),
                 Forms\Components\RichEditor::make('solution')
+                    ->label('Solusi')
                     ->toolbarButtons([
                         'bold',
                         'bulletList',
                         'italic',
                         'orderedList',
                         'underline',
+                    ])
+                    ->extraInputAttributes([
+                        'style' => 'min-height: 100px;',
                     ]),
                 Forms\Components\RichEditor::make('note')
                     ->toolbarButtons([
@@ -359,6 +387,9 @@ class OutstandingResource extends Resource
                         'italic',
                         'orderedList',
                         'underline',
+                    ])
+                    ->extraInputAttributes([
+                        'style' => 'min-height: 100px;',
                     ]),
                 ])
             ->visible(fn ($context) => $context === 'create')

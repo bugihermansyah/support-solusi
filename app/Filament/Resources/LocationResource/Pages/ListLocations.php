@@ -4,6 +4,7 @@ namespace App\Filament\Resources\LocationResource\Pages;
 
 use App\Filament\Resources\LocationResource;
 use Filament\Actions;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -28,4 +29,14 @@ class ListLocations extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    // public function getTabs(): array
+    // {
+    //     return [
+    //         null => Tab::make('All'),
+    //         'implementasi' => Tab::make()->query(fn ($query) => $query->where('status', 'imple')),
+    //         'new' => Tab::make()->query(fn ($query) => $query->where('status', 'new')),
+    //         'settle' => Tab::make()->query(fn ($query) => $query->where('status', 'settle')),
+    //     ];
+    // }
 }

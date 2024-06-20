@@ -20,7 +20,7 @@ class Location extends Model
         'company_id',
         'name',
         'team_id',
-        'bd',
+        'bd_id',
         'area_status',
         'user_id',
         'image',
@@ -93,6 +93,16 @@ class Location extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the BD that owns the Location
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function bd(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'bd_id');
     }
 
     /**
