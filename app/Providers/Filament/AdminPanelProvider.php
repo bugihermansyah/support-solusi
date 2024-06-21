@@ -5,8 +5,11 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\EmailVerification;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\RequestPasswordReset;
+use App\Filament\Resources\EvaluationResource;
+use App\Filament\Resources\OutstandingResource;
 use App\Livewire\MyProfileExtended;
 use App\Settings\GeneralSettings;
+use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -78,6 +81,11 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
+                QuickCreatePlugin::make()
+                    ->includes([
+                        EvaluationResource::class,
+                        OutstandingResource::class,
+                    ]),
                 // \BezhanSalleh\FilamentExceptions\FilamentExceptionsPlugin::make(),
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
                     ->gridColumns([

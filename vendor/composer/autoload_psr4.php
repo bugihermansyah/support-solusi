@@ -150,6 +150,7 @@ return array(
     'BezhanSalleh\\FilamentExceptions\\' => array($vendorDir . '/bezhansalleh/filament-exceptions/src'),
     'BaconQrCode\\' => array($vendorDir . '/bacon/bacon-qr-code/src'),
     'Aymanalhattami\\FilamentSlimScrollbar\\' => array($vendorDir . '/aymanalhattami/filament-slim-scrollbar/src'),
+    'Awcodes\\FilamentQuickCreate\\' => array($vendorDir . '/awcodes/filament-quick-create/src'),
     'App\\' => array($baseDir . '/app', $vendorDir . '/laravel/pint/app'),
     'AnourValar\\EloquentSerialize\\' => array($vendorDir . '/anourvalar/eloquent-serialize/src'),
 );

@@ -263,6 +263,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'A' => 
         array (
             'Aymanalhattami\\FilamentSlimScrollbar\\' => 37,
+            'Awcodes\\FilamentQuickCreate\\' => 28,
             'App\\' => 4,
             'AnourValar\\EloquentSerialize\\' => 29,
         ),
@@ -857,6 +858,10 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         array (
             0 => __DIR__ . '/..' . '/aymanalhattami/filament-slim-scrollbar/src',
         ),
+        'Awcodes\\FilamentQuickCreate\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/awcodes/filament-quick-create/src',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -878,6 +883,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Console\\Commands\\GenerateLang' => __DIR__ . '/../..' . '/app/Console/Commands/GenerateLang.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Enums\\LocationStatus' => __DIR__ . '/../..' . '/app/Enums/LocationStatus.php',
+        'App\\Enums\\OutstandingStatus' => __DIR__ . '/../..' . '/app/Enums/OutstandingStatus.php',
         'App\\Enums\\TypeContract' => __DIR__ . '/../..' . '/app/Enums/TypeContract.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Filament\\Pages\\Auth\\EmailVerification' => __DIR__ . '/../..' . '/app/Filament/Pages/Auth/EmailVerification.php',
@@ -906,6 +912,8 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Filament\\Resources\\CompanyResource\\Pages\\ManageCompanies' => __DIR__ . '/../..' . '/app/Filament/Resources/CompanyResource/Pages/ManageCompanies.php',
         'App\\Filament\\Resources\\CustomerResource' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource.php',
         'App\\Filament\\Resources\\CustomerResource\\Pages\\ManageCustomers' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource/Pages/ManageCustomers.php',
+        'App\\Filament\\Resources\\EvaluationResource' => __DIR__ . '/../..' . '/app/Filament/Resources/EvaluationResource.php',
+        'App\\Filament\\Resources\\EvaluationResource\\Pages\\ManageEvaluations' => __DIR__ . '/../..' . '/app/Filament/Resources/EvaluationResource/Pages/ManageEvaluations.php',
         'App\\Filament\\Resources\\LocationResource' => __DIR__ . '/../..' . '/app/Filament/Resources/LocationResource.php',
         'App\\Filament\\Resources\\LocationResource\\Pages\\CreateLocation' => __DIR__ . '/../..' . '/app/Filament/Resources/LocationResource/Pages/CreateLocation.php',
         'App\\Filament\\Resources\\LocationResource\\Pages\\EditLocation' => __DIR__ . '/../..' . '/app/Filament/Resources/LocationResource/Pages/EditLocation.php',
@@ -943,6 +951,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Livewire\\MyProfileExtended' => __DIR__ . '/../..' . '/app/Livewire/MyProfileExtended.php',
         'App\\Mail\\TestMail' => __DIR__ . '/../..' . '/app/Mail/TestMail.php',
+        'App\\Models\\Assessment' => __DIR__ . '/../..' . '/app/Models/Assessment.php',
         'App\\Models\\Banner' => __DIR__ . '/../..' . '/app/Models/Banner.php',
         'App\\Models\\BannerCategory' => __DIR__ . '/../..' . '/app/Models/BannerCategory.php',
         'App\\Models\\Blog\\Category' => __DIR__ . '/../..' . '/app/Models/Blog/Category.php',
@@ -951,6 +960,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Models\\Contract' => __DIR__ . '/../..' . '/app/Models/Contract.php',
         'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
         'App\\Models\\CustomerLocation' => __DIR__ . '/../..' . '/app/Models/CustomerLocation.php',
+        'App\\Models\\Evaluation' => __DIR__ . '/../..' . '/app/Models/Evaluation.php',
         'App\\Models\\Location' => __DIR__ . '/../..' . '/app/Models/Location.php',
         'App\\Models\\Outstanding' => __DIR__ . '/../..' . '/app/Models/Outstanding.php',
         'App\\Models\\OutstandingUnit' => __DIR__ . '/../..' . '/app/Models/OutstandingUnit.php',
@@ -977,6 +987,9 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Settings\\GeneralSettings' => __DIR__ . '/../..' . '/app/Settings/GeneralSettings.php',
         'App\\Settings\\MailSettings' => __DIR__ . '/../..' . '/app/Settings/MailSettings.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Awcodes\\FilamentQuickCreate\\Components\\QuickCreateMenu' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/Components/QuickCreateMenu.php',
+        'Awcodes\\FilamentQuickCreate\\QuickCreatePlugin' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/QuickCreatePlugin.php',
+        'Awcodes\\FilamentQuickCreate\\QuickCreateServiceProvider' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/QuickCreateServiceProvider.php',
         'Aymanalhattami\\FilamentSlimScrollbar\\FilamentSlimScrollbarServiceProvider' => __DIR__ . '/..' . '/aymanalhattami/filament-slim-scrollbar/src/FilamentSlimScrollbarServiceProvider.php',
         'BaconQrCode\\Common\\BitArray' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitArray.php',
         'BaconQrCode\\Common\\BitMatrix' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitMatrix.php',
