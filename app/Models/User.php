@@ -9,6 +9,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -98,5 +99,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     public function team()
     {
         return $this->belongsTo(Team::class);
+    }
+
+    /**
+     * Get all of the evaluations for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class);
     }
 }

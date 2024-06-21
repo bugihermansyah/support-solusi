@@ -30,8 +30,11 @@ class ProductResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(100),
+                    ->maxLength(100)
+                    ->required(),
+                Forms\Components\TextInput::make('point')
+                    ->numeric()
+                    ->required(),
             ]);
     }
 
@@ -42,6 +45,8 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('point')
+                    ->label('Point'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
