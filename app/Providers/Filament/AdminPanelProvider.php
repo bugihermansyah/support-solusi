@@ -9,6 +9,8 @@ use App\Filament\Resources\EvaluationResource;
 use App\Filament\Resources\OutstandingResource;
 use App\Livewire\MyProfileExtended;
 use App\Settings\GeneralSettings;
+use Awcodes\FilamentGravatar\GravatarPlugin;
+use Awcodes\FilamentGravatar\GravatarProvider;
 use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -36,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('/')
             ->login(Login::class)
+            ->defaultAvatarProvider(GravatarProvider::class)
             // ->passwordReset(RequestPasswordReset::class)
             // ->emailVerification(EmailVerification::class)
             // ->favicon(fn (GeneralSettings $settings) => Storage::url($settings->site_favicon))
@@ -47,6 +50,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Main',
                 'Reports',
+                'Indicator Performances',
                 'Access',
             ])
             ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge)
@@ -81,6 +85,10 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
+                GravatarPlugin::make()
+                    ->default('robohash')
+                    ->size(200)
+                    ->rating('pg'),
                 QuickCreatePlugin::make()
                     ->includes([
                         EvaluationResource::class,

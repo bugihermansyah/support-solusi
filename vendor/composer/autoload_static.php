@@ -264,6 +264,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         array (
             'Aymanalhattami\\FilamentSlimScrollbar\\' => 37,
             'Awcodes\\FilamentQuickCreate\\' => 28,
+            'Awcodes\\FilamentGravatar\\' => 25,
             'App\\' => 4,
             'AnourValar\\EloquentSerialize\\' => 29,
         ),
@@ -862,6 +863,10 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         array (
             0 => __DIR__ . '/..' . '/awcodes/filament-quick-create/src',
         ),
+        'Awcodes\\FilamentGravatar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/awcodes/filament-gravatar/src',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -894,6 +899,8 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Filament\\Pages\\LaporanMasalahProduk' => __DIR__ . '/../..' . '/app/Filament/Pages/LaporanMasalahProduk.php',
         'App\\Filament\\Pages\\Setting\\ManageGeneral' => __DIR__ . '/../..' . '/app/Filament/Pages/Setting/ManageGeneral.php',
         'App\\Filament\\Pages\\Setting\\ManageMail' => __DIR__ . '/../..' . '/app/Filament/Pages/Setting/ManageMail.php',
+        'App\\Filament\\Pages\\SlaFinish' => __DIR__ . '/../..' . '/app/Filament/Pages/SlaFinish.php',
+        'App\\Filament\\Pages\\SlaVisit' => __DIR__ . '/../..' . '/app/Filament/Pages/SlaVisit.php',
         'App\\Filament\\Resources\\BannerCategoryResource' => __DIR__ . '/../..' . '/app/Filament/Resources/BannerCategoryResource.php',
         'App\\Filament\\Resources\\BannerCategoryResource\\Pages\\ListBannerCategories' => __DIR__ . '/../..' . '/app/Filament/Resources/BannerCategoryResource/Pages/ListBannerCategories.php',
         'App\\Filament\\Resources\\BannerResource' => __DIR__ . '/../..' . '/app/Filament/Resources/BannerResource.php',
@@ -912,6 +919,11 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Filament\\Resources\\CompanyResource\\Pages\\ManageCompanies' => __DIR__ . '/../..' . '/app/Filament/Resources/CompanyResource/Pages/ManageCompanies.php',
         'App\\Filament\\Resources\\CustomerResource' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource.php',
         'App\\Filament\\Resources\\CustomerResource\\Pages\\ManageCustomers' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource/Pages/ManageCustomers.php',
+        'App\\Filament\\Resources\\DisciplineResource' => __DIR__ . '/../..' . '/app/Filament/Resources/DisciplineResource.php',
+        'App\\Filament\\Resources\\DisciplineResource\\Pages\\CreateDiscipline' => __DIR__ . '/../..' . '/app/Filament/Resources/DisciplineResource/Pages/CreateDiscipline.php',
+        'App\\Filament\\Resources\\DisciplineResource\\Pages\\EditDiscipline' => __DIR__ . '/../..' . '/app/Filament/Resources/DisciplineResource/Pages/EditDiscipline.php',
+        'App\\Filament\\Resources\\DisciplineResource\\Pages\\ListDisciplines' => __DIR__ . '/../..' . '/app/Filament/Resources/DisciplineResource/Pages/ListDisciplines.php',
+        'App\\Filament\\Resources\\DisciplineResource\\Pages\\ViewDiscipline' => __DIR__ . '/../..' . '/app/Filament/Resources/DisciplineResource/Pages/ViewDiscipline.php',
         'App\\Filament\\Resources\\EvaluationResource' => __DIR__ . '/../..' . '/app/Filament/Resources/EvaluationResource.php',
         'App\\Filament\\Resources\\EvaluationResource\\Pages\\ManageEvaluations' => __DIR__ . '/../..' . '/app/Filament/Resources/EvaluationResource/Pages/ManageEvaluations.php',
         'App\\Filament\\Resources\\LocationResource' => __DIR__ . '/../..' . '/app/Filament/Resources/LocationResource.php',
@@ -987,6 +999,10 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Settings\\GeneralSettings' => __DIR__ . '/../..' . '/app/Settings/GeneralSettings.php',
         'App\\Settings\\MailSettings' => __DIR__ . '/../..' . '/app/Settings/MailSettings.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Awcodes\\FilamentGravatar\\Gravatar' => __DIR__ . '/..' . '/awcodes/filament-gravatar/src/Gravatar.php',
+        'Awcodes\\FilamentGravatar\\GravatarPlugin' => __DIR__ . '/..' . '/awcodes/filament-gravatar/src/GravatarPlugin.php',
+        'Awcodes\\FilamentGravatar\\GravatarProvider' => __DIR__ . '/..' . '/awcodes/filament-gravatar/src/GravatarProvider.php',
+        'Awcodes\\FilamentGravatar\\GravatarServiceProvider' => __DIR__ . '/..' . '/awcodes/filament-gravatar/src/GravatarServiceProvider.php',
         'Awcodes\\FilamentQuickCreate\\Components\\QuickCreateMenu' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/Components/QuickCreateMenu.php',
         'Awcodes\\FilamentQuickCreate\\QuickCreatePlugin' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/QuickCreatePlugin.php',
         'Awcodes\\FilamentQuickCreate\\QuickCreateServiceProvider' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/QuickCreateServiceProvider.php',
