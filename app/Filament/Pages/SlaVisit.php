@@ -99,7 +99,7 @@ class SlaVisit extends Page implements HasTable
                     ])
                     ->default(Carbon::now()->format('m'))
                     ->query(function (Builder $query, array $data) {
-                        if (isset($data['value'])) {
+                        if (!empty($data['value'])) {
                             $query->whereMonth('outstandings.date_in', $data['value']);
                         }
                     }),
@@ -111,7 +111,7 @@ class SlaVisit extends Page implements HasTable
                     })
                     ->default(Carbon::now()->year)
                     ->query(function (Builder $query, array $data) {
-                        if (isset($data['value'])) {
+                        if (!empty($data['value'])) {
                             $query->whereYear('outstandings.date_in', $data['value']);
                         }
                     }),
@@ -120,7 +120,7 @@ class SlaVisit extends Page implements HasTable
                     ->options(Team::all()->pluck('name', 'id'))
                     ->default(Auth::user()->team_id)
                     ->query(function (Builder $query, array $data) {
-                        if (isset($data['value'])) {
+                        if (!empty($data['value'])) {
                             $query->where('locations.team_id', $data['value']);
                         }
                     }),
