@@ -2,70 +2,95 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\OutstandingUnit;
+use App\Models\Product;
 use App\Models\Team;
-use App\Models\Unit;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Pages\Page;
-use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class LaporanKerusakanUnit extends Page implements HasTable
+class SlaFinish extends Page implements HasTable
 {
     use InteractsWithTable;
     use HasPageShield;
 
-    protected static ?string $slug = 'reporting/monthly/kerusakan-unit';
+    protected static ?string $slug = 'reporting/monthly/sla-finish';
 
-    protected static ?string $navigationLabel = 'Kerusakan Unit';
+    protected static ?string $navigationLabel = 'SLA Selesai';
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $title = 'Laporan SLA Selesai';
 
-    protected static string $view = 'filament.pages.laporan-kerusakan-unit';
+    protected ?string $heading = 'Laporan SLA Selesai';
 
-    protected static ?string $navigationGroup = 'Reports';
+    // public function getSubheading(): ?string
+    // {
+    //     return __('SLA Selesai dihitung dari tanggal pertama kali aksi visit/remote sampai tanggal selesai');
+    // }
 
     public function getTableRecordKey($record): string
     {
         return (string) $record->getKeyName();
     }
 
-    public function table(Table $table): Table
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    protected static string $view = 'filament.pages.sla-finish';
+
+    protected static ?string $navigationGroup = 'Reports';
+
+    public static function table(Table $table): Table
     {
         return $table
             ->query(
-                OutstandingUnit::query()
-                    ->select('units.name')
-                    ->selectRaw('SUM(outstanding_units.qty) as unit_sums')
-                    ->join('units', 'units.id', '=', 'outstanding_units.unit_id')
-                    ->join('outstandings', 'outstandings.id', '=', 'outstanding_units.outstanding_id')
+            Product::query()
+                ->select('products.name')
+                    ->selectRaw("
+                        SUM(CASE
+                            WHEN DATEDIFF(outstandings.date_finish, outstandings.date_visit) BETWEEN 0 AND 3 THEN 1
+                            ELSE 0
+                        END) as sla1_count,
+                        SUM(CASE
+                            WHEN DATEDIFF(outstandings.date_finish, outstandings.date_visit) BETWEEN 4 AND 7 THEN 1
+                            ELSE 0
+                        END) as sla2_count,
+                        SUM(CASE
+                            WHEN DATEDIFF(outstandings.date_finish, outstandings.date_visit) > 7 THEN 1
+                            ELSE 0
+                        END) as sla3_count
+                    ")
+                    ->join('outstandings', 'products.id', '=', 'outstandings.product_id')
                     ->leftjoin('locations', 'locations.id', '=', 'outstandings.location_id')
-                    ->groupBy('units.name')
-                    // ->orderBy('units.sort', 'asc')
-            )
+                    ->whereNotNull('outstandings.date_finish')
+                    ->whereNotNull('outstandings.date_visit')
+                    ->groupBy('products.name')
+                    // ->orderBy('products.name')
+                )
             ->columns([
-                TextColumn::make('name')
-                    ->label('Nama Unit')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('unit_sums')
-                    ->label('Jumlah')
-                    ->summarize(Sum::make()->label('Total'))
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('sla1_count')
+                    ->label('SLA 1 (0 - 3)')
+                    ->summarize(Sum::make()->label('Total')),
+                Tables\Columns\TextColumn::make('sla2_count')
+                    ->label('SLA 2 (4 - 7)')
+                    ->summarize(Sum::make()->label('Total')),
+                Tables\Columns\TextColumn::make('sla3_count')
+                    ->label('SLA 3 (> 7)')
+                    ->summarize(Sum::make()->label('Total')),
             ])
-            ->defaultSort('name', 'asc')
+            ->defaultSort('sort', 'asc')
             ->filters([
                 SelectFilter::make('month')
-                    ->label('Bulan')
+                    ->label('Month')
                     ->options([
                         '01' => 'Januari',
                         '02' => 'Februari',
@@ -87,7 +112,7 @@ class LaporanKerusakanUnit extends Page implements HasTable
                         }
                     }),
                 SelectFilter::make('year')
-                    ->label('Tahun')
+                    ->label('Year')
                     ->options(function () {
                         $years = range(Carbon::now()->year, 2021);
                         return array_combine($years, $years);
@@ -123,12 +148,11 @@ class LaporanKerusakanUnit extends Page implements HasTable
                 TernaryFilter::make('lpm')
                     ->label('Laporan /1 masuk'),
             ])
-            // , layout: FiltersLayout::AboveContent)
             ->actions([
-                // ...
+                //
             ])
             ->bulkActions([
-                // ...
+                //
             ]);
     }
 }
