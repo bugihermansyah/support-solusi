@@ -17,6 +17,8 @@ class CustomerResource extends Resource
 {
     protected static ?string $model = Customer::class;
 
+    protected static ?string $modelLabel = 'PIC Lokasi';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
@@ -28,16 +30,23 @@ class CustomerResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('tlp')
+                    ->label('Phone')
+                    ->tel()
+                    ->unique()
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('email')
+                    ->label('Email')
                     ->email()
+                    ->unique()
                     ->required()
                     ->maxLength(100),
                 Forms\Components\Textarea::make('description')
+                    ->label('Keterangan')
                     ->columnSpanFull(),
             ]);
     }
@@ -47,11 +56,21 @@ class CustomerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tlp')
-                    ->numeric(),
+                    ->label('Phone')
+                    ->numeric()
+                    ->copyable()
+                    ->copyMessage('Phone Number copied')
+                    ->copyMessageDuration(1500),
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
+                    ->searchable()
+                    ->copyable()
+                    ->copyMessage('Email address copied')
+                    ->copyMessageDuration(1500),
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Keterangan'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

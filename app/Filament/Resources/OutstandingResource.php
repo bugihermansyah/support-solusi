@@ -40,6 +40,15 @@ class OutstandingResource extends Resource
                 ->schema([
                     Forms\Components\Section::make()
                         ->schema([
+                            Forms\Components\TextInput::make('number')
+                                ->label('No. Tiket')
+                                ->default('SP-' .Carbon::now()->format('ym').''.(random_int(10000, 99999)))
+                                ->disabled()
+                                ->dehydrated()
+                                ->required()
+                                ->maxLength(32)
+                                ->unique(Outstanding::class, 'number', ignoreRecord: true)
+                                ->columnSpanFull(),
                             Forms\Components\Select::make('location_id')
                                 ->label('Lokasi')
                                 ->options(Location::query()->pluck('name', 'id'))
@@ -222,11 +231,14 @@ class OutstandingResource extends Resource
     {
         return $table
         ->columns([
+            Tables\Columns\TextColumn::make('number')
+                ->label('No. Tiket')
+                ->searchable(),
             Tables\Columns\TextColumn::make('location.team.name')
                 ->label('Tim Area')
                 ->searchable()
                 ->sortable()
-                ->limit(15),
+                ->limit(5),
             Tables\Columns\TextColumn::make('location.name')
                 ->label('Lokasi')
                 ->searchable()

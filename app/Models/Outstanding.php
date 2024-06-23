@@ -15,6 +15,7 @@ class Outstanding extends Model
     use HasUlids;
 
     protected $fillable = [
+        'number',
         'location_id',
         'product_id',
         'title',

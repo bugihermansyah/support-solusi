@@ -25,6 +25,8 @@ class EvaluationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
+    protected static ?string $navigationGroup = 'Indicator Performances';
+
     public static function form(Form $form): Form
     {
         return $form

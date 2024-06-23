@@ -31,6 +31,7 @@ class ProductResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->maxLength(100)
+                    ->unique()
                     ->required(),
                 Forms\Components\TextInput::make('point')
                     ->numeric()

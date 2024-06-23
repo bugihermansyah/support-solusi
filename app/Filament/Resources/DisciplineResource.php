@@ -28,6 +28,8 @@ class DisciplineResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
+    protected static ?string $navigationGroup = 'Indicator Performances';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -107,7 +109,7 @@ class DisciplineResource extends Resource
                 SelectFilter::make('year')
                     ->label('Year')
                     ->options(function () {
-                        $years = range(Carbon::now()->year, 2023);
+                        $years = range(Carbon::now()->year, 2021);
                         return array_combine($years, $years);
                     })
                     ->default(Carbon::now()->year)

@@ -14,7 +14,8 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'sort'
+        'sort',
+        'point'
     ];
 
     protected $sortable = ['sort'];

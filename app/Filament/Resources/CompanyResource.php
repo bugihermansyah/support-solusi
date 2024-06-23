@@ -63,9 +63,17 @@ class CompanyResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tlp')
                     ->label('Phone')
-                    ->numeric(),
+                    ->numeric()
+                    ->copyable()
+                    ->copyMessage('Phone Number copied')
+                    ->copyMessageDuration(1500),
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
+                    ->searchable()
+                    ->copyable()
+                    ->copyMessage('Email address copied')
+                    ->copyMessageDuration(1500),
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Keterangan'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
