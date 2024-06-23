@@ -50,6 +50,7 @@ class EvaluationResource extends Resource
                     ->options(Assessment::all()->pluck('title', 'id'))
                     ->reactive()
                     ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('point', Assessment::find($state)?->point ?? 0))
+                    ->searchable()
                     ->required(),
                 Forms\Components\TextInput::make('point')
                     ->disabled()

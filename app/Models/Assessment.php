@@ -9,4 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class Assessment extends Model
 {
     use HasFactory;
+    use HasUlids;
+
+    protected $fillable = [
+        'title',
+        'point'
+    ];
 }
