@@ -41,11 +41,11 @@ class AdminPanelProvider extends PanelProvider
             ->defaultAvatarProvider(GravatarProvider::class)
             // ->passwordReset(RequestPasswordReset::class)
             // ->emailVerification(EmailVerification::class)
-            // ->favicon(fn (GeneralSettings $settings) => Storage::url($settings->site_favicon))
-            // ->brandName(fn (GeneralSettings $settings) => $settings->brand_name)
-            // ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
-            // ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
-            // ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
+            ->favicon(fn (GeneralSettings $settings) => Storage::url($settings->site_favicon))
+            ->brandName(fn (GeneralSettings $settings) => $settings->brand_name)
+            ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
+            ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
+            ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
             // ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->navigationGroups([
                 'Main',
@@ -65,6 +65,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 // Pages\Dashboard::class,
             ])
+            ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 // Widgets\AccountWidget::class,
