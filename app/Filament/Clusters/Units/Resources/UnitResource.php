@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Clusters\Units\Resources;
 
-use App\Filament\Resources\UnitResource\Pages;
-use App\Filament\Resources\UnitResource\RelationManagers;
+use App\Filament\Clusters\Units;
+use App\Filament\Clusters\Units\Resources\UnitResource\Pages;
+use App\Filament\Clusters\Units\Resources\UnitResource\RelationManagers;
 use App\Models\Unit;
+use App\Models\UnitCategory;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,11 +19,14 @@ class UnitResource extends Resource
 {
     protected static ?string $model = Unit::class;
 
+    protected static ?string $cluster = Units::class;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-cpu-chip';
 
-    protected static ?string $navigationGroup = 'Main';
+    protected static ?int $navigationSort = 0;
+    // protected static ?string $navigationGroup = 'Main';
 
     public static function form(Form $form): Form
     {
@@ -40,8 +45,12 @@ class UnitResource extends Resource
                             ->label('Nama')
                             ->required()
                             ->maxLength(100),
+                        Forms\Components\Select::make('unit_category_id')
+                            ->label('Kategori')
+                            ->options(UnitCategory::all()->pluck('name', 'id'))
+                            ->searchable(),
                         Forms\Components\Select::make('parent_id')
-                            ->label('Grup')
+                            ->label('Set Unit')
                             ->options(Unit::where('parent_id', null)->pluck('name', 'id'))
                             ->searchable()
                             ->reactive()
@@ -56,7 +65,7 @@ class UnitResource extends Resource
                             ->label('Terlihat')
                             ->required(),
                     ])
-                    ->columns(2),
+                    ->columns(3),
             ]);
     }
 
@@ -72,7 +81,10 @@ class UnitResource extends Resource
                     ->label('Nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('parent.name')
-                    ->label('Grup')
+                    ->label('Set Unit')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('unitCategory.name')
+                    ->label('Kategori')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_visible')
                     ->label('Terlihat')
@@ -97,13 +109,15 @@ class UnitResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('sort')
+            ->reorderable('sort');
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageUnits::route('/'),
+            'index' => \App\Filament\Clusters\Units\Resources\UnitResource\Pages\ManageUnits::route('/'),
         ];
     }
 }

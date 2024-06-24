@@ -17,7 +17,8 @@ class Unit extends Model
         'parent_id',
         'sort',
         'image',
-        'is_visible'
+        'is_visible',
+        'unit_category_id'
     ];
 
     /**
@@ -28,5 +29,15 @@ class Unit extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Unit::class, 'parent_id');
+    }
+
+    /**
+     * Get the unitCategory that owns the Unit
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unitCategory(): BelongsTo
+    {
+        return $this->belongsTo(UnitCategory::class, 'unit_category_id');
     }
 }

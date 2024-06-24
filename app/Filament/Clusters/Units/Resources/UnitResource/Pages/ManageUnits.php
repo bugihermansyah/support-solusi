@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\UnitResource\Pages;
+namespace App\Filament\Clusters\Units\Resources\UnitResource\Pages;
 
-use App\Filament\Resources\UnitResource;
+use App\Filament\Clusters\Units\Resources\UnitResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Filament\Support\Enums\MaxWidth;
