@@ -211,6 +211,8 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'F' => 
         array (
             'Fruitcake\\Cors\\' => 15,
+            'Flowframe\\Trend\\Database\\Factories\\' => 35,
+            'Flowframe\\Trend\\' => 16,
             'Filament\\Widgets\\' => 17,
             'Filament\\Tables\\' => 16,
             'Filament\\Support\\' => 17,
@@ -263,6 +265,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'A' => 
         array (
             'Aymanalhattami\\FilamentSlimScrollbar\\' => 37,
+            'Awcodes\\TableRepeater\\' => 22,
             'Awcodes\\FilamentQuickCreate\\' => 28,
             'Awcodes\\FilamentGravatar\\' => 25,
             'App\\' => 4,
@@ -706,6 +709,14 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         array (
             0 => __DIR__ . '/..' . '/fruitcake/php-cors/src',
         ),
+        'Flowframe\\Trend\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flowframe/laravel-trend/database/factories',
+        ),
+        'Flowframe\\Trend\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flowframe/laravel-trend/src',
+        ),
         'Filament\\Widgets\\' => 
         array (
             0 => __DIR__ . '/..' . '/filament/widgets/src',
@@ -859,6 +870,10 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         array (
             0 => __DIR__ . '/..' . '/aymanalhattami/filament-slim-scrollbar/src',
         ),
+        'Awcodes\\TableRepeater\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src',
+        ),
         'Awcodes\\FilamentQuickCreate\\' => 
         array (
             0 => __DIR__ . '/..' . '/awcodes/filament-quick-create/src',
@@ -891,6 +906,11 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Enums\\OutstandingStatus' => __DIR__ . '/../..' . '/app/Enums/OutstandingStatus.php',
         'App\\Enums\\TypeContract' => __DIR__ . '/../..' . '/app/Enums/TypeContract.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Filament\\Clusters\\Units' => __DIR__ . '/../..' . '/app/Filament/Clusters/Units.php',
+        'App\\Filament\\Clusters\\Units\\Resources\\UnitCategoryResource' => __DIR__ . '/../..' . '/app/Filament/Clusters/Units/Resources/UnitCategoryResource.php',
+        'App\\Filament\\Clusters\\Units\\Resources\\UnitCategoryResource\\Pages\\ManageUnitCategories' => __DIR__ . '/../..' . '/app/Filament/Clusters/Units/Resources/UnitCategoryResource/Pages/ManageUnitCategories.php',
+        'App\\Filament\\Clusters\\Units\\Resources\\UnitResource' => __DIR__ . '/../..' . '/app/Filament/Clusters/Units/Resources/UnitResource.php',
+        'App\\Filament\\Clusters\\Units\\Resources\\UnitResource\\Pages\\ManageUnits' => __DIR__ . '/../..' . '/app/Filament/Clusters/Units/Resources/UnitResource/Pages/ManageUnits.php',
         'App\\Filament\\Pages\\Auth\\EmailVerification' => __DIR__ . '/../..' . '/app/Filament/Pages/Auth/EmailVerification.php',
         'App\\Filament\\Pages\\Auth\\Login' => __DIR__ . '/../..' . '/app/Filament/Pages/Auth/Login.php',
         'App\\Filament\\Pages\\Auth\\RequestPasswordReset' => __DIR__ . '/../..' . '/app/Filament/Pages/Auth/RequestPasswordReset.php',
@@ -943,12 +963,11 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Filament\\Resources\\Shield\\RoleResource\\Pages\\EditRole' => __DIR__ . '/../..' . '/app/Filament/Resources/Shield/RoleResource/Pages/EditRole.php',
         'App\\Filament\\Resources\\Shield\\RoleResource\\Pages\\ListRoles' => __DIR__ . '/../..' . '/app/Filament/Resources/Shield/RoleResource/Pages/ListRoles.php',
         'App\\Filament\\Resources\\Shield\\RoleResource\\Pages\\ViewRole' => __DIR__ . '/../..' . '/app/Filament/Resources/Shield/RoleResource/Pages/ViewRole.php',
-        'App\\Filament\\Resources\\UnitResource' => __DIR__ . '/../..' . '/app/Filament/Resources/UnitResource.php',
-        'App\\Filament\\Resources\\UnitResource\\Pages\\ManageUnits' => __DIR__ . '/../..' . '/app/Filament/Resources/UnitResource/Pages/ManageUnits.php',
         'App\\Filament\\Resources\\UserResource' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource.php',
         'App\\Filament\\Resources\\UserResource\\Pages\\CreateUser' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/CreateUser.php',
         'App\\Filament\\Resources\\UserResource\\Pages\\EditUser' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/EditUser.php',
         'App\\Filament\\Resources\\UserResource\\Pages\\ListUsers' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/ListUsers.php',
+        'App\\Filament\\Widgets\\ReportingsChart' => __DIR__ . '/../..' . '/app/Filament/Widgets/ReportingsChart.php',
         'App\\Filament\\Widgets\\StatsOverviewWidget' => __DIR__ . '/../..' . '/app/Filament/Widgets/StatsOverviewWidget.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
@@ -980,6 +999,7 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'App\\Models\\Reporting' => __DIR__ . '/../..' . '/app/Models/Reporting.php',
         'App\\Models\\Team' => __DIR__ . '/../..' . '/app/Models/Team.php',
         'App\\Models\\Unit' => __DIR__ . '/../..' . '/app/Models/Unit.php',
+        'App\\Models\\UnitCategory' => __DIR__ . '/../..' . '/app/Models/UnitCategory.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Policies\\ActivityPolicy' => __DIR__ . '/../..' . '/app/Policies/ActivityPolicy.php',
         'App\\Policies\\BannerCategoryPolicy' => __DIR__ . '/../..' . '/app/Policies/BannerCategoryPolicy.php',
@@ -1006,6 +1026,14 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'Awcodes\\FilamentQuickCreate\\Components\\QuickCreateMenu' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/Components/QuickCreateMenu.php',
         'Awcodes\\FilamentQuickCreate\\QuickCreatePlugin' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/QuickCreatePlugin.php',
         'Awcodes\\FilamentQuickCreate\\QuickCreateServiceProvider' => __DIR__ . '/..' . '/awcodes/filament-quick-create/src/QuickCreateServiceProvider.php',
+        'Awcodes\\TableRepeater\\Components\\Concerns\\CanBeStreamlined' => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src/Components/Concerns/CanBeStreamlined.php',
+        'Awcodes\\TableRepeater\\Components\\Concerns\\HasBreakPoints' => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src/Components/Concerns/HasBreakPoints.php',
+        'Awcodes\\TableRepeater\\Components\\Concerns\\HasEmptyLabel' => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src/Components/Concerns/HasEmptyLabel.php',
+        'Awcodes\\TableRepeater\\Components\\Concerns\\HasExtraActions' => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src/Components/Concerns/HasExtraActions.php',
+        'Awcodes\\TableRepeater\\Components\\Concerns\\HasHeader' => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src/Components/Concerns/HasHeader.php',
+        'Awcodes\\TableRepeater\\Components\\TableRepeater' => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src/Components/TableRepeater.php',
+        'Awcodes\\TableRepeater\\Header' => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src/Header.php',
+        'Awcodes\\TableRepeater\\TableRepeaterServiceProvider' => __DIR__ . '/..' . '/awcodes/filament-table-repeater/src/TableRepeaterServiceProvider.php',
         'Aymanalhattami\\FilamentSlimScrollbar\\FilamentSlimScrollbarServiceProvider' => __DIR__ . '/..' . '/aymanalhattami/filament-slim-scrollbar/src/FilamentSlimScrollbarServiceProvider.php',
         'BaconQrCode\\Common\\BitArray' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitArray.php',
         'BaconQrCode\\Common\\BitMatrix' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitMatrix.php',
@@ -3219,6 +3247,13 @@ class ComposerStaticInit64cc647011e8c3d5bace62ae400b548c
         'Filament\\Widgets\\Widget' => __DIR__ . '/..' . '/filament/widgets/src/Widget.php',
         'Filament\\Widgets\\WidgetConfiguration' => __DIR__ . '/..' . '/filament/widgets/src/WidgetConfiguration.php',
         'Filament\\Widgets\\WidgetsServiceProvider' => __DIR__ . '/..' . '/filament/widgets/src/WidgetsServiceProvider.php',
+        'Flowframe\\Trend\\Adapters\\AbstractAdapter' => __DIR__ . '/..' . '/flowframe/laravel-trend/src/Adapters/AbstractAdapter.php',
+        'Flowframe\\Trend\\Adapters\\MySqlAdapter' => __DIR__ . '/..' . '/flowframe/laravel-trend/src/Adapters/MySqlAdapter.php',
+        'Flowframe\\Trend\\Adapters\\PgsqlAdapter' => __DIR__ . '/..' . '/flowframe/laravel-trend/src/Adapters/PgsqlAdapter.php',
+        'Flowframe\\Trend\\Adapters\\SqliteAdapter' => __DIR__ . '/..' . '/flowframe/laravel-trend/src/Adapters/SqliteAdapter.php',
+        'Flowframe\\Trend\\Trend' => __DIR__ . '/..' . '/flowframe/laravel-trend/src/Trend.php',
+        'Flowframe\\Trend\\TrendServiceProvider' => __DIR__ . '/..' . '/flowframe/laravel-trend/src/TrendServiceProvider.php',
+        'Flowframe\\Trend\\TrendValue' => __DIR__ . '/..' . '/flowframe/laravel-trend/src/TrendValue.php',
         'Fruitcake\\Cors\\CorsService' => __DIR__ . '/..' . '/fruitcake/php-cors/src/CorsService.php',
         'Fruitcake\\Cors\\Exceptions\\InvalidOptionException' => __DIR__ . '/..' . '/fruitcake/php-cors/src/Exceptions/InvalidOptionException.php',
         'GrahamCampbell\\ResultType\\Error' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Error.php',
