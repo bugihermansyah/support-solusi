@@ -17,6 +17,8 @@ class StatsOverviewWidget extends BaseWidget
 
     protected function getStats(): array
     {
+        $user = auth()->user();
+
         $typeContract = $this->filters['typeContract'] ?? 'all';
         $selectedMonth = $this->filters['month'] ?? null;
         $selectedYear = $this->filters['year'] ?? null;
@@ -34,6 +36,11 @@ class StatsOverviewWidget extends BaseWidget
 
         if ($selectedYear) {
             $query->whereYear('created_at', $selectedYear);
+        }
+
+        // Apply team filter if the user has a team and is not an admin
+        if ($user->team_id && !$user->hasRole('admin')) {
+            $query->where('team_id', $user->team_id);
         }
 
         $totalLocations = $query->count();
@@ -55,31 +62,31 @@ class StatsOverviewWidget extends BaseWidget
         $openOutstanding = $outstandingQuery->count();
 
         return [
-            Stat::make('Total Lokasi', $totalLocations)
+            Stat::make('Lokasi', $totalLocations)
                 ->description('Jumlah lokasi tim area')
                 // ->descriptionIcon('heroicon-m-arrow-trending-up')
                 // ->chart([10, 20, 30, 40, 50, 60, 70])
                 ->color('primary'),
-            Stat::make('Total Outstanding', $outstandingAll)
+            Stat::make('Outstanding', $outstandingAll)
                 ->description('Total outstanding yang belum selesai')
                 // ->descriptionIcon('heroicon-m-arrow-trending-up')
                 // ->chart([10, 20, 30, 40, 50, 60, 70])
                 ->color('primary'),
-            Stat::make('Outstanding', $openOutstanding)
-                ->description('Outstanding berdasarkan filter')
-                // ->descriptionIcon('heroicon-m-arrow-trending-up')
-                // ->chart([10, 20, 30, 40, 50, 60, 70])
-                ->color('primary'),
-            Stat::make('Total Locations', $areaLocations)
-                ->description('Lokasi luar kota')
+            // Stat::make('Outstanding', $openOutstanding)
+            //     ->description('Outstanding berdasarkan filter')
+            //     // ->descriptionIcon('heroicon-m-arrow-trending-up')
+            //     // ->chart([10, 20, 30, 40, 50, 60, 70])
+            //     ->color('primary'),
+            Stat::make('Luar kota', $areaLocations)
+                ->description('Reporting luar kota')
                 // ->descriptionIcon('heroicon-m-arrow-trending-up')
                 // ->chart([10, 20, 30, 40, 50, 60, 70])
                 ->color('primary'),
         ];
     }
 
-    protected function getColumns(): int
-    {
-        return 4;
-    }
+    // protected function getColumns(): int
+    // {
+    //     return 4;
+    // }
 }
