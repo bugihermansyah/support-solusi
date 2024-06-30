@@ -30,11 +30,6 @@ class SlaFinish extends Page implements HasTable
 
     protected ?string $heading = 'Laporan SLA Selesai';
 
-    // public function getSubheading(): ?string
-    // {
-    //     return __('SLA Selesai dihitung dari tanggal pertama kali aksi visit/remote sampai tanggal selesai');
-    // }
-
     public function getTableRecordKey($record): string
     {
         return (string) $record->getKeyName();
