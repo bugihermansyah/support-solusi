@@ -8,11 +8,16 @@ use App\Filament\Resources\OutstandingResource\RelationManagers;
 use App\Models\Contract;
 use App\Models\Location;
 use App\Models\Outstanding;
+use App\Models\Product;
 use App\Models\Team;
 use App\Models\Unit;
+use Awcodes\TableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Header;
 use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
@@ -40,15 +45,6 @@ class OutstandingResource extends Resource
                 ->schema([
                     Forms\Components\Section::make()
                         ->schema([
-                            Forms\Components\TextInput::make('number')
-                                ->label('No. Tiket')
-                                ->default('SP-' .Carbon::now()->format('ym').''.(random_int(10000, 99999)))
-                                ->disabled()
-                                ->dehydrated()
-                                ->required()
-                                ->maxLength(32)
-                                ->unique(Outstanding::class, 'number', ignoreRecord: true)
-                                ->columnSpanFull(),
                             Forms\Components\Select::make('location_id')
                                 ->label('Lokasi')
                                 ->options(Location::query()->pluck('name', 'id'))
@@ -57,13 +53,14 @@ class OutstandingResource extends Resource
                                 ->required(),
                             Forms\Components\Select::make('product_id')
                                 ->label('Produk')
-                                ->options(function ($get): Collection {
-                                    $locationId = $get('location_id');
-                                    if ($locationId) {
-                                        return Contract::query()
-                                            ->where('location_id', $locationId)
-                                            ->get()
-                                            ->pluck('product.name', 'product.id');
+                                ->options(function (callable $get){
+                                    $product = Location::find($get('location_id'));
+
+                                    if (!$product) {
+                                        return Product::all()->pluck('name', 'id');
+                                    }
+                                    if ($product->contracts) {
+                                        return $product->contracts->pluck('product.name', 'product.id');
                                     }
                                     return collect();
                                 })
@@ -80,8 +77,16 @@ class OutstandingResource extends Resource
                             Forms\Components\TextInput::make('title')
                                 ->label('Laporan masalah')
                                 ->maxLength(100)
-                                ->columnSpanFull()
-                                ->required(),
+                                ->required()
+                                ->columnSpan(2),
+                            Forms\Components\TextInput::make('number')
+                                ->label('No. Tiket')
+                                ->default('SP-' .Carbon::now()->format('ym').''.(random_int(100000, 999999)))
+                                ->disabled()
+                                ->dehydrated()
+                                ->required()
+                                ->maxLength(32)
+                                ->unique(Outstanding::class, 'number', ignoreRecord: true),
                         ])
                         ->columns(3),
 
@@ -132,6 +137,20 @@ class OutstandingResource extends Resource
                         ])
                         ->collapsible()
                         ->columns(3),
+                    Group::make()
+                        ->schema([
+
+                            Forms\Components\Section::make('Gambar')
+                                ->schema([
+                                    SpatieMediaLibraryFileUpload::make('image')
+                                        ->imageEditor()
+                                        ->resize(20)
+                                        ->openable(),
+                                ])
+                                ->columnSpan(2)
+                                ->collapsed(),
+                        ])
+                        ->columns(4)
                 ])
                 ->columnSpan(['lg' => 2]),
 
@@ -139,33 +158,41 @@ class OutstandingResource extends Resource
                 ->schema([
                     Forms\Components\Section::make('Unit')
                         ->schema([
-                            Forms\Components\Repeater::make('outstandingunits')
+                            TableRepeater::make('outstandingunits')
                                 ->label('')
                                 ->collapsible()
                                 ->relationship()
+                                ->headers([
+                                    Header::make('nama')->width('200px'),
+                                    Header::make('qty')->width('50px'),
+                                ])
+                                // ->renderHeader(false)
+                                ->streamlined()
                                 ->schema([
                                     Forms\Components\Select::make('unit_id')
                                         ->label('Unit')
                                         ->options(Unit::where('is_visible', 1)->pluck('name', 'id'))
                                         ->placeholder('Pilih unit')
                                         ->searchable()
-                                        ->required()
-                                        ->columnSpan([
-                                            'md' => 7,
-                                        ]),
+                                        ->required(),
+                                        // ->columnSpan([
+                                        //     'md' => 7,
+                                        // ]),
 
                                     Forms\Components\TextInput::make('qty')
                                         ->numeric()
+                                        ->minValue(1)
+                                        ->maxValue(20)
                                         ->default(1)
-                                        ->required()
-                                        ->columnSpan([
-                                            'md' => 3,
-                                        ]),
+                                        ->required(),
+                                        // ->columnSpan([
+                                        //     'md' => 3,
+                                        // ]),
                                 ])
-                            ->defaultItems(0)
-                            ->columns([
-                                'md' => 10,
-                            ]),
+                            ->defaultItems(0),
+                            // ->columns([
+                            //     'md' => 10,
+                            // ]),
                         ]),
                 ])
                 ->columnSpan(['lg' => 1]),
@@ -177,54 +204,6 @@ class OutstandingResource extends Resource
                 ->columnSpanFull(),
         ])
         ->columns(3);
-            // ->schema([
-            //     Forms\Components\Group::make()
-            //         ->schema([
-            //             Forms\Components\Section::make()
-            //                 ->schema([
-            //                     Forms\Components\Select::make('location_id')
-            //                         ->label('Lokasi')
-            //                         ->options(Location::query()->pluck('name', 'id'))
-            //                         ->live()
-            //                         ->searchable()
-            //                         ->required(),
-            //                     Forms\Components\Select::make('product_id')
-            //                         ->label('Produk')
-            //                         ->options(function ($get): Collection {
-            //                             $locationId = $get('location_id');
-            //                             if ($locationId) {
-            //                                 return Contract::query()
-            //                                     ->where('location_id', $locationId)
-            //                                     ->get()
-            //                                     ->pluck('product.name', 'product.id');
-            //                             }
-            //                             return collect();
-            //                         })
-            //                         ->required(),
-            //                     Forms\Components\Select::make('reporter')
-            //                         ->label('Pelapor')
-            //                         ->options([
-            //                             'Admin' => 'Admin',
-            //                             'User' => 'User',
-            //                         ])
-            //                         ->required(),
-            //                     Forms\Components\TextInput::make('title')
-            //                         ->label('Judul')
-            //                         ->maxLength(100)
-            //                         ->columnSpanFull()
-            //                         ->required(),
-            //                 ])
-            //             ->columns(3),
-            //         ])
-            //         ->columnSpan(['lg' => 2]),
-
-            //     Forms\Components\Section::make()
-            //         ->schema([
-            //             static::getItemsRepeater(),
-            //     ])
-            //     ->columnSpanFull(),
-            // ])
-            // ->columns(3);
     }
 
     public static function table(Table $table): Table
