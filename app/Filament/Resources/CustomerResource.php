@@ -36,13 +36,13 @@ class CustomerResource extends Resource
                 Forms\Components\TextInput::make('tlp')
                     ->label('Phone')
                     ->tel()
-                    ->unique()
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('email')
                     ->label('Email')
                     ->email()
-                    ->unique()
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(100),
                 Forms\Components\Textarea::make('description')

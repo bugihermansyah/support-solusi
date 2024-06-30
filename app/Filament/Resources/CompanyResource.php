@@ -32,18 +32,21 @@ class CompanyResource extends Resource
                 Forms\Components\TextInput::make('alias')
                     ->label('Alias')
                     ->required()
+                    ->unique(ignoreRecord: true)
                     ->maxLength(50),
                 Forms\Components\TextInput::make('name')
                     ->label('Nama')
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(100),
                 Forms\Components\TextInput::make('tlp')
+                    ->unique(ignoreRecord: true)
                     ->label('Phone')
                     ->tel()
                     ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                 Forms\Components\TextInput::make('email')
                     ->email()
-                    ->unique()
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(100),
                 Forms\Components\Textarea::make('description')
