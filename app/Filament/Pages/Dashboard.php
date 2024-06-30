@@ -13,50 +13,52 @@ class Dashboard extends BaseDashboard
 {
     use BaseDashboard\Concerns\HasFiltersForm;
 
-    protected function getYearOptions(): array
-    {
-        $years = range(date('Y'), date('Y') - 5);
-        return array_combine($years, $years);
-    }
+    protected ?string $heading = '';
 
-    public function filtersForm(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Section::make()
-                    ->schema([
-                        Select::make('typeContract')
-                            ->label('Kontrak Lokasi')
-                            ->options([
-                                'all' => 'Semua',
-                                'sewa' => 'Sewa',
-                                'putus' => 'Putus'
-                            ])
-                            ->selectablePlaceholder(false)
-                            ->default('all'),
+    // protected function getYearOptions(): array
+    // {
+    //     $years = range(date('Y'), date('Y') - 5);
+    //     return array_combine($years, $years);
+    // }
 
-                        Select::make('month')
-                            ->label('Bulan')
-                            ->options([
-                                '01' => 'Januari',
-                                '02' => 'Februari',
-                                '03' => 'Maret',
-                                '04' => 'April',
-                                '05' => 'Mei',
-                                '06' => 'Juni',
-                                '07' => 'Juli',
-                                '08' => 'Agustus',
-                                '09' => 'September',
-                                '10' => 'Oktober',
-                                '11' => 'November',
-                                '12' => 'Desember',
-                            ]),
+    // public function filtersForm(Form $form): Form
+    // {
+    //     return $form
+    //         ->schema([
+    //             Section::make()
+    //                 ->schema([
+    //                     Select::make('typeContract')
+    //                         ->label('Kontrak Lokasi')
+    //                         ->options([
+    //                             'all' => 'Semua',
+    //                             'sewa' => 'Sewa',
+    //                             'putus' => 'Putus'
+    //                         ])
+    //                         ->selectablePlaceholder(false)
+    //                         ->default('all'),
 
-                        Select::make('year')
-                            ->label('Tahun')
-                            ->options($this->getYearOptions()),
-                    ])
-                    ->columns(5),
-            ]);
-    }
+    //                     Select::make('month')
+    //                         ->label('Bulan')
+    //                         ->options([
+    //                             '01' => 'Januari',
+    //                             '02' => 'Februari',
+    //                             '03' => 'Maret',
+    //                             '04' => 'April',
+    //                             '05' => 'Mei',
+    //                             '06' => 'Juni',
+    //                             '07' => 'Juli',
+    //                             '08' => 'Agustus',
+    //                             '09' => 'September',
+    //                             '10' => 'Oktober',
+    //                             '11' => 'November',
+    //                             '12' => 'Desember',
+    //                         ]),
+
+    //                     Select::make('year')
+    //                         ->label('Tahun')
+    //                         ->options($this->getYearOptions()),
+    //                 ])
+    //                 ->columns(5),
+    //         ]);
+    // }
 }
