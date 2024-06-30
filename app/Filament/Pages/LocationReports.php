@@ -49,8 +49,8 @@ class LocationReports extends Page implements HasTable
             ->query(Reporting::query())
             ->groups([
                 Group::make('outstanding.id')
-                    ->label('Outstanding')
-                    ->getTitleFromRecordUsing(fn (Reporting $record): string => ucfirst($record->outstanding->location->name). ' | Produk: ' .($record->outstanding->product->name). ' | Outstanding: ' .($record->outstanding->title). ' | Lapor: ' .($record->outstanding->date_in). ' | Pelapor: ' .($record->outstanding->reporter))
+                    ->label('-> Outstanding')
+                    ->getTitleFromRecordUsing(fn (Reporting $record): string => ucfirst($record->outstanding->title). ' | Lokasi: ' .($record->outstanding->location->name). ' | Produk: ' .($record->outstanding->product->name). ' | Lapor: ' .($record->outstanding->date_in). ' | Pelapor: ' .($record->outstanding->reporter))
                     // ->getTitleFromRecordUsing(fn (Reporting $record): string => $record->outstanding
                     //     ? ucfirst($record->outstanding->title) . ' - ' . $record->outstanding->reporter
                     //     : 'No Title')
