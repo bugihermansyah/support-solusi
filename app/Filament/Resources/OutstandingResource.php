@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Enums\OutstandingStatus;
 use App\Filament\Resources\OutstandingResource\Pages;
 use App\Filament\Resources\OutstandingResource\RelationManagers;
-use App\Models\Contract;
 use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Product;
@@ -19,7 +18,6 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -139,7 +137,6 @@ class OutstandingResource extends Resource
                         ->columns(3),
                     Group::make()
                         ->schema([
-
                             Forms\Components\Section::make('Gambar')
                                 ->schema([
                                     SpatieMediaLibraryFileUpload::make('image')
@@ -193,7 +190,8 @@ class OutstandingResource extends Resource
                             // ->columns([
                             //     'md' => 10,
                             // ]),
-                        ]),
+                        ])
+                        ->collapsed(),
                 ])
                 ->columnSpan(['lg' => 1]),
 
