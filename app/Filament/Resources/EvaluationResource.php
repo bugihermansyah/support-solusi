@@ -23,6 +23,8 @@ class EvaluationResource extends Resource
 {
     protected static ?string $model = Evaluation::class;
 
+    protected static ?string $modelLabel = 'Penilaian';
+
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
     protected static ?string $navigationGroup = 'Indicator Performances';
@@ -47,21 +49,28 @@ class EvaluationResource extends Resource
                     })
                     ->required(),
                 Forms\Components\Select::make('assessment_id')
+                    ->label('Penilaian')
                     ->options(Assessment::all()->pluck('title', 'id'))
                     ->reactive()
                     ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('point', Assessment::find($state)?->point ?? 0))
                     ->searchable()
-                    ->required(),
+                    ->required()
+                    ->columnSpan([
+                        'md' => 2,
+                    ]),
                 Forms\Components\TextInput::make('point')
                     ->disabled()
                     ->dehydrated()
                     ->numeric()
-                    ->required(),
+                    ->required()
+                    ->columnSpan([
+                        'md' => 0,
+                    ]),
                 Forms\Components\Textarea::make('note')
                     ->required()
                     ->columnSpanFull(),
             ])
-            ->columns(4);
+            ->columns(5);
     }
 
     public static function table(Table $table): Table

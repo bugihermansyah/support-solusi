@@ -60,14 +60,20 @@ class LocationReports extends Page implements HasTable
             ->defaultGroup('outstanding.id')
             ->columns([
                 TextColumn::make('date_visit')
+                    ->label('Tanggal Aksi')
                     ->date(),
                 TextColumn::make('user.firstname')
                     ->label('Support'),
                 TextColumn::make('work')
                     ->label('Tipe Aksi'),
+                TextColumn::make('cause')
+                    ->label('Sebab')
+                    ->html()
+                    ->wrap(),
                 TextColumn::make('action')
                     ->label('Aksi')
-                    ->html(),
+                    ->html()
+                    ->wrap(),
                 TextColumn::make('solution')
                     ->label('Solusi')
                     ->html()

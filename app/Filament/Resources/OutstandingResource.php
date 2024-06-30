@@ -210,7 +210,8 @@ class OutstandingResource extends Resource
         ->columns([
             Tables\Columns\TextColumn::make('number')
                 ->label('No. Tiket')
-                ->searchable(),
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('location.team.name')
                 ->label('Tim Area')
                 ->searchable()
@@ -262,6 +263,14 @@ class OutstandingResource extends Resource
                 ->badge()
                 ->searchable()
                 ->sortable(),
+            Tables\Columns\TextColumn::make('created_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('updated_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

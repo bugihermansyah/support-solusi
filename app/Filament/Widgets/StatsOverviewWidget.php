@@ -23,7 +23,7 @@ class StatsOverviewWidget extends BaseWidget
         $selectedMonth = $this->filters['month'] ?? null;
         $selectedYear = $this->filters['year'] ?? null;
 
-            // Query to get the total number of locations based on the type_contract filter
+        // Query to get the total number of locations based on the type_contract filter
         $query = DB::table('locations');
 
         if ($typeContract !== 'all') {
@@ -47,7 +47,7 @@ class StatsOverviewWidget extends BaseWidget
 
         $areaLocations = DB::table('locations')->where('area_status', 'out')->count();
 
-        $outstandingAll = DB::table('outstandings')->where('status', 0)->count();
+        // $outstandingAll = DB::table('outstandings')->where('status', 0)->count();
 
         $outstandingQuery = DB::table('outstandings')->where('status', 0);
 
@@ -67,16 +67,16 @@ class StatsOverviewWidget extends BaseWidget
                 // ->descriptionIcon('heroicon-m-arrow-trending-up')
                 // ->chart([10, 20, 30, 40, 50, 60, 70])
                 ->color('primary'),
-            Stat::make('Outstanding', $outstandingAll)
-                ->description('Total outstanding yang belum selesai')
-                // ->descriptionIcon('heroicon-m-arrow-trending-up')
-                // ->chart([10, 20, 30, 40, 50, 60, 70])
-                ->color('primary'),
-            // Stat::make('Outstanding', $openOutstanding)
-            //     ->description('Outstanding berdasarkan filter')
+            // Stat::make('Outstanding', $outstandingAll)
+            //     ->description('Total outstanding yang belum selesai')
             //     // ->descriptionIcon('heroicon-m-arrow-trending-up')
             //     // ->chart([10, 20, 30, 40, 50, 60, 70])
             //     ->color('primary'),
+            Stat::make('Outstanding', $openOutstanding)
+                ->description('Outstanding berdasarkan filter')
+                // ->descriptionIcon('heroicon-m-arrow-trending-up')
+                // ->chart([10, 20, 30, 40, 50, 60, 70])
+                ->color('primary'),
             Stat::make('Luar kota', $areaLocations)
                 ->description('Reporting luar kota')
                 // ->descriptionIcon('heroicon-m-arrow-trending-up')
