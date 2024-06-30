@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ReportingsRelationManager extends RelationManager
 {
+
     protected static string $relationship = 'reportings';
 
     protected static ?string $title = 'Laporan';
@@ -140,7 +141,9 @@ class ReportingsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('solution')
                     ->label('Solusi')
                     ->html(),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge(),
             ])
             ->filters([
                 //

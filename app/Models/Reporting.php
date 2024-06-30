@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReportStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,10 @@ class Reporting extends Model
         'user_id',
         'status',
         'note'
+    ];
+
+    protected $casts = [
+        'status' => ReportStatus::class,
     ];
 
     /**
