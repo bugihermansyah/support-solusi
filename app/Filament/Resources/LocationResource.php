@@ -49,6 +49,9 @@ class LocationResource extends Resource
                                     ->searchable()
                                     ->required()
                                     ->createOptionForm([
+                                        Forms\Components\TextInput::make('alias')
+                                            ->required()
+                                            ->maxLength(50),
                                         Forms\Components\TextInput::make('name')
                                             ->required()
                                             ->maxLength(255),
