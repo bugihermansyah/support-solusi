@@ -43,6 +43,14 @@ class OutstandingResource extends Resource
                 ->schema([
                     Forms\Components\Section::make()
                         ->schema([
+                            Forms\Components\TextInput::make('number')
+                                ->label('No. Tiket')
+                                ->default('SP-' .Carbon::now()->format('ym').''.(random_int(100000, 999999)))
+                                ->disabled()
+                                ->dehydrated()
+                                ->required()
+                                ->maxLength(32)
+                                ->unique(Outstanding::class, 'number', ignoreRecord: true),
                             Forms\Components\Select::make('location_id')
                                 ->label('Lokasi')
                                 ->options(Location::query()->pluck('name', 'id'))
@@ -76,17 +84,9 @@ class OutstandingResource extends Resource
                                 ->label('Laporan masalah')
                                 ->maxLength(100)
                                 ->required()
-                                ->columnSpan(2),
-                            Forms\Components\TextInput::make('number')
-                                ->label('No. Tiket')
-                                ->default('SP-' .Carbon::now()->format('ym').''.(random_int(100000, 999999)))
-                                ->disabled()
-                                ->dehydrated()
-                                ->required()
-                                ->maxLength(32)
-                                ->unique(Outstanding::class, 'number', ignoreRecord: true),
+                                ->columnSpanFull(),
                         ])
-                        ->columns(3),
+                        ->columns(4),
 
                     Forms\Components\Section::make('Informasi tanggal')
                         ->schema([
