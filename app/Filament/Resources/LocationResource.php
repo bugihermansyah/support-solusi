@@ -44,7 +44,7 @@ class LocationResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('company_id')
                                     ->label('Perusahaan')
-                                    ->relationship('company', 'name')
+                                    ->relationship('company', 'alias')
                                     ->preload()
                                     ->searchable()
                                     ->required()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LocationResource\RelationManagers;
 
+use App\Enums\TypeContract;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -26,11 +27,27 @@ class ContractsRelationManager extends RelationManager
                     ->options(Product::all()->pluck('name', 'id'))
                     ->required()
                     ->searchable(),
-                Forms\Components\TextInput::make('gate'),
-                Forms\Components\TextInput::make('type_contract'),
-                Forms\Components\DatePicker::make('bap'),
-                Forms\Components\TextInput::make('description'),
-                Forms\Components\TextInput::make('status'),
+                Forms\Components\TextInput::make('gate')
+                    ->label('Unit'),
+                Forms\Components\ToggleButtons::make('type_contract')
+                    ->label('Tipe Kontrak')
+                    ->inline()
+                    ->options(TypeContract::class)
+                    ->default('sewa')
+                    ->required(),
+                Forms\Components\DatePicker::make('bap')
+                    ->label('BAP')
+                    ->native(false),
+                Forms\Components\RichEditor::make('description')
+                    ->label('Keterangan')
+                    ->toolbarButtons([
+                        'bold',
+                        'bulletList',
+                        'italic',
+                        'orderedList',
+                        'underline',
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 
