@@ -59,10 +59,12 @@ class CompanyResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('alias')
                     ->label('Alias')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Perusahaan')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('tlp')
                     ->label('Phone')
                     ->numeric()
@@ -74,6 +76,10 @@ class CompanyResource extends Resource
                     ->copyable()
                     ->copyMessage('Email address copied')
                     ->copyMessageDuration(1500),
+                Tables\Columns\TextColumn::make('locations_count')
+                    ->label('Jumlah Lokasi')
+                    ->counts('locations')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Keterangan'),
                 Tables\Columns\TextColumn::make('created_at')
