@@ -11,6 +11,7 @@ enum LocationStatus: string implements HasColor, HasLabel
     case Implementasi = 'imple';
     case New = 'new';
     case Settle = 'settle';
+    case Dismantle = 'dismantle';
     case Cancelled = 'cancelled';
 
     public function getLabel(): string
@@ -19,6 +20,7 @@ enum LocationStatus: string implements HasColor, HasLabel
             self::Implementasi => 'Implementasi',
             self::New => 'New',
             self::Settle => 'Settle',
+            self::Dismantle => 'Dismantle',
             self::Cancelled => 'Cancelled',
         };
     }
@@ -29,6 +31,7 @@ enum LocationStatus: string implements HasColor, HasLabel
             self::Implementasi => 'warning',
             self::New => 'info',
             self::Settle => 'success',
+            self::Dismantle => 'warning',
             self::Cancelled => 'danger',
         };
     }

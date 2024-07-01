@@ -116,8 +116,7 @@ class LocationResource extends Resource
                                     ->options(LocationStatus::class)
                                     ->required(),
                                 Forms\Components\Textarea::make('address')
-                                    ->label('Alamat')
-                                    ->required(),
+                                    ->label('Alamat'),
                                 Forms\Components\Textarea::make('description')
                                     ->label('Deskripsi'),
                             ])
