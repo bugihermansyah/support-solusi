@@ -31,24 +31,23 @@ class CompanyResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('alias')
                     ->label('Alias')
-                    ->required()
+                    ->maxLength(50)
                     ->unique(ignoreRecord: true)
-                    ->maxLength(50),
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->label('Nama')
-                    ->unique(ignoreRecord: true)
-                    ->required()
-                    ->maxLength(100),
+                    ->required(),
                 Forms\Components\TextInput::make('tlp')
-                    ->unique(ignoreRecord: true)
                     ->label('Phone')
                     ->tel()
-                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
+                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
+                    ->unique(ignoreRecord: true)
+                    ->required(),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->unique(ignoreRecord: true)
-                    ->required()
-                    ->maxLength(100),
+                    ->maxLength(100)
+                    ->required(),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
             ]);
