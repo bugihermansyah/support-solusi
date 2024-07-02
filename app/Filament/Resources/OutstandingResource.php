@@ -112,6 +112,7 @@ class OutstandingResource extends Resource
                         ->schema([
                             Forms\Components\ToggleButtons::make('is_type_problem')
                                 ->label('')
+                                ->required()
                                 ->options([
                                     '1' => 'Hardware',
                                     '2' => 'Software',
