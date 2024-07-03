@@ -112,13 +112,13 @@ class OutstandingResource extends Resource
                         ->schema([
                             Forms\Components\ToggleButtons::make('is_type_problem')
                                 ->label('')
-                                ->required()
                                 ->options([
                                     '1' => 'Hardware',
                                     '2' => 'Software',
                                     '3' => 'H/W Non Unit',
                                     '4' => 'Sipil'
                                 ])
+                                ->default(3)
                                 ->inline()
                                 ->inlineLabel(false),
                         ])
@@ -262,7 +262,6 @@ class OutstandingResource extends Resource
             Tables\Columns\TextColumn::make('status')
                 ->label('Status')
                 ->badge()
-                ->searchable()
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
                 ->dateTime()
