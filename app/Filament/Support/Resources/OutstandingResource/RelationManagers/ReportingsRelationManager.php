@@ -11,6 +11,7 @@ use App\Models\Team;
 use App\Models\User;
 use App\Settings\MailSettings;
 use Carbon\Carbon;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
@@ -27,7 +28,6 @@ use Illuminate\Support\Facades\Mail;
 
 class ReportingsRelationManager extends RelationManager
 {
-
     protected static string $relationship = 'reportings';
 
     protected static ?string $title = 'Laporan';
@@ -47,8 +47,7 @@ class ReportingsRelationManager extends RelationManager
                             ->label('Support')
                             ->options(User::all()->pluck('firstname', 'id'))
                             ->default(Auth::user()->id)
-                            ->disabled()
-                            ->required(),
+                            ->disabled(),
                         Forms\Components\ToggleButtons::make('work')
                             ->label('Jenis Aksi')
                             ->inline()
@@ -161,6 +160,15 @@ class ReportingsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['user_id'] = auth()->id();
+                        $data['outstanding_id'] = $this->ownerRecord->id;
+
+                        return $data;
+                    })
+                    ->using(function (array $data, string $model): Model {
+                        return $model::create($data);
+                    })
                     ->extraModalFooterActions(fn (Action $action): array => [
                         // $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
                         //     ->label(__('filament-actions::create.single.modal.actions.create_another.label')),
