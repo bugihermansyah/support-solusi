@@ -83,11 +83,52 @@ class ManageMail extends SettingsPage
                                             ->revealable(),
                                     ])
                                     ->columns(3),
+                            ]),
+                        Forms\Components\Section::make('Configuration')
+                            ->label(fn () => __('page.mail_settings.sections.config.title'))
+                            ->icon('fluentui-calendar-settings-32-o')
+                            ->schema([
+                                Forms\Components\Grid::make()
+                                    ->schema([
+                                        Forms\Components\TextInput::make('to_address')
+                                            ->label('Mail To')
+                                            ->columnSpanFull()
+                                            ->required(),
+                                        Forms\Components\TextInput::make('to_barat')
+                                            ->label('To Barat')
+                                            ->email()
+                                            ->required(),
+                                        Forms\Components\TagsInput::make('cc_barat')
+                                            ->label('CC Barat')
+                                            // ->rules(['email'])
+                                            // ->separator(',')
+                                            ->columnSpan(2),
+                                        Forms\Components\TextInput::make('to_pusat')
+                                            ->label('To Pusat')
+                                            ->required(),
+                                        Forms\Components\TagsInput::make('cc_pusat')
+                                            ->label('CC Pusat')
+                                            ->columnSpan(2),
+                                        Forms\Components\TextInput::make('to_timur')
+                                            ->label('To Timur')
+                                            ->required(),
+                                        Forms\Components\TagsInput::make('cc_timur')
+                                            ->label('CC Timur')
+                                            ->columnSpan(2),
+                                        Forms\Components\TextInput::make('to_cass_barat')
+                                            ->label('To CASS Barat')
+                                            ->required(),
+                                        Forms\Components\TagsInput::make('cc_cass_barat')
+                                            ->label('CC CASS Barat')
+                                            ->columnSpan(2),
+                                    ])
+                                    ->columns(3),
                             ])
                     ])
                     ->columnSpan([
                         "md" => 2
                     ]),
+
                 Forms\Components\Group::make()
                     ->schema([
                         Forms\Components\Section::make('From (Sender)')
@@ -106,8 +147,8 @@ class ManageMail extends SettingsPage
                                 Forms\Components\TextInput::make('mail_to')
                                     ->label(fn () => __('page.mail_settings.fields.mail_to'))
                                     ->hiddenLabel()
-                                    ->placeholder(fn () => __('page.mail_settings.fields.placeholder.receiver_email'))
-                                    ->required(),
+                                    ->placeholder(fn () => __('page.mail_settings.fields.placeholder.receiver_email')),
+                                    // ->required(),
                                 Forms\Components\Actions::make([
                                         Forms\Components\Actions\Action::make('Send Test Mail')
                                             ->label(fn () => __('page.mail_settings.actions.send_test_mail'))

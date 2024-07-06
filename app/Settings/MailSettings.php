@@ -8,6 +8,15 @@ class MailSettings extends Settings
 {
     public string $from_address;
     public string $from_name;
+    public string $to_address;
+    public string $to_barat;
+    public ?array $cc_barat;
+    public string $to_timur;
+    public ?array $cc_timur;
+    public string $to_pusat;
+    public ?array $cc_pusat;
+    public string $to_cass_barat;
+    public ?array $cc_cass_barat;
     public ?string $driver;
     public ?string $host;
     public int $port;
@@ -40,6 +49,15 @@ class MailSettings extends Settings
             'mail.mailers.smtp.password' => $data['password'] ?? $this->password,
             'mail.from.address' => $data['from_address'] ?? $this->from_address,
             'mail.from.name' => $data['from_name'] ?? $this->from_name,
+            'mail.to.address' => $data['to_address'] ?? $this->to_address,
+            'mail.to.barat' => $data['to_barat'] ?? $this->to_barat,
+            'mail.cc.barat' => $data['cc_barat'] ?? $this->cc_barat,
+            'mail.to.timur' => $data['to_timur'] ?? $this->to_timur,
+            'mail.cc.timur' => $data['cc_timur'] ?? $this->cc_timur,
+            'mail.to.pusat' => $data['to_pusat'] ?? $this->to_pusat,
+            'mail.cc.pusat' => $data['cc_pusat'] ?? $this->cc_pusat,
+            'mail.to.cass_barat' => $data['to_cass_barat'] ?? $this->to_cass_barat,
+            'mail.cc.cass_barat' => $data['cc_cass_barat'] ?? $this->cc_cass_barat,
         ]);
     }
 }
