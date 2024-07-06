@@ -197,10 +197,10 @@ class ReportingsRelationManager extends RelationManager
                                 if ($user->team && $user->team->name === 'Barat') {
                                     $mailTo = $settings->to_barat;
                                     $mailCc = $settings->cc_barat;
-                                } elseif ($user->team && $user->team->name === 'Pusat') {
+                                } elseif ($user->team && $user->team->name === 'Timur') {
                                     $mailTo = $settings->to_timur;
                                     $mailCc = $settings->cc_timur;
-                                } elseif ($user->team && $user->team->name === 'Timur') {
+                                } elseif ($user->team && $user->team->name === 'Pusat') {
                                     $mailTo = $settings->to_pusat;
                                     $mailCc = $settings->cc_pusat;
                                 } elseif ($user->team && $user->team->name === 'CASS Barat') {
