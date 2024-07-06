@@ -28,6 +28,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Shanerbaner82\PanelRoles\PanelRoles;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -122,6 +123,10 @@ class AdminPanelProvider extends PanelProvider
                     ->myProfileComponents([
                         'personal_info' => MyProfileExtended::class,
                     ]),
-            ]);
+            ])
+            ->plugin(PanelRoles::make()
+                // ->roleToAssign('staff')
+                ->restrictedRoles(['head','admin','super_admin']),
+            );
     }
 }
