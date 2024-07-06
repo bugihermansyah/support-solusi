@@ -1,17 +1,29 @@
 <?php
 
-namespace App\Filament\Resources\OutstandingResource\RelationManagers;
+namespace App\Filament\Support\Resources\OutstandingResource\RelationManagers;
 
+use App\Jobs\SupportMailJob;
+use App\Mail\SupportMail;
+use App\Models\Location;
+use App\Models\Outstanding;
+use App\Models\Reporting;
 use App\Models\Team;
+use App\Models\User;
+use App\Settings\MailSettings;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ReportingsRelationManager extends RelationManager
 {
@@ -33,16 +45,9 @@ class ReportingsRelationManager extends RelationManager
                             ->required(),
                         Forms\Components\Select::make('user_id')
                             ->label('Support')
-                            ->options(function () {
-                                $teams = Team::with('users')->get();
-                                $options = [];
-                                foreach ($teams as $team) {
-                                    $teamUsers = $team->users->pluck('name', 'id')->toArray();
-                                    $options[$team->name] = $teamUsers;
-                                }
-                                return $options;
-                            })
-                            ->searchable()
+                            ->options(User::all()->pluck('firstname', 'id'))
+                            ->default(Auth::user()->id)
+                            ->disabled()
                             ->required(),
                         Forms\Components\ToggleButtons::make('work')
                             ->label('Jenis Aksi')
@@ -155,7 +160,84 @@ class ReportingsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->extraModalFooterActions(fn (Action $action): array => [
+                        // $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
+                        //     ->label(__('filament-actions::create.single.modal.actions.create_another.label')),
+                        $action->makeModalSubmitAction('sendEmailAction', ['sendEmailArgument' => true])
+                            ->label('Buat & Kirim email')
+                    ])
+                    ->after(function (array $data, Model $record, array $arguments){
+                        if($arguments['sendEmailArgument'] ?? false){
+
+                            try {
+                                $reporting = Reporting::find($record->id);
+                                $mediaItems = $reporting->getMedia();
+
+                                $settings = app(MailSettings::class);
+                                $settings->loadMailSettingsToConfig($data);
+
+                                $outstanding = Outstanding::find($record->outstanding_id);
+                                $location = Location::find($outstanding->location_id);
+                                $dateLapor = Carbon::parse($outstanding->date_in)->format('d M Y');
+                                $dateVisit = Carbon::parse($data['date_visit'])->format('d M Y');
+                                $user = User::find($data['user_id']);
+                                $status = ($data['status'] == 1) ? 'Selesai' : 'Pending';
+
+                                $user = auth()->user();
+                                // Tentukan nilai $mailTo dan $mailCC berdasarkan tim pengguna
+                                if ($user->team->where('name', 'Barat')->exists()) {
+                                    $mailTo = $settings->to_barat;
+                                    $mailCc = $settings->cc_barat;
+                                } elseif ($user->team->where('name', 'Timur')->exists()) {
+                                    $mailTo = $settings->to_timur;
+                                    $mailCc = $settings->cc_timur;
+                                } elseif ($user->team->where('name', 'Pusat')->exists()) {
+                                    $mailTo = $settings->to_pusat;
+                                    $mailCc = $settings->cc_pusat;
+                                } elseif ($user->team->where('name', 'Cass Barat')->exists()) {
+                                    $mailTo = $settings->to_cass_barat;
+                                    $mailCc = $settings->cc_cass_barat;
+                                } else {
+                                    // Default atau tangani jika pengguna tidak termasuk dalam tim yang diharapkan
+                                    $mailTo = null;
+                                    $mailCc = [];
+                                }
+
+                                $mailData = [
+                                    'location' => $location->name,
+                                    'title' => $outstanding->title,
+                                    'date_lapor' => $dateLapor,
+                                    'date_visit' => $dateVisit,
+                                    'work' => $data['work'],
+                                    'pelapor' => $outstanding->reporter,
+                                    'support' => $user->firstname,
+                                    'masalah' => $outstanding->title,
+                                    'sebab' => $data['cause'],
+                                    'aksi' => $data['action'],
+                                    'solusi' => $data['solution'],
+                                    'status' => $status,
+                                    'note' => $data['note'],
+                                    'attachments' => $mediaItems->map(function ($media) {
+                                        return $media->getFullUrl();
+                                    })->toArray(),
+                                ];
+
+                                SupportMailJob::dispatch($mailTo, $mailCc, $mailData)->onQueue('emails');
+                                // Mail::to($mailTo)->cc($mailCc)->send(new SupportMail($mailData));
+
+                                Notification::make()
+                                    ->title('Email terkirim')
+                                    ->success()
+                                    ->send();
+                            } catch (\Exception $e) {
+                                Notification::make()
+                                    ->title('Gagal mengirim email: ' . $e->getMessage())
+                                    ->danger()
+                                    ->send();
+                            }
+                        }
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
