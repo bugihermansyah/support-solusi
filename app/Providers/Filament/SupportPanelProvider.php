@@ -46,6 +46,9 @@ class SupportPanelProvider extends PanelProvider
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Support/Resources'), for: 'App\\Filament\\Support\\Resources')
+            ->resources([
+                config('filament-logger.activity_resource')
+            ])
             ->discoverPages(in: app_path('Filament/Support/Pages'), for: 'App\\Filament\\Support\\Pages')
             ->pages([
                 // Pages\Dashboard::class,
