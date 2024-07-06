@@ -194,16 +194,16 @@ class ReportingsRelationManager extends RelationManager
 
                                 $user = auth()->user();
                                 // Tentukan nilai $mailTo dan $mailCC berdasarkan tim pengguna
-                                if ($user->team->where('name', 'Barat')->exists()) {
+                                if ($user->team && $user->team->name === 'Barat') {
                                     $mailTo = $settings->to_barat;
                                     $mailCc = $settings->cc_barat;
-                                } elseif ($user->team->where('name', 'Timur')->exists()) {
+                                } elseif ($user->team && $user->team->name === 'Pusat') {
                                     $mailTo = $settings->to_timur;
                                     $mailCc = $settings->cc_timur;
-                                } elseif ($user->team->where('name', 'Pusat')->exists()) {
+                                } elseif ($user->team && $user->team->name === 'Timur') {
                                     $mailTo = $settings->to_pusat;
                                     $mailCc = $settings->cc_pusat;
-                                } elseif ($user->team->where('name', 'Cass Barat')->exists()) {
+                                } elseif ($user->team && $user->team->name === 'CASS Barat') {
                                     $mailTo = $settings->to_cass_barat;
                                     $mailCc = $settings->cc_cass_barat;
                                 } else {
