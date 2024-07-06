@@ -3,7 +3,7 @@
         'name' => 'riodwanto/superduper-filament-starter-kit',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'd9e155d8c10b8bee21a0e35ac6fe9218b155d106',
+        'reference' => '8eec5230f994eea340358411f0ea3170390dedee',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1244,7 +1244,7 @@
         'riodwanto/superduper-filament-starter-kit' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd9e155d8c10b8bee21a0e35ac6fe9218b155d106',
+            'reference' => '8eec5230f994eea340358411f0ea3170390dedee',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1393,6 +1393,15 @@
             'install_path' => __DIR__ . '/../sebastian/version',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'shanerbaner82/panel-roles' => array(
+            'pretty_version' => 'v0.0.3',
+            'version' => '0.0.3.0',
+            'reference' => '86878c598a79eaaf178fbdbaed77cd387434faeb',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../shanerbaner82/panel-roles',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'spatie/backtrace' => array(
             'pretty_version' => '1.6.1',

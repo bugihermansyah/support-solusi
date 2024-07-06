@@ -39,6 +39,7 @@
         "laravel/tinker": "^2.8",
         "league/commonmark": "^2.4",
         "riodwanto/filament-ace-editor": "^1.0",
+        "shanerbaner82/panel-roles": "^0.0.3",
         "z3d0x/filament-logger": "^0.6.3"
     },
     "require-dev": {

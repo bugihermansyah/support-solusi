@@ -1,0 +1,28 @@
+{
+    "name": "shanerbaner82/panel-roles",
+    "description": "Filament Panel Roles is an intuitive way to ensure all users of a specified panel within Filament v3 is assigned a role during registration and has a specified role using Laravel Middleware.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Shanerbaner82\\PanelRoles\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "SD Rosenthal",
+            "email": "srosenthal82@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "filament/support": "^3.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Shanerbaner82\\PanelRoles\\PanelRolesServiceProvider"
+            ]
+        }
+    }
+}

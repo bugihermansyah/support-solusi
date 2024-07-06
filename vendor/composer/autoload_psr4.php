@@ -63,6 +63,7 @@ return array(
     'Spatie\\Color\\' => array($vendorDir . '/spatie/color/src'),
     'Spatie\\Backtrace\\' => array($vendorDir . '/spatie/backtrace/src'),
     'Spatie\\Activitylog\\' => array($vendorDir . '/spatie/laravel-activitylog/src'),
+    'Shanerbaner82\\PanelRoles\\' => array($vendorDir . '/shanerbaner82/panel-roles/src'),
     'RyanChandler\\BladeCaptureDirective\\Database\\Factories\\' => array($vendorDir . '/ryangjchandler/blade-capture-directive/database/factories'),
     'RyanChandler\\BladeCaptureDirective\\' => array($vendorDir . '/ryangjchandler/blade-capture-directive/src'),
     'Riodwanto\\FilamentAceEditor\\Database\\Factories\\' => array($vendorDir . '/riodwanto/filament-ace-editor/database/factories'),
