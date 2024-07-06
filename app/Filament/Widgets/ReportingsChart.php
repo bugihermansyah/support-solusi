@@ -55,11 +55,13 @@ class ReportingsChart extends ChartWidget
                     $query->whereIn('location_id', $locationIds);
                 })
             )
+            ->dateColumn('date_visit')
             ->between(start: $start, end: $end)
             ->$interval()
             ->count();
 
         $outstandingData = Trend::query(Outstanding::whereIn('location_id', $locationIds))
+            ->dateColumn('date_in')
             ->between(start: $start, end: $end)
             ->$interval()
             ->count();
