@@ -55,8 +55,7 @@ class MyProfileExtended extends MyProfileComponent
             ->schema([
                 SpatieMediaLibraryFileUpload::make('media')->label('Avatar')
                         ->collection('avatars')
-                        ->avatar()
-                        ->required(),
+                        ->avatar(),
                     Grid::make()->schema([
                         TextInput::make('username')
                             ->disabled()
