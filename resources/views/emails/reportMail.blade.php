@@ -5,22 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Details</title>
     <style>
-        /* CSS untuk styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: Trebuchet MS, sans-serif;
             line-height: 1.6;
             background-color: #f4f4f4;
-            padding: 20px;
+            padding: 30px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-size: 13px;
         }
         th, td {
-            padding: 8px;
+            padding: 5px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+        }
+        .top {
+            vertical-align: top;
         }
         th {
             background-color: #4CAF50;
@@ -34,7 +37,7 @@
             <th colspan="2">Detail Laporan</th>
         </tr>
         <tr>
-            <td style="width: 25%;">Tanggal Lapor :</td>
+            <td style="width: 30%;">Tanggal Lapor :</td>
             <td>{{ $data['date_lapor'] }}</td>
         </tr>
         <tr>
@@ -50,7 +53,7 @@
             <td>{{ $data['pelapor'] }}</td>
         </tr>
         <tr>
-            <td colspan="2"><br></td> <!-- Untuk memberi jarak antara bagian atas dan bagian bawah -->
+            <td colspan="2"><br></td>
         </tr>
         <tr>
             <td>Masalah :</td>
@@ -61,16 +64,16 @@
             <td>{!! $data['sebab'] !!}</td>
         </tr>
         <tr>
-            <td>Aksi :</td>
-            <td>{!! $data['aksi'] !!}{!! $data['solusi'] !!}</td>
+            <td class="top">Aksi :</td>
+            <td class="top">{!! $data['aksi'] !!}{!! $data['solusi'] !!}</td>
         </tr>
         <tr>
             <td>Status :</td>
             <td>{{ $data['status'] }}</td>
         </tr>
         <tr>
-            <td>Keterangan :</td>
-            <td>{!! $data['note'] !!}</td>
+            <td class="top">Keterangan :</td>
+            <td class="top">{!! $data['note'] !!}</td>
         </tr>
     </table>
 </body>
