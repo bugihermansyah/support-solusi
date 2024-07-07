@@ -7,6 +7,7 @@ use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\RequestPasswordReset;
 use App\Filament\Resources\EvaluationResource;
 use App\Filament\Resources\OutstandingResource;
+use App\Filament\Resources\QuickOutstandingResource;
 use App\Livewire\MyProfileExtended;
 use App\Settings\GeneralSettings;
 use Awcodes\FilamentGravatar\GravatarPlugin;
@@ -92,7 +93,9 @@ class AdminPanelProvider extends PanelProvider
                     ->size(200)
                     ->rating('pg'),
                 QuickCreatePlugin::make()
+                    ->sort(false)
                     ->includes([
+                        QuickOutstandingResource::class,
                         EvaluationResource::class,
                         OutstandingResource::class,
                     ]),

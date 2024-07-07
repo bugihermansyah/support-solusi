@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Responses\StaffLoginResponse;
+use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as LoginResponseContract;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Enums\FiltersLayout;
@@ -26,12 +27,18 @@ class AppServiceProvider extends ServiceProvider
     {
         Table::configureUsing(function (Table $table): void {
             $table
-                ->emptyStateHeading('No data yet')
+                ->emptyStateHeading('Belum ada data nih.')
                 ->striped()
                 ->defaultPaginationPageOption(10)
-                ->paginated([10, 25, 50, 100])
+                ->paginated([10, 25, 50])
                 ->extremePaginationLinks()
                 ->defaultSort('created_at', 'desc');
         });
+        FilamentShield::configurePermissionIdentifierUsing(
+            fn($resource) => str($resource::getModel())
+                ->afterLast('\\')
+                ->lower()
+                ->toString()
+        );
     }
 }

@@ -247,13 +247,6 @@ class OutstandingResource extends Resource
                 ->label('Lapor')
                 ->date()
                 ->sortable(),
-            // Tables\Columns\TextColumn::make('date_visit')
-            //     ->label('Visit date')
-            //     ->date(),
-            // Tables\Columns\TextColumn::make('date_finish')
-            //     ->label('Finish date')
-            //     ->date()
-            //     ->sortable(),
             Tables\Columns\TextColumn::make('reportings_count')
                 ->label('Aksi')
                 ->suffix('x')

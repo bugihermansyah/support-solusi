@@ -29,7 +29,9 @@ class Outstanding extends Model implements HasMedia
         'lpm',
         'is_implement',
         'is_type_problem',
-        'status'
+        'status',
+        'user_id',
+        'create_user_id'
     ];
 
     protected $casts = [
