@@ -46,7 +46,11 @@ class OpenOutstandings extends BaseWidget
                     ->searchable(),
                 Tables\Columns\TextColumn::make('date_in')
                     ->label('Lapor')
-                    ->since(),
+                    ->formatStateUsing(function ($state) {
+                        $createdDate = Carbon::parse($state);
+                        $daysDifference = $createdDate->subDays(1)->longAbsoluteDiffForHumans();
+                        return $daysDifference;
+                    }),
                 Tables\Columns\TextColumn::make('reportings_count')
                     ->label('Aksi')
                     ->prefix('x')
