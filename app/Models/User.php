@@ -110,4 +110,12 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     {
         return $this->hasMany(Evaluation::class);
     }
+
+    public function scopeWithRoleInSpecificLocation($query, $role, $locationId)
+    {
+        return $query->role($role)
+            ->whereHas('team.locations', function ($query) use ($locationId) {
+                $query->where('id', $locationId);
+            });
+    }
 }
