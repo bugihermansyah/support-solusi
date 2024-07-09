@@ -48,7 +48,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
             ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
             ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
-            // ->databaseNotifications()->databaseNotificationsPolling('30s')
+            ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->navigationGroups([
                 'Main',
                 'Reports',
@@ -95,9 +95,9 @@ class AdminPanelProvider extends PanelProvider
                 QuickCreatePlugin::make()
                     ->sort(false)
                     ->includes([
-                        QuickOutstandingResource::class,
+                        // QuickOutstandingResource::class,
+                        // OutstandingResource::class,
                         EvaluationResource::class,
-                        OutstandingResource::class,
                     ]),
                 // \BezhanSalleh\FilamentExceptions\FilamentExceptionsPlugin::make(),
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
