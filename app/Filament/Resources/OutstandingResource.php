@@ -88,7 +88,7 @@ class OutstandingResource extends Resource
                         ])
                         ->columns(4),
 
-                    Forms\Components\Section::make('Informasi tanggal')
+                    Forms\Components\Fieldset::make('Informasi tanggal')
                         ->schema([
                             Forms\Components\DatePicker::make('date_in')
                                 ->label('Awal')
@@ -96,19 +96,32 @@ class OutstandingResource extends Resource
                                 ->maxDate(now())
                                 ->native(false)
                                 ->required(),
+                            Forms\Components\Select::make('user_id')
+                                ->label('Jadwal')
+                                ->options(function () {
+                                    $teams = Team::with('users')->get();
+                                    $options = [];
+
+                                    foreach ($teams as $team) {
+                                        $teamUsers = $team->users->pluck('name', 'id')->toArray();
+                                        $options[$team->name] = $teamUsers;
+                                    }
+
+                                    return $options;
+                                })
+                                ->searchable(),
                             Forms\Components\DatePicker::make('date_visit')
                                 ->label('Visit/Remote')
-                                ->native(false)
-                                ->maxDate(now()),
+                                ->native(false),
+                                // ->maxDate(now()),
                             Forms\Components\DatePicker::make('date_finish')
                                 ->label('Selesai')
                                 ->native(false)
                                 ->maxDate(now()),
                         ])
-                        ->collapsible()
-                        ->columns(3),
+                        ->columns(4),
 
-                    Forms\Components\Section::make('Tipe masalah')
+                    Forms\Components\Fieldset::make('Tipe masalah')
                         ->schema([
                             Forms\Components\ToggleButtons::make('is_type_problem')
                                 ->label('')
@@ -121,39 +134,30 @@ class OutstandingResource extends Resource
                                 ->default(3)
                                 ->inline()
                                 ->inlineLabel(false),
-                        ])
-                        ->collapsible(),
-                        // ->columns(3),
-
-                    Forms\Components\Section::make('Informasi status')
-                        ->schema([
-                            Forms\Components\Checkbox::make('lpm')
-                                ->label('Laporan Pertama Masuk'),
-                            Forms\Components\Checkbox::make('is_implement')
-                                ->label('Implementasi'),
-                            Forms\Components\Checkbox::make('status')
-                                ->label('Status Closed'),
-                        ])
-                        ->collapsible()
-                        ->columns(3),
-                    Group::make()
-                        ->schema([
-                            Forms\Components\Section::make('Gambar')
-                                ->schema([
-                                    SpatieMediaLibraryFileUpload::make('image')
-                                        ->imageEditor()
-                                        ->resize(20)
-                                        ->openable(),
-                                ])
-                                ->columnSpan(2)
-                                ->collapsed(),
-                        ])
-                        ->columns(4)
+                                ]),
                 ])
                 ->columnSpan(['lg' => 2]),
 
             Forms\Components\Group::make()
                 ->schema([
+                    Forms\Components\Fieldset::make('Informasi status')
+                        ->schema([
+                            Forms\Components\Checkbox::make('lpm')
+                                ->label('LPM'),
+                            Forms\Components\Checkbox::make('is_implement')
+                                ->label('Implementasi'),
+                            Forms\Components\Checkbox::make('status')
+                                ->label('Status Closed'),
+                        ]),
+                    Forms\Components\Section::make('Gambar')
+                        ->schema([
+                            SpatieMediaLibraryFileUpload::make('image')
+                                ->imageEditor()
+                                ->resize(20)
+                                ->openable(),
+                        ])
+                        ->collapsed(),
+
                     Forms\Components\Section::make('Unit')
                         ->schema([
                             TableRepeater::make('outstandingunits')
@@ -196,11 +200,11 @@ class OutstandingResource extends Resource
                 ])
                 ->columnSpan(['lg' => 1]),
 
-            Forms\Components\Group::make()
-                ->schema([
-                    static::getItemsRepeater(),
-                ])
-                ->columnSpanFull(),
+            // Forms\Components\Group::make()
+            //     ->schema([
+            //         static::getItemsRepeater(),
+            //     ])
+            //     ->columnSpanFull(),
         ])
         ->columns(3);
     }
