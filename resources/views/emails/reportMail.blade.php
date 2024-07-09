@@ -15,7 +15,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
-            font-size: 13px;
+            font-size: 14px;
         }
         th, td {
             padding: 5px;
