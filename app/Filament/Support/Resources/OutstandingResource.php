@@ -43,11 +43,6 @@ class OutstandingResource extends Resource
                 ->schema([
                     Forms\Components\Section::make()
                         ->schema([
-                            Forms\Components\TextInput::make('number')
-                                ->label('No. Tiket')
-                                ->default('SP-' .Carbon::now()->format('ym').''.(random_int(100000, 999999)))
-                                ->required()
-                                ->disabled(),
                             Forms\Components\Select::make('location_id')
                                 ->label('Lokasi')
                                 ->options(Location::query()->pluck('name', 'id'))
