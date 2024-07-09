@@ -2,19 +2,19 @@
 
 namespace App\Filament\Support\Resources\OutstandingResource\RelationManagers;
 
+use App\Filament\Resources\OutstandingResource as ResourcesOutstandingResource;
+use App\Filament\Support\Resources\OutstandingResource;
 use App\Jobs\SupportMailJob;
-use App\Mail\SupportMail;
 use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Reporting;
-use App\Models\Team;
 use App\Models\User;
 use App\Settings\MailSettings;
 use Carbon\Carbon;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
+use Filament\Notifications\Actions\Action as ActionsAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class ReportingsRelationManager extends RelationManager
 {
@@ -43,11 +42,11 @@ class ReportingsRelationManager extends RelationManager
                             ->default(Carbon::now())
                             ->native(false)
                             ->required(),
-                        Forms\Components\Select::make('user_id')
-                            ->label('Support')
-                            ->options(User::all()->pluck('firstname', 'id'))
-                            ->default(Auth::user()->id)
-                            ->disabled(),
+                        // Forms\Components\Select::make('user_id')
+                        //     ->label('Support')
+                        //     ->options(User::all()->pluck('firstname', 'id'))
+                        //     ->default(Auth::user()->id)
+                        //     ->disabled(),
                         Forms\Components\ToggleButtons::make('work')
                             ->label('Jenis Aksi')
                             ->inline()
@@ -96,7 +95,7 @@ class ReportingsRelationManager extends RelationManager
                                 'orderedList',
                             ])
                             ->extraInputAttributes([
-                                'style' => 'min-height: 100px;',
+                                'style' => 'min-height: 90px;',
                             ]),
                         Forms\Components\RichEditor::make('solution')
                             ->label('Solusi')
@@ -107,7 +106,7 @@ class ReportingsRelationManager extends RelationManager
                                 'orderedList',
                             ])
                             ->extraInputAttributes([
-                                'style' => 'min-height: 100px;',
+                                'style' => 'min-height: 70px;',
                             ]),
 
                         Forms\Components\RichEditor::make('note')
@@ -119,7 +118,7 @@ class ReportingsRelationManager extends RelationManager
                                 'orderedList',
                             ])
                             ->extraInputAttributes([
-                                'style' => 'min-height: 100px;',
+                                'style' => 'min-height: 70px;',
                             ])
                             ->columnSpanFull(),
                         SpatieMediaLibraryFileUpload::make('attachments')
@@ -141,19 +140,27 @@ class ReportingsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('user.firstname')
                     ->label('Support'),
                 Tables\Columns\TextColumn::make('work')
+                    ->formatStateUsing(fn (string $state): string => ucwords($state))
                     ->label('Tipe Aksi'),
                 Tables\Columns\TextColumn::make('cause')
                     ->label('Sebab')
+                    ->wrap()
                     ->html(),
                 Tables\Columns\TextColumn::make('action')
                     ->label('Aksi')
+                    ->wrap()
                     ->html(),
                 Tables\Columns\TextColumn::make('solution')
                     ->label('Solusi')
+                    ->wrap()
                     ->html(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge(),
+                Tables\Columns\TextColumn::make('note')
+                    ->label('Keterangan')
+                    ->wrap()
+                    ->html(),
             ])
             ->filters([
                 //
@@ -176,12 +183,46 @@ class ReportingsRelationManager extends RelationManager
                             ->label('Buat & Kirim email')
                     ])
                     ->after(function (array $data, Model $record, array $arguments){
+
+                        $report = Reporting::find($record->id);
+                        $outstanding = Outstanding::find($report->outstanding_id);
+                        $location = Location::find($outstanding->location_id);
+                        $status = ($report->status == 1) ? 'Selesai' : 'Pending';
+
+                        $user = auth()->user();
+
+                        $userLocation = $outstanding->location?->user_id;
+
+                        $sendUserHeadLocation = User::withRoleInSpecificLocation('Head', $location->id)->first();
+                        $sendUserLocation = User::find($userLocation);
+
+                        Notification::make()
+                            ->title("{$user->firstname} {$user->lastname}")
+                            ->icon('heroicon-o-document-plus')
+                            ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
+                            ->actions([
+                                ActionsAction::make('Lihat')
+                                ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
+                            ])
+                            ->sendToDatabase($sendUserLocation);
+
+                        Notification::make()
+                            ->title("{$user->firstname} {$user->lastname}")
+                            ->icon('heroicon-o-document-plus')
+                            ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
+                            ->actions([
+                                ActionsAction::make('Lihat')
+                                ->url(ResourcesOutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'admin')),
+                            ])
+                            ->sendToDatabase($sendUserHeadLocation);
+
                         if($arguments['sendEmailArgument'] ?? false){
 
                             try {
                                 $reporting = Reporting::find($record->id);
                                 $mediaItems = $reporting->getMedia();
 
+                                // dd($record->id, $reporting, $mediaItems);
                                 $settings = app(MailSettings::class);
                                 $settings->loadMailSettingsToConfig($data);
 
@@ -193,7 +234,7 @@ class ReportingsRelationManager extends RelationManager
                                 $status = ($data['status'] == 1) ? 'Selesai' : 'Pending';
 
                                 $user = auth()->user();
-                                // Tentukan nilai $mailTo dan $mailCC berdasarkan tim pengguna
+
                                 if ($user->team && $user->team->name === 'Barat') {
                                     $mailTo = $settings->to_barat;
                                     $mailCc = $settings->cc_barat;
@@ -207,7 +248,6 @@ class ReportingsRelationManager extends RelationManager
                                     $mailTo = $settings->to_cass_barat;
                                     $mailCc = $settings->cc_cass_barat;
                                 } else {
-                                    // Default atau tangani jika pengguna tidak termasuk dalam tim yang diharapkan
                                     $mailTo = null;
                                     $mailCc = [];
                                 }
@@ -232,7 +272,6 @@ class ReportingsRelationManager extends RelationManager
                                 ];
 
                                 SupportMailJob::dispatch($mailTo, $mailCc, $mailData)->onQueue('emails');
-                                // Mail::to($mailTo)->cc($mailCc)->send(new SupportMail($mailData));
 
                                 Notification::make()
                                     ->title('Email terkirim')
@@ -248,8 +287,14 @@ class ReportingsRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
-                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah')
+                    ->visible(function ($record) {
+                        return $record->user_id === Auth::id();
+                    }),
+                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus')
+                    ->visible(function ($record) {
+                        return $record->user_id === Auth::id();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
