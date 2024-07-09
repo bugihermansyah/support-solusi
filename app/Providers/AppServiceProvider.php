@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
                 ->emptyStateHeading('Belum ada data nih.')
                 ->striped()
                 ->defaultPaginationPageOption(10)
-                ->paginated([10, 25, 50])
+                ->paginated([5, 10, 25, 50])
                 ->extremePaginationLinks()
                 ->defaultSort('created_at', 'desc');
         });
