@@ -2,6 +2,7 @@
 
 namespace App\Filament\Support\Widgets;
 
+use App\Filament\Resources\OutstandingResource;
 use App\Jobs\SupportMailJob;
 use App\Models\Location;
 use App\Models\Outstanding;
@@ -9,13 +10,15 @@ use App\Models\Reporting;
 use App\Models\User;
 use App\Settings\MailSettings;
 use Carbon\Carbon;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Textarea;
+use Filament\Tables\Actions\EditAction;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Notifications\Actions\Action as ActionsAction;
 use Filament\Notifications\Notification;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
@@ -23,36 +26,56 @@ use Illuminate\Support\Facades\Auth;
 
 class ScheduleOutstandings extends BaseWidget
 {
-    protected static string $relationship = 'reportings';
+    protected static ?int $sort = 1;
 
     public function table(Table $table): Table
     {
         $user = Auth::user();
         return $table
+            ->defaultPaginationPageOption(5)
             ->query(
-                Outstanding::query()
+                Reporting::query()
                     ->where('user_id', $user->id)
-                    ->where('status', 0)
+                    ->where('status', null)
             )
             ->columns([
-                Tables\Columns\TextColumn::make('date_visit')
-                    ->label('Jadwal')
-                    ->date(),
-                Tables\Columns\TextColumn::make('location.name')
-                    ->label('Lokasi')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('title')
-                ->label('Masalah'),
-                Tables\Columns\TextColumn::make('reportings_count')
-                    ->label('Aksi')
-                    ->prefix('x')
-                    ->sortable()
-                    ->counts('reportings'),
+                Split::make([
+                    Tables\Columns\TextColumn::make('date_visit')
+                        ->label('Jadwal')
+                        ->icon('heroicon-m-briefcase')
+                        ->weight(FontWeight::Bold)
+                        ->grow(false)
+                        ->date(),
+                        Split::make([
+                    Tables\Columns\TextColumn::make('outstanding.location.name')
+                        ->label('Lokasi')
+                        ->icon('heroicon-m-map-pin')
+                        ->weight(FontWeight::Bold)
+                        ->grow(false)
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('outstanding.title')
+                        ->label('Masalah')
+                        ->icon('heroicon-m-inbox-arrow-down')
+                        ->searchable(),
+                        ])->from('md')
+                ])
+                ->from('md'),
             ])
             ->actions([
-                Action::make('createReport')
+                EditAction::make('updateReport')
                     ->label('Report')
+                    ->icon('heroicon-m-document-plus')
                     ->modalHeading('Buat Laporan')
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['user_id'] = auth()->id();
+
+                        return $data;
+                    })
+                    ->using(function (Model $record, array $data): Model {
+                        $record->update($data);
+
+                        return $record;
+                    })
                     ->form([
                         Forms\Components\Grid::make(2)
                         ->schema([
@@ -62,13 +85,7 @@ class ScheduleOutstandings extends BaseWidget
                                         ->label('Tanggal Aksi')
                                         ->default(Carbon::now())
                                         ->native(false)
-                                        ->required(),
-                                    Forms\Components\Select::make('user_id')
-                                        ->label('Support')
-                                        ->options(User::all()->pluck('firstname', 'id'))
-                                        ->default(Auth::user()->id)
-                                        ->disabled()
-                                        ->dehydrated()
+                                        ->columnSpanFull()
                                         ->required(),
                                     Forms\Components\ToggleButtons::make('work')
                                         ->label('Jenis Aksi')
@@ -127,7 +144,7 @@ class ScheduleOutstandings extends BaseWidget
                                             'orderedList',
                                         ])
                                         ->extraInputAttributes([
-                                            'style' => 'min-height: 100px;',
+                                            'style' => 'min-height: 90px;',
                                         ]),
                                     Forms\Components\RichEditor::make('solution')
                                         ->label('Solusi')
@@ -138,7 +155,7 @@ class ScheduleOutstandings extends BaseWidget
                                             'orderedList',
                                         ])
                                         ->extraInputAttributes([
-                                            'style' => 'min-height: 100px;',
+                                            'style' => 'min-height: 70px;',
                                         ]),
 
                                     Forms\Components\RichEditor::make('note')
@@ -150,41 +167,57 @@ class ScheduleOutstandings extends BaseWidget
                                             'orderedList',
                                         ])
                                         ->extraInputAttributes([
-                                            'style' => 'min-height: 100px;',
+                                            'style' => 'min-height: 70px;',
                                         ])
                                         ->columnSpanFull(),
                                 ]),
                         ]),
                     ])
-                    ->action(function (array $data, Outstanding $record) {
-                        Reporting::create([
-                            'outstanding_id' => $record->id,
-                            'cause' => $data['cause'],
-                            'action' => $data['action'],
-                            'solution' => $data['solution'],
-                            'work' => $data['work'],
-                            'date_visit' => $data['date_visit'],
-                            'user_id' => $data['user_id'],
-                            'status' => $data['status'],
-                            'note' => $data['note']
-                        ]);
-
-                        Notification::make()
-                            ->title('Laporan berhasil dibuat')
-                            ->success()
-                            ->send();
-                    })
                     ->extraModalFooterActions(fn (Action $action): array => [
                         $action->makeModalSubmitAction('sendEmailAction', ['sendEmailArgument' => true])
-                            ->label('Buat & Kirim email')
+                            ->label('Simpan & Kirim email')
                     ])
                     ->after(function (array $data, Model $record, array $arguments){
+
+                        $report = Reporting::find($record->id);
+                        $outstanding = Outstanding::find($report->outstanding_id);
+                        $location = Location::find($outstanding->location_id);
+                        $status = ($report->status == 1) ? 'Selesai' : 'Pending';
+
+                        $user = auth()->user();
+
+                        $userLocation = $outstanding->location?->user_id;
+
+                        $sendUserHeadLocation = User::withRoleInSpecificLocation('Head', $location->id)->first();
+                        $sendUserLocation = User::find($userLocation);
+
+                        Notification::make()
+                            ->title("{$user->firstname} {$user->lastname}")
+                            ->icon('heroicon-o-document-plus')
+                            ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
+                            ->actions([
+                                ActionsAction::make('Lihat')
+                                ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
+                            ])
+                            ->sendToDatabase($sendUserLocation);
+
+                        Notification::make()
+                            ->title("{$user->firstname} {$user->lastname}")
+                            ->icon('heroicon-o-document-plus')
+                            ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
+                            ->actions([
+                                ActionsAction::make('Lihat')
+                                ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'admin')),
+                            ])
+                            ->sendToDatabase($sendUserHeadLocation);
+
                         if($arguments['sendEmailArgument'] ?? false){
 
                             try {
                                 $reporting = Reporting::find($record->id);
                                 $mediaItems = $reporting->getMedia();
 
+                                // dd($record->id, $reporting, $mediaItems);
                                 $settings = app(MailSettings::class);
                                 $settings->loadMailSettingsToConfig($data);
 
@@ -196,7 +229,7 @@ class ScheduleOutstandings extends BaseWidget
                                 $status = ($data['status'] == 1) ? 'Selesai' : 'Pending';
 
                                 $user = auth()->user();
-                                // Tentukan nilai $mailTo dan $mailCC berdasarkan tim pengguna
+
                                 if ($user->team && $user->team->name === 'Barat') {
                                     $mailTo = $settings->to_barat;
                                     $mailCc = $settings->cc_barat;
@@ -210,7 +243,6 @@ class ScheduleOutstandings extends BaseWidget
                                     $mailTo = $settings->to_cass_barat;
                                     $mailCc = $settings->cc_cass_barat;
                                 } else {
-                                    // Default atau tangani jika pengguna tidak termasuk dalam tim yang diharapkan
                                     $mailTo = null;
                                     $mailCc = [];
                                 }
@@ -235,7 +267,6 @@ class ScheduleOutstandings extends BaseWidget
                                 ];
 
                                 SupportMailJob::dispatch($mailTo, $mailCc, $mailData)->onQueue('emails');
-                                // Mail::to($mailTo)->cc($mailCc)->send(new SupportMail($mailData));
 
                                 Notification::make()
                                     ->title('Email terkirim')
