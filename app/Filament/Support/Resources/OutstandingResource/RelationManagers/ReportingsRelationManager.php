@@ -187,7 +187,7 @@ class ReportingsRelationManager extends RelationManager
                         $report = Reporting::find($record->id);
                         $outstanding = Outstanding::find($report->outstanding_id);
                         $location = Location::find($outstanding->location_id);
-                        $status = ($report->status == 1) ? 'Selesai' : 'Pending';
+                        $status = ($data['status'] == 1) ? 'Selesai' : 'Pending';
 
                         $user = auth()->user();
 
