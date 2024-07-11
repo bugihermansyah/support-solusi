@@ -8,6 +8,7 @@ use App\Filament\Resources\OutstandingResource\RelationManagers;
 use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Product;
+use App\Models\Reporting;
 use App\Models\Team;
 use App\Models\Unit;
 use Awcodes\TableRepeater\Components\TableRepeater;
@@ -20,6 +21,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -273,6 +275,39 @@ class OutstandingResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('assign')
+                    ->label('Assign')
+                    ->form([
+                        Forms\Components\DatePicker::make('date_visit')
+                            ->label('Visit/Remote')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\Select::make('user_id')
+                            ->label('Support')
+                            ->options(function () {
+                                $teams = Team::with('users')->get();
+                                $options = [];
+
+                                foreach ($teams as $team) {
+                                    $teamUsers = $team->users->pluck('name', 'id')->toArray();
+                                    $options[$team->name] = $teamUsers;
+                                }
+
+                                return $options;
+                            })
+                            ->required(),
+                    ])
+                    ->action(function (array $data, Outstanding $record): void {
+                        // Create a new Reporting instance and associate it with the Outstanding record
+                        $reporting = new Reporting();
+                        $reporting->date_visit = $data['date_visit'];
+                        $reporting->user_id = $data['user_id'];
+                        $reporting->status = null;
+                        $reporting->outstanding_id = $record->id;
+                        $reporting->save();
+
+                        $record->save();
+                    }),
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
                 Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
             ])
