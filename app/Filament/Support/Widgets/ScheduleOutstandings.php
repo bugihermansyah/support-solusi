@@ -122,7 +122,7 @@ class ScheduleOutstandings extends BaseWidget
                                         ->image()
                                         ->multiple()
                                         ->resize(30)
-                                        ->maxSize(2048)
+                                        ->maxSize(7000)
                                         ->maxFiles(10)
                                         ->preserveFilenames()
                                         ->columnSpanFull()
