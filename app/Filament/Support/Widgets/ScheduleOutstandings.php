@@ -191,15 +191,17 @@ class ScheduleOutstandings extends BaseWidget
                         $sendUserHeadLocation = User::withRoleInSpecificLocation('Head', $location->id)->first();
                         $sendUserLocation = User::find($userLocation);
 
-                        Notification::make()
-                            ->title("{$user->firstname} {$user->lastname}")
-                            ->icon('heroicon-o-document-plus')
-                            ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
-                            ->actions([
-                                ActionsAction::make('Lihat')
-                                ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
-                            ])
-                            ->sendToDatabase($sendUserLocation);
+                        if($location->user_id !== null){
+                            Notification::make()
+                                ->title("{$user->firstname} {$user->lastname}")
+                                ->icon('heroicon-o-document-plus')
+                                ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
+                                ->actions([
+                                    ActionsAction::make('Lihat')
+                                    ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
+                                ])
+                                ->sendToDatabase($sendUserLocation);
+                        }
 
                         Notification::make()
                             ->title("{$user->firstname} {$user->lastname}")
