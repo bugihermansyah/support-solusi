@@ -185,127 +185,127 @@ class ReportingsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->mutateFormDataUsing(function (array $data): array {
-                        $data['user_id'] = auth()->id();
-                        $data['outstanding_id'] = $this->ownerRecord->id;
+                // Tables\Actions\CreateAction::make()
+                //     ->mutateFormDataUsing(function (array $data): array {
+                //         $data['user_id'] = auth()->id();
+                //         $data['outstanding_id'] = $this->ownerRecord->id;
 
-                        return $data;
-                    })
-                    ->using(function (array $data, string $model): Model {
-                        return $model::create($data);
-                    })
-                    ->extraModalFooterActions(fn (Action $action): array => [
-                        // $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
-                        //     ->label(__('filament-actions::create.single.modal.actions.create_another.label')),
-                        $action->makeModalSubmitAction('sendEmailAction', ['sendEmailArgument' => true])
-                            ->label('Buat & Kirim email')
-                    ])
-                    ->after(function (array $data, Model $record, array $arguments){
+                //         return $data;
+                //     })
+                //     ->using(function (array $data, string $model): Model {
+                //         return $model::create($data);
+                //     })
+                //     ->extraModalFooterActions(fn (Action $action): array => [
+                //         // $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
+                //         //     ->label(__('filament-actions::create.single.modal.actions.create_another.label')),
+                //         $action->makeModalSubmitAction('sendEmailAction', ['sendEmailArgument' => true])
+                //             ->label('Buat & Kirim email')
+                //     ])
+                //     ->after(function (array $data, Model $record, array $arguments){
 
-                        $report = Reporting::find($record->id);
-                        $outstanding = Outstanding::find($report->outstanding_id);
-                        $location = Location::find($outstanding->location_id);
-                        $status = ($data['status'] == 1) ? 'Selesai' : 'Pending';
+                //         $report = Reporting::find($record->id);
+                //         $outstanding = Outstanding::find($report->outstanding_id);
+                //         $location = Location::find($outstanding->location_id);
+                //         $status = ($data['status'] == 1) ? 'Selesai' : 'Pending';
 
-                        $user = auth()->user();
+                //         $user = auth()->user();
 
-                        $userLocation = $outstanding->location?->user_id;
+                //         $userLocation = $outstanding->location?->user_id;
 
-                        $sendUserHeadLocation = User::withRoleInSpecificLocation('Head', $location->id)->first();
-                        $sendUserLocation = User::find($userLocation);
+                //         $sendUserHeadLocation = User::withRoleInSpecificLocation('Head', $location->id)->first();
+                //         $sendUserLocation = User::find($userLocation);
 
-                        if($location->user_id !== null) {
-                            Notification::make()
-                                ->title("{$user->firstname} {$user->lastname}")
-                                ->icon('heroicon-o-document-plus')
-                                ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
-                                ->actions([
-                                    ActionsAction::make('Lihat')
-                                    ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
-                                ])
-                                ->sendToDatabase($sendUserLocation);
-                        }
+                //         if($location->user_id !== null) {
+                //             Notification::make()
+                //                 ->title("{$user->firstname} {$user->lastname}")
+                //                 ->icon('heroicon-o-document-plus')
+                //                 ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
+                //                 ->actions([
+                //                     ActionsAction::make('Lihat')
+                //                     ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
+                //                 ])
+                //                 ->sendToDatabase($sendUserLocation);
+                //         }
 
-                        Notification::make()
-                            ->title("{$user->firstname} {$user->lastname}")
-                            ->icon('heroicon-o-document-plus')
-                            ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
-                            ->actions([
-                                ActionsAction::make('Lihat')
-                                ->url(ResourcesOutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'admin')),
-                            ])
-                            ->sendToDatabase($sendUserHeadLocation);
+                //         Notification::make()
+                //             ->title("{$user->firstname} {$user->lastname}")
+                //             ->icon('heroicon-o-document-plus')
+                //             ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
+                //             ->actions([
+                //                 ActionsAction::make('Lihat')
+                //                 ->url(ResourcesOutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'admin')),
+                //             ])
+                //             ->sendToDatabase($sendUserHeadLocation);
 
-                        if($arguments['sendEmailArgument'] ?? false){
+                //         if($arguments['sendEmailArgument'] ?? false){
 
-                            try {
-                                $reporting = Reporting::find($record->id);
-                                $mediaItems = $reporting->getMedia();
+                //             try {
+                //                 $reporting = Reporting::find($record->id);
+                //                 $mediaItems = $reporting->getMedia();
 
-                                // dd($record->id, $reporting, $mediaItems);
-                                $settings = app(MailSettings::class);
-                                $settings->loadMailSettingsToConfig($data);
+                //                 // dd($record->id, $reporting, $mediaItems);
+                //                 $settings = app(MailSettings::class);
+                //                 $settings->loadMailSettingsToConfig($data);
 
-                                $outstanding = Outstanding::find($record->outstanding_id);
-                                $location = Location::find($outstanding->location_id);
-                                $dateLapor = Carbon::parse($outstanding->date_in)->format('d M Y');
-                                $dateVisit = Carbon::parse($data['date_visit'])->format('d M Y');
-                                $user = User::find($data['user_id']);
-                                $status = ($data['status'] == 1) ? 'Selesai' : 'Pending';
+                //                 $outstanding = Outstanding::find($record->outstanding_id);
+                //                 $location = Location::find($outstanding->location_id);
+                //                 $dateLapor = Carbon::parse($outstanding->date_in)->format('d M Y');
+                //                 $dateVisit = Carbon::parse($data['date_visit'])->format('d M Y');
+                //                 $user = User::find($data['user_id']);
+                //                 $status = ($data['status'] == 1) ? 'Selesai' : 'Pending';
 
-                                $user = auth()->user();
+                //                 $user = auth()->user();
 
-                                if ($user->team && $user->team->name === 'Barat') {
-                                    $mailTo = $settings->to_barat;
-                                    $mailCc = $settings->cc_barat;
-                                } elseif ($user->team && $user->team->name === 'Timur') {
-                                    $mailTo = $settings->to_timur;
-                                    $mailCc = $settings->cc_timur;
-                                } elseif ($user->team && $user->team->name === 'Pusat') {
-                                    $mailTo = $settings->to_pusat;
-                                    $mailCc = $settings->cc_pusat;
-                                } elseif ($user->team && $user->team->name === 'CASS Barat') {
-                                    $mailTo = $settings->to_cass_barat;
-                                    $mailCc = $settings->cc_cass_barat;
-                                } else {
-                                    $mailTo = null;
-                                    $mailCc = [];
-                                }
+                //                 if ($user->team && $user->team->name === 'Barat') {
+                //                     $mailTo = $settings->to_barat;
+                //                     $mailCc = $settings->cc_barat;
+                //                 } elseif ($user->team && $user->team->name === 'Timur') {
+                //                     $mailTo = $settings->to_timur;
+                //                     $mailCc = $settings->cc_timur;
+                //                 } elseif ($user->team && $user->team->name === 'Pusat') {
+                //                     $mailTo = $settings->to_pusat;
+                //                     $mailCc = $settings->cc_pusat;
+                //                 } elseif ($user->team && $user->team->name === 'CASS Barat') {
+                //                     $mailTo = $settings->to_cass_barat;
+                //                     $mailCc = $settings->cc_cass_barat;
+                //                 } else {
+                //                     $mailTo = null;
+                //                     $mailCc = [];
+                //                 }
 
-                                $mailData = [
-                                    'location' => $location->name,
-                                    'title' => $outstanding->title,
-                                    'date_lapor' => $dateLapor,
-                                    'date_visit' => $dateVisit,
-                                    'work' => $data['work'],
-                                    'pelapor' => $outstanding->reporter,
-                                    'support' => $user->firstname,
-                                    'masalah' => $outstanding->title,
-                                    'sebab' => $data['cause'],
-                                    'aksi' => $data['action'],
-                                    'solusi' => $data['solution'],
-                                    'status' => $status,
-                                    'note' => $data['note'],
-                                    'attachments' => $mediaItems->map(function ($media) {
-                                        return $media->getFullUrl();
-                                    })->toArray(),
-                                ];
+                //                 $mailData = [
+                //                     'location' => $location->name,
+                //                     'title' => $outstanding->title,
+                //                     'date_lapor' => $dateLapor,
+                //                     'date_visit' => $dateVisit,
+                //                     'work' => $data['work'],
+                //                     'pelapor' => $outstanding->reporter,
+                //                     'support' => $user->firstname,
+                //                     'masalah' => $outstanding->title,
+                //                     'sebab' => $data['cause'],
+                //                     'aksi' => $data['action'],
+                //                     'solusi' => $data['solution'],
+                //                     'status' => $status,
+                //                     'note' => $data['note'],
+                //                     'attachments' => $mediaItems->map(function ($media) {
+                //                         return $media->getFullUrl();
+                //                     })->toArray(),
+                //                 ];
 
-                                SupportMailJob::dispatch($mailTo, $mailCc, $mailData)->onQueue('emails');
+                //                 SupportMailJob::dispatch($mailTo, $mailCc, $mailData)->onQueue('emails');
 
-                                Notification::make()
-                                    ->title('Email terkirim')
-                                    ->success()
-                                    ->send();
-                            } catch (\Exception $e) {
-                                Notification::make()
-                                    ->title('Gagal mengirim email: ' . $e->getMessage())
-                                    ->danger()
-                                    ->send();
-                            }
-                        }
-                    }),
+                //                 Notification::make()
+                //                     ->title('Email terkirim')
+                //                     ->success()
+                //                     ->send();
+                //             } catch (\Exception $e) {
+                //                 Notification::make()
+                //                     ->title('Gagal mengirim email: ' . $e->getMessage())
+                //                     ->danger()
+                //                     ->send();
+                //             }
+                //         }
+                //     }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah')
