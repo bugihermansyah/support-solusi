@@ -45,11 +45,13 @@ class ReportingsRelationManager extends RelationManager
                                     ->label('Tanggal Aksi')
                                     ->default(Carbon::now())
                                     ->native(false)
+                                    ->disabled()
                                     ->columnSpanFull()
                                     ->required(),
                                 Forms\Components\ToggleButtons::make('work')
                                     ->label('Jenis Aksi')
                                     ->inline()
+                                    ->disabled()
                                     ->options([
                                         'visit' => 'Visit',
                                         'remote' => 'Remote'
@@ -63,8 +65,9 @@ class ReportingsRelationManager extends RelationManager
                                     ->required(),
                                 Forms\Components\ToggleButtons::make('status')
                                     ->inline()
+                                    ->disabled()
                                     ->options([
-                                        '1' => 'Finish',
+                                        '1' => 'Selesai',
                                         '0' => 'Pending',
                                     ])
                                     ->icons([
@@ -80,6 +83,7 @@ class ReportingsRelationManager extends RelationManager
                                     ->required(),
                                 SpatieMediaLibraryFileUpload::make('attachments')
                                     ->image()
+                                    ->disabled()
                                     ->multiple()
                                     ->resize(30)
                                     ->optimize('webp')
@@ -90,7 +94,8 @@ class ReportingsRelationManager extends RelationManager
                                     ->maxFiles(10)
                                     ->preserveFilenames()
                                     ->columnSpanFull()
-                                    ->previewable(),
+                                    ->previewable()
+                                    ->deletable(false),
                             ])
                             ->columns(2),
 
@@ -98,9 +103,11 @@ class ReportingsRelationManager extends RelationManager
                             ->schema([
                                 Forms\Components\TextInput::make('cause')
                                     ->label('Sebab')
+                                    ->disabled()
                                     ->required(),
                                 Forms\Components\Textarea::make('action')
                                     ->label('Aksi')
+                                    ->disabled()
                                     ->required()
                                     // ->toolbarButtons([
                                     //     'bold',
@@ -113,6 +120,7 @@ class ReportingsRelationManager extends RelationManager
                                     ]),
                                 Forms\Components\Textarea::make('solution')
                                     ->label('Solusi')
+                                    ->disabled()
                                     // ->toolbarButtons([
                                     //     'bold',
                                     //     'bulletList',
@@ -125,6 +133,7 @@ class ReportingsRelationManager extends RelationManager
 
                                 Forms\Components\Textarea::make('note')
                                     ->label('Keterangan')
+                                    ->disabled()
                                     // ->toolbarButtons([
                                     //     'bold',
                                     //     'bulletList',
@@ -308,14 +317,10 @@ class ReportingsRelationManager extends RelationManager
                 //     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah')
-                    ->visible(function ($record) {
-                        return $record->user_id === Auth::id();
-                    }),
-                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus')
-                    ->visible(function ($record) {
-                        return $record->user_id === Auth::id();
-                    }),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Lihat'),
+                    // ->visible(function ($record) {
+                    //     return $record->user_id === Auth::id();
+                    // }),
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([
