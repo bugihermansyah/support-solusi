@@ -10,6 +10,7 @@ use App\Models\Outstanding;
 use App\Models\Reporting;
 use App\Models\User;
 use App\Settings\MailSettings;
+use App\Tables\Columns\UserAvatarColumn;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -19,6 +20,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -35,98 +37,107 @@ class ReportingsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\Group::make()
+                Forms\Components\Grid::make(2)
                     ->schema([
-                        Forms\Components\DatePicker::make('date_visit')
-                            ->label('Tanggal Aksi')
-                            ->default(Carbon::now())
-                            ->native(false)
-                            ->required(),
-                        // Forms\Components\Select::make('user_id')
-                        //     ->label('Support')
-                        //     ->options(User::all()->pluck('firstname', 'id'))
-                        //     ->default(Auth::user()->id)
-                        //     ->disabled(),
-                        Forms\Components\ToggleButtons::make('work')
-                            ->label('Jenis Aksi')
-                            ->inline()
-                            ->options([
-                                'visit' => 'Visit',
-                                'remote' => 'Remote'
+                        Forms\Components\Group::make()
+                            ->schema([
+                                Forms\Components\DatePicker::make('date_visit')
+                                    ->label('Tanggal Aksi')
+                                    ->default(Carbon::now())
+                                    ->native(false)
+                                    ->columnSpanFull()
+                                    ->required(),
+                                Forms\Components\ToggleButtons::make('work')
+                                    ->label('Jenis Aksi')
+                                    ->inline()
+                                    ->options([
+                                        'visit' => 'Visit',
+                                        'remote' => 'Remote'
+                                    ])
+                                    ->colors([
+                                        'visit' => 'info',
+                                        'remote' => 'warning',
+                                    ])
+                                    ->default('visit')
+                                    ->grouped()
+                                    ->required(),
+                                Forms\Components\ToggleButtons::make('status')
+                                    ->inline()
+                                    ->options([
+                                        '1' => 'Finish',
+                                        '0' => 'Pending',
+                                    ])
+                                    ->icons([
+                                        '1' => 'heroicon-o-check',
+                                        '0' => 'heroicon-o-x-mark',
+                                    ])
+                                    ->colors([
+                                        '1' => 'success',
+                                        '0' => 'warning',
+                                    ])
+                                    ->default('1')
+                                    ->grouped()
+                                    ->required(),
+                                SpatieMediaLibraryFileUpload::make('attachments')
+                                    ->image()
+                                    ->multiple()
+                                    ->resize(30)
+                                    ->optimize('webp')
+                                    ->imagePreviewHeight('50')
+                                    ->downloadable()
+                                    ->openable()
+                                    ->maxSize(7000)
+                                    ->maxFiles(10)
+                                    ->preserveFilenames()
+                                    ->columnSpanFull()
+                                    ->previewable(),
                             ])
-                            ->colors([
-                                'visit' => 'info',
-                                'remote' => 'warning',
-                            ])
-                            ->default('visit')
-                            ->grouped()
-                            ->required(),
-                        Forms\Components\ToggleButtons::make('status')
-                            ->inline()
-                            ->options([
-                                '1' => 'Finish',
-                                '0' => 'Pending',
-                            ])
-                            ->icons([
-                                '1' => 'heroicon-o-check',
-                                '0' => 'heroicon-o-x-mark',
-                            ])
-                            ->colors([
-                                '1' => 'success',
-                                '0' => 'warning',
-                            ])
-                            ->default('1')
-                            ->grouped()
-                            ->required(),
-                    ])
-                    ->columns(),
+                            ->columns(2),
 
-                Forms\Components\Group::make()
-                    ->schema([
-                        Forms\Components\TextInput::make('cause')
-                            ->label('Sebab')
-                            ->required(),
-                        Forms\Components\RichEditor::make('action')
-                            ->label('Aksi')
-                            ->toolbarButtons([
-                                'bold',
-                                'bulletList',
-                                'italic',
-                                'orderedList',
-                            ])
-                            ->extraInputAttributes([
-                                'style' => 'min-height: 90px;',
-                            ]),
-                        Forms\Components\RichEditor::make('solution')
-                            ->label('Solusi')
-                            ->toolbarButtons([
-                                'bold',
-                                'bulletList',
-                                'italic',
-                                'orderedList',
-                            ])
-                            ->extraInputAttributes([
-                                'style' => 'min-height: 70px;',
-                            ]),
+                        Forms\Components\Group::make()
+                            ->schema([
+                                Forms\Components\TextInput::make('cause')
+                                    ->label('Sebab')
+                                    ->required(),
+                                Forms\Components\Textarea::make('action')
+                                    ->label('Aksi')
+                                    ->required()
+                                    // ->toolbarButtons([
+                                    //     'bold',
+                                    //     'bulletList',
+                                    //     'italic',
+                                    //     'orderedList',
+                                    // ])
+                                    ->extraInputAttributes([
+                                        'style' => 'min-height: 90px;',
+                                    ]),
+                                Forms\Components\Textarea::make('solution')
+                                    ->label('Solusi')
+                                    // ->toolbarButtons([
+                                    //     'bold',
+                                    //     'bulletList',
+                                    //     'italic',
+                                    //     'orderedList',
+                                    // ])
+                                    ->extraInputAttributes([
+                                        'style' => 'min-height: 70px;',
+                                    ]),
 
-                        Forms\Components\RichEditor::make('note')
-                            ->label('Keterangan')
-                            ->toolbarButtons([
-                                'bold',
-                                'bulletList',
-                                'italic',
-                                'orderedList',
-                            ])
-                            ->extraInputAttributes([
-                                'style' => 'min-height: 70px;',
-                            ])
-                            ->columnSpanFull(),
-                        SpatieMediaLibraryFileUpload::make('attachments')
-                            ->multiple()
-                            ->preserveFilenames()
-                            ->previewable(false),
+                                Forms\Components\Textarea::make('note')
+                                    ->label('Keterangan')
+                                    // ->toolbarButtons([
+                                    //     'bold',
+                                    //     'bulletList',
+                                    //     'italic',
+                                    //     'orderedList',
+                                    // ])
+                                    ->extraInputAttributes([
+                                        'style' => 'min-height: 50px;',
+                                    ])
+                                    ->columnSpanFull(),
+                            ]),
                     ]),
-            ]);
+                ]);
     }
 
     public function table(Table $table): Table
@@ -136,9 +147,15 @@ class ReportingsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('date_visit')
                     ->label('Tanggal')
+                    ->searchable()
+                    ->sortable()
                     ->date(),
-                Tables\Columns\TextColumn::make('user.firstname')
-                    ->label('Support'),
+                UserAvatarColumn::make('user')
+                    ->label('Support')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('gap')
+                    ->label('')
+                    ->visible('sm'),
                 Tables\Columns\TextColumn::make('work')
                     ->formatStateUsing(fn (string $state): string => ucwords($state))
                     ->label('Tipe Aksi'),
@@ -156,7 +173,9 @@ class ReportingsRelationManager extends RelationManager
                     ->html(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
-                    ->badge(),
+                    ->badge()
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('note')
                     ->label('Keterangan')
                     ->wrap()
@@ -196,15 +215,17 @@ class ReportingsRelationManager extends RelationManager
                         $sendUserHeadLocation = User::withRoleInSpecificLocation('Head', $location->id)->first();
                         $sendUserLocation = User::find($userLocation);
 
-                        Notification::make()
-                            ->title("{$user->firstname} {$user->lastname}")
-                            ->icon('heroicon-o-document-plus')
-                            ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
-                            ->actions([
-                                ActionsAction::make('Lihat')
-                                ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
-                            ])
-                            ->sendToDatabase($sendUserLocation);
+                        if($location->user_id !== null) {
+                            Notification::make()
+                                ->title("{$user->firstname} {$user->lastname}")
+                                ->icon('heroicon-o-document-plus')
+                                ->body("membuat laporan <b>{$location->name} - {$outstanding->title}</b> status <b>{$status}</b>")
+                                ->actions([
+                                    ActionsAction::make('Lihat')
+                                    ->url(OutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
+                                ])
+                                ->sendToDatabase($sendUserLocation);
+                        }
 
                         Notification::make()
                             ->title("{$user->firstname} {$user->lastname}")
@@ -297,9 +318,9 @@ class ReportingsRelationManager extends RelationManager
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }

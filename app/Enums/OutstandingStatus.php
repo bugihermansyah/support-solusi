@@ -3,10 +3,10 @@
 namespace App\Enums;
 
 use Filament\Support\Contracts\HasColor;
-// use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum OutstandingStatus: string implements HasColor, HasLabel
+enum OutstandingStatus: string implements HasColor, HasLabel, HasIcon
 {
     case Open = '0';
     case Close = '1';
@@ -27,14 +27,11 @@ enum OutstandingStatus: string implements HasColor, HasLabel
         };
     }
 
-    // public function getIcon(): ?string
-    // {
-    //     return match ($this) {
-    //         self::New => 'heroicon-m-sparkles',
-    //         self::Processing => 'heroicon-m-arrow-path',
-    //         self::Shipped => 'heroicon-m-truck',
-    //         self::Delivered => 'heroicon-m-check-badge',
-    //         self::Cancelled => 'heroicon-m-x-circle',
-    //     };
-    // }
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::Open => 'heroicon-m-exclamation-triangle',
+            self::Close => 'heroicon-m-star',
+        };
+    }
 }

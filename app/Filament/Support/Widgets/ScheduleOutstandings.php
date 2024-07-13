@@ -122,6 +122,8 @@ class ScheduleOutstandings extends BaseWidget
                                         ->image()
                                         ->multiple()
                                         ->resize(30)
+                                        ->optimize('webp')
+                                        ->openable()
                                         ->maxSize(7000)
                                         ->maxFiles(10)
                                         ->preserveFilenames()
@@ -135,39 +137,40 @@ class ScheduleOutstandings extends BaseWidget
                                     Forms\Components\TextInput::make('cause')
                                         ->label('Sebab')
                                         ->required(),
-                                    Forms\Components\RichEditor::make('action')
+                                    Forms\Components\Textarea::make('action')
                                         ->label('Aksi')
-                                        ->toolbarButtons([
-                                            'bold',
-                                            'bulletList',
-                                            'italic',
-                                            'orderedList',
-                                        ])
+                                        ->required()
+                                        // ->toolbarButtons([
+                                        //     'bold',
+                                        //     'bulletList',
+                                        //     'italic',
+                                        //     'orderedList',
+                                        // ])
                                         ->extraInputAttributes([
                                             'style' => 'min-height: 90px;',
                                         ]),
-                                    Forms\Components\RichEditor::make('solution')
+                                    Forms\Components\Textarea::make('solution')
                                         ->label('Solusi')
-                                        ->toolbarButtons([
-                                            'bold',
-                                            'bulletList',
-                                            'italic',
-                                            'orderedList',
-                                        ])
+                                        // ->toolbarButtons([
+                                        //     'bold',
+                                        //     'bulletList',
+                                        //     'italic',
+                                        //     'orderedList',
+                                        // ])
                                         ->extraInputAttributes([
                                             'style' => 'min-height: 70px;',
                                         ]),
 
-                                    Forms\Components\RichEditor::make('note')
+                                    Forms\Components\Textarea::make('note')
                                         ->label('Keterangan')
-                                        ->toolbarButtons([
-                                            'bold',
-                                            'bulletList',
-                                            'italic',
-                                            'orderedList',
-                                        ])
+                                        // ->toolbarButtons([
+                                        //     'bold',
+                                        //     'bulletList',
+                                        //     'italic',
+                                        //     'orderedList',
+                                        // ])
                                         ->extraInputAttributes([
-                                            'style' => 'min-height: 70px;',
+                                            'style' => 'min-height: 50px;',
                                         ])
                                         ->columnSpanFull(),
                                 ]),
@@ -250,12 +253,13 @@ class ScheduleOutstandings extends BaseWidget
                                 }
 
                                 $mailData = [
+                                    'number' => $outstanding->number,
                                     'location' => $location->name,
                                     'title' => $outstanding->title,
                                     'date_lapor' => $dateLapor,
                                     'date_visit' => $dateVisit,
-                                    'work' => $data['work'],
-                                    'pelapor' => $outstanding->reporter,
+                                    'work' => ucfirst($data['work']),
+                                    'pelapor' => ucfirst($outstanding->reporter),
                                     'support' => $user->firstname,
                                     'masalah' => $outstanding->title,
                                     'sebab' => $data['cause'],

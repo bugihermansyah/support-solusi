@@ -148,8 +148,8 @@ class OutstandingResource extends Resource
             Tables\Columns\TextColumn::make('location.team.name')
                 ->label('Tim Area')
                 ->searchable()
-                ->sortable()
-                ->limit(5),
+                ->limit(5)
+                ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('location.name')
                 ->label('Lokasi')
                 ->searchable()
@@ -158,7 +158,6 @@ class OutstandingResource extends Resource
             Tables\Columns\TextColumn::make('product.name')
                 ->label('Produk')
                 ->searchable()
-                ->sortable()
                 ->limit(15),
             Tables\Columns\TextColumn::make('title')
                 ->label('Masalah')
@@ -173,28 +172,30 @@ class OutstandingResource extends Resource
                     'warning' => 'preventif',
                     'success' => 'support',
                 ])
-                ->searchable()
-                ->sortable(),
+                ->searchable(),
             Tables\Columns\TextColumn::make('date_in')
                 ->label('Lapor')
                 ->date()
                 ->sortable(),
-            // Tables\Columns\TextColumn::make('date_visit')
-            //     ->label('Visit date')
-            //     ->date(),
-            // Tables\Columns\TextColumn::make('date_finish')
-            //     ->label('Finish date')
-            //     ->date()
-            //     ->sortable(),
+            Tables\Columns\TextColumn::make('date_visit')
+                ->label('Aksi Pertama')
+                ->date(),
+            Tables\Columns\TextColumn::make('date_finish')
+                ->label('Selesai')
+                ->date(),
             Tables\Columns\TextColumn::make('reportings_count')
                 ->label('Aksi')
                 ->suffix('x')
                 ->sortable()
                 ->counts('reportings'),
+            Tables\Columns\TextColumn::make('outstandingunits.unit.name')
+                ->label('Unit')
+                ->badge()
+                ->searchable(),
             Tables\Columns\TextColumn::make('status')
                 ->label('Status')
                 ->badge()
-                ->sortable(),
+                ->searchable(),
             Tables\Columns\TextColumn::make('created_at')
                 ->dateTime()
                 ->sortable()

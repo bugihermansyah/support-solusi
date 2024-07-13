@@ -5,11 +5,14 @@ namespace App\Filament\Support\Widgets;
 use App\Filament\Support\Resources\OutstandingResource;
 use App\Models\Outstanding;
 use Carbon\Carbon;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class OpenOutstandings extends BaseWidget
@@ -26,8 +29,10 @@ class OpenOutstandings extends BaseWidget
             ->defaultPaginationPageOption(5)
             ->query(
                 Outstanding::query()
-                    ->where('user_id', $user->id)
-                    ->where('status', 0)
+                    ->whereHas('location', function (Builder $query) use ($user) {
+                        $query->where('user_id', $user->id)
+                            ->where('status', 0);
+                    })
             )
             ->columns([
                 Split::make([
@@ -40,23 +45,46 @@ class OpenOutstandings extends BaseWidget
                     Tables\Columns\TextColumn::make('title')
                         ->label('Masalah')
                         ->icon('heroicon-m-inbox-arrow-down')
-                        // ->grow(false)
+                        ->grow(false)
                         ->searchable(),
                     Tables\Columns\TextColumn::make('date_in')
                         ->label('Lapor')
                         ->icon('heroicon-m-clock')
+                        ->visible('sm')
+                        ->grow(false)
                         ->formatStateUsing(function ($state) {
                             $createdDate = Carbon::parse($state);
-                            $daysDifference = $createdDate->subDays(1)->longAbsoluteDiffForHumans();
+                            $daysDifference = $createdDate->subDays(0)->longAbsoluteDiffForHumans();
                             return $daysDifference;
                         }),
-                    Tables\Columns\TextColumn::make('reportings_count')
-                        ->label('Aksi')
-                        ->icon('heroicon-m-wrench-screwdriver')
-                        ->visibleFrom('md')
-                        ->prefix('x')
-                        ->counts('reportings'),
-                    ])->from('md'),
+                        Stack::make([
+                            Tables\Columns\TextColumn::make('date_in')
+                                ->label('Lapor')
+                                ->icon('heroicon-m-clock')
+                                ->hidden('sm')
+                                ->grow(false)
+                                ->formatStateUsing(function ($state) {
+                                    $createdDate = Carbon::parse($state);
+                                    $daysDifference = $createdDate->subDays(0)->longAbsoluteDiffForHumans();
+                                    return $daysDifference;
+                                }),
+                        ])
+                        ->alignment(Alignment::End)
+                        ->visible('md'),
+
+                        Stack::make([
+                            Tables\Columns\TextColumn::make('reportings_count')
+                                ->label('Aksi')
+                                ->icon('heroicon-m-wrench-screwdriver')
+                                ->grow(false)
+                                ->visibleFrom('md')
+                                ->prefix('x')
+                                ->counts('reportings'),
+                        ])
+                        ->alignment(Alignment::End)
+                        ->visible('md'),
+                    ])
+                    ->from('md'),
             ])
             // ->defaultSort('title', 'asc')
             ->actions([

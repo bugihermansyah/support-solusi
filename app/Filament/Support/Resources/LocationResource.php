@@ -4,6 +4,7 @@ namespace App\Filament\Support\Resources;
 
 use App\Filament\Support\Resources\LocationResource\Pages;
 use App\Filament\Support\Resources\LocationResource\RelationManagers;
+use App\Filament\Support\Resources\LocationResource\Widgets\LocationsOverview;
 use App\Models\Location;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -41,13 +42,13 @@ class LocationResource extends Resource
                     ->label('Perusahaan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Cluster')
+                    ->label('Lokasi')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contracts.product.name')
                     ->label('Produk')
                     ->badge(),
                 Tables\Columns\TextColumn::make('team.name')
-                    ->label('Tim Area')
+                    ->label('Area')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('bd.firstname')
                     ->label('BD')
@@ -55,7 +56,7 @@ class LocationResource extends Resource
                 Tables\Columns\TextColumn::make('user.firstname')
                     ->label('Support'),
                 Tables\Columns\TextColumn::make('type_contract')
-                    ->label('Tipe Kontrak'),
+                    ->label('Kontrak'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge(),
                 // Tables\Columns\TextColumn::make('customers.name'),
@@ -85,6 +86,13 @@ class LocationResource extends Resource
     {
         return [
             //
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            LocationsOverview::class,
         ];
     }
 
