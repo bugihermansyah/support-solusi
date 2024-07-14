@@ -54,6 +54,7 @@ class ListOutstandings extends ListRecords
                     Section::make()
                         ->schema([
                             Toggle::make('task')
+                                ->label('Existing <-> New')
                                 ->live()
                                 ->columnSpanFull(),
                             // old outstanding
@@ -75,6 +76,7 @@ class ListOutstandings extends ListRecords
                             Select::make('user_id')
                                 ->label('Support')
                                 ->visible(fn ($get) => !$get('task'))
+                                ->required()
                                 ->options(function () {
                                     $teams = Team::with('users')->get();
                                     $options = [];
@@ -89,6 +91,7 @@ class ListOutstandings extends ListRecords
                             DatePicker::make('date_visit')
                                 ->label('Jadwal')
                                 ->visible(fn ($get) => !$get('task'))
+                                ->required()
                                 ->default(Carbon::now())
                                 ->native(false),
                             // new outstanding
@@ -105,19 +108,23 @@ class ListOutstandings extends ListRecords
                             Select::make('location_id')
                                 ->label('Lokasi')
                                 ->visible(fn ($get) => $get('task'))
-                                ->options(Location::all()->pluck('name', 'id')),
+                                ->options(Location::all()->pluck('name', 'id'))
+                                ->required(),
                             TextInput::make('title')
                                 ->label('Masalah')
                                 ->visible(fn ($get) => $get('task'))
+                                ->required()
                                 ->columnSpan(3),
                             DatePicker::make('date_visit')
                                 ->label('Jadwal')
                                 ->visible(fn ($get) => $get('task'))
                                 ->default(Carbon::now())
+                                ->required()
                                 ->native(false),
                             Select::make('user_id')
                                 ->label('Support')
                                 ->visible(fn ($get) => $get('task'))
+                                ->required()
                                 ->columnSpan(3)
                                 ->options(function () {
                                     $teams = Team::with('users')->get();
