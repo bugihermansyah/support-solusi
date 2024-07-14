@@ -92,7 +92,7 @@ class LocationResource extends Resource
                                     ->inlineLabel(false)
                                     ->required(),
                                 Forms\Components\Select::make('user_id')
-                                    ->label('Staff')
+                                    ->label('Support')
                                     ->options(function () {
                                         $teams = Team::with('users')->get();
                                         $options = [];

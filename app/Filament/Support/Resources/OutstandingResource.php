@@ -123,8 +123,8 @@ class OutstandingResource extends Resource
                             // ->columns([
                             //     'md' => 10,
                             // ]),
-                        ])
-                        ->collapsed(),
+                                ]),
+                        // ->collapsed(),
                 ])
                 ->columnSpan(['lg' => 1]),
 

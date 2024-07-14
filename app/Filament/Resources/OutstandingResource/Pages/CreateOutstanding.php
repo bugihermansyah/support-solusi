@@ -18,36 +18,37 @@ class CreateOutstanding extends CreateRecord
     {
         $outstanding = $this->record;
         $userLocation = $outstanding->location?->user_id;
-        $userSchedule = $outstanding?->user_id;
+        // $userSchedule = $outstanding?->user_id;
 
         $sendUserLocation = User::find($userLocation);
-        $sendUserSchedule = User::find($userSchedule);
+        // $sendUserSchedule = User::find($userSchedule);
 
-        Reporting::create([
-            'outstanding_id' => $outstanding->id,
-            'date_visit' => $outstanding->date_visit,
-            'user_id' => $outstanding->user_id,
-            'status' => null,
-        ]);
+        // Reporting::create([
+        //     'outstanding_id' => $outstanding->id,
+        //     'date_visit' => $outstanding->date_visit,
+        //     'user_id' => $outstanding->user_id,
+        //     'status' => null,
+        // ]);
 
-        Notification::make()
-            ->title('Outstanding lokasi')
-            ->icon('heroicon-o-inbox-arrow-down')
-            ->body("<b>{$outstanding->location?->name} - {$outstanding?->title}</b>")
-            ->actions([
-                Action::make('Lihat')
-                    ->url(SupportOutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
-            ])
-            ->sendToDatabase($sendUserLocation);
-
-        Notification::make()
-            ->title('Jadwal outstanding')
-            ->icon('heroicon-o-inbox-arrow-down')
-            ->body("<b>{$outstanding->location?->name} - {$outstanding?->title}</b>")
-            ->actions([
-                Action::make('Lihat')
-                    ->url(SupportOutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
-            ])
-            ->sendToDatabase($sendUserSchedule);
+        if($sendUserLocation->user_id !== null){
+            Notification::make()
+                ->title('Outstanding lokasi')
+                ->icon('heroicon-o-inbox-arrow-down')
+                ->body("<b>{$outstanding->location?->name} - {$outstanding?->title}</b>")
+                ->actions([
+                    Action::make('Lihat')
+                        ->url(SupportOutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
+                ])
+                ->sendToDatabase($sendUserLocation);
+        }
+    //     Notification::make()
+    //         ->title('Jadwal outstanding')
+    //         ->icon('heroicon-o-inbox-arrow-down')
+    //         ->body("<b>{$outstanding->location?->name} - {$outstanding?->title}</b>")
+    //         ->actions([
+    //             Action::make('Lihat')
+    //                 ->url(SupportOutstandingResource::getUrl('edit', ['record' => $outstanding], panel: 'support')),
+    //         ])
+    //         ->sendToDatabase($sendUserSchedule);
     }
 }

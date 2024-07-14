@@ -3,10 +3,29 @@
 namespace App\Filament\Resources\OutstandingResource\Pages;
 
 use App\Filament\Resources\OutstandingResource;
+use App\Models\Contract;
+use App\Models\Location;
+use App\Models\Outstanding;
+use App\Models\Product;
+use App\Models\Reporting;
+use App\Models\Team;
+use Carbon\Carbon;
 use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ListOutstandings extends ListRecords
 {
@@ -30,7 +49,246 @@ class ListOutstandings extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('fvck')
+                ->form([
+                    Section::make()
+                        ->schema([
+                            Toggle::make('task')
+                                ->live()
+                                ->columnSpanFull(),
+                            // old outstanding
+                            Select::make('outstanding_id')
+                                ->label('Outstanding')
+                                ->options(
+                                    Outstanding::where('outstandings.status', 0)
+                                        ->join('locations', 'outstandings.location_id', '=', 'locations.id')
+                                        ->select(
+                                            DB::raw("CONCAT(locations.name, ' - ', outstandings.title) as title"),
+                                            'outstandings.id'
+                                        )
+                                        ->pluck('title', 'id')
+                                )
+                                ->visible(fn ($get) => !$get('task'))
+                                ->searchable()
+                                ->columnSpan(2)
+                                ->required(),
+                            Select::make('user_id')
+                                ->label('Support')
+                                ->visible(fn ($get) => !$get('task'))
+                                ->options(function () {
+                                    $teams = Team::with('users')->get();
+                                    $options = [];
+
+                                    foreach ($teams as $team) {
+                                        $teamUsers = $team->users->pluck('name', 'id')->toArray();
+                                        $options[$team->name] = $teamUsers;
+                                    }
+
+                                    return $options;
+                                }),
+                            DatePicker::make('date_visit')
+                                ->label('Jadwal')
+                                ->visible(fn ($get) => !$get('task'))
+                                ->default(Carbon::now())
+                                ->native(false),
+                            // new outstanding
+                            TextInput::make('number')
+                                ->label('No. Tiket')
+                                ->default('SP-' .Carbon::now()->format('ym').''.(random_int(100000, 999999)))
+                                ->disabled()
+                                ->visible(fn ($get) => $get('task'))
+                                ->dehydrated()
+                                ->required()
+                                ->columnSpanFull()
+                                ->maxLength(32)
+                                ->unique(Outstanding::class, 'number', ignoreRecord: true),
+                            Select::make('location_id')
+                                ->label('Lokasi')
+                                ->visible(fn ($get) => $get('task'))
+                                ->options(Location::all()->pluck('name', 'id')),
+                            TextInput::make('title')
+                                ->label('Masalah')
+                                ->visible(fn ($get) => $get('task'))
+                                ->columnSpan(3),
+                            DatePicker::make('date_visit')
+                                ->label('Jadwal')
+                                ->visible(fn ($get) => $get('task'))
+                                ->default(Carbon::now())
+                                ->native(false),
+                            Select::make('user_id')
+                                ->label('Support')
+                                ->visible(fn ($get) => $get('task'))
+                                ->columnSpan(3)
+                                ->options(function () {
+                                    $teams = Team::with('users')->get();
+                                    $options = [];
+
+                                    foreach ($teams as $team) {
+                                        $teamUsers = $team->users->pluck('name', 'id')->toArray();
+                                        $options[$team->name] = $teamUsers;
+                                    }
+
+                                    return $options;
+                                }),
+
+                        ])
+                        ->columns(4)
+                ])
+                ->extraModalFooterActions(fn (Action $action): array => [
+                    $action->makeModalSubmitAction('createAnother', arguments: ['another' => true]),
+                ])
+                ->action(function (array $data, array $arguments): void {
+                    if ($data['task']) {
+                        // Create new outstanding
+                        $product = Contract::where('location_id', $data['location_id'])->where('is_default', 1)->first();
+                        // dd($product);
+                        $outstanding = Outstanding::create([
+                            'number' => $data['number'],
+                            'location_id' => $data['location_id'],
+                            'product_id' => $product->product_id ?? null,
+                            'title' => $data['title'],
+                        ]);
+                        // Create new reporting
+                        Reporting::create([
+                            'outstanding_id' => $outstanding->id,
+                            'user_id' => $data['user_id'],
+                            'date_visit' => $data['date_visit'],
+                            'status' => null,
+                        ]);
+
+                        Notification::make()
+                            ->title('Data berhasil dibuat')
+                            ->success()
+                            ->send();
+                    } else {
+                        // Create new reporting
+                        Reporting::create([
+                            'outstanding_id' => $data['outstanding_id'],
+                            'user_id' => $data['user_id'],
+                            'date_visit' => $data['date_visit'],
+                            'status' => null,
+                        ]);
+
+                        Notification::make()
+                            ->title('Data berhasil dibuat')
+                            ->success()
+                            ->send();
+                    }
+
+                    // if ($arguments['another'] ?? false) {
+                    //     if ($data['task']) {
+                    //         // Create new outstanding
+                    //         $product = Contract::where('id', $data['location_id'])->where('is_default', 1)->first();
+                    //         $outstanding = Outstanding::create([
+                    //             'number' => $data['number'],
+                    //             'location_id' => $data['location_id'],
+                    //             'product_id' => $product->product_id ?? null,
+                    //             'title' => $data['title'],
+                    //         ]);
+                    //         // Create new reporting
+                    //         Reporting::create([
+                    //             'outstanding_id' => $outstanding->id,
+                    //             'user_id' => $data['user_id'],
+                    //             'date_visit' => $data['date_visit'],
+                    //             'status' => null,
+                    //         ]);
+
+                    //         Notification::make()
+                    //             ->title('Data berhasil dibuat3')
+                    //             ->success()
+                    //             ->send();
+                    //     }
+                    //     // else {
+                    //     //     // Create new reporting
+                    //     //     Reporting::create([
+                    //     //         'outstanding_id' => $data['outstanding_id'],
+                    //     //         'user_id' => $data['user_id'],
+                    //     //         'date_visit' => $data['date_visit'],
+                    //     //         'status' => null,
+                    //     //     ]);
+
+                    //     //     Notification::make()
+                    //     //         ->title('Data berhasil dibuat4')
+                    //     //         ->success()
+                    //     //         ->send();
+                    //     // }
+                    // }
+                })
+                ->closeModalByEscaping(false)
+                ->closeModalByClickingAway(false),
             Actions\CreateAction::make(),
+            // Action::make('create')
+            //     ->label('Schedule Outstanding')
+            //     ->icon('heroicon-o-briefcase')
+            //     ->form([
+            //         Forms\Components\Select::make('location_id')
+            //             ->label('Lokasi')
+            //             ->options(Location::query()->pluck('name', 'id'))
+            //             ->live()
+            //             ->searchable()
+            //             ->required(fn (Forms\Get $get) => $get('tab') === 'old'),
+            //         Forms\Components\Select::make('outstanding_id')
+            //             ->label('Outstanding')
+            //             ->options(fn (Get $get): Collection => Outstanding::query()
+            //                 ->where('location_id', $get('location_id'))
+            //                 ->pluck('title', 'id'))
+            //             ->searchable()
+            //             ->required(fn (Forms\Get $get) => $get('tab') === 'old'),
+            //         Forms\Components\DatePicker::make('date_visit')
+            //             ->label('Tanggal Aksi/Remote')
+            //             ->native(false)
+            //             ->required(fn (Forms\Get $get) => $get('tab') === 'old'),
+            //         Forms\Components\Select::make('user_id')
+            //             ->label('Jadwal')
+            //             ->options(function () {
+            //                 $teams = Team::with('users')->get();
+            //                 $options = [];
+
+            //                 foreach ($teams as $team) {
+            //                     $teamUsers = $team->users->pluck('name', 'id')->toArray();
+            //                     $options[$team->name] = $teamUsers;
+            //                 }
+
+            //                 return $options;
+            //             })
+            //             ->searchable(),
+
+            //     ])
+            //     ->action(function (array $data) {
+            //         if ($data['tab'] === 'new') {
+            //             // Handle action for 'Outstanding baru'
+            //             // Extract relevant data for 'outstanding' table
+            //             $outstandingData = [
+            //                 'number' => $data['number'],
+            //                 'location_id' => $data['location_id'],
+            //                 'product_id' => $data['product_id'],
+            //                 'reporter' => $data['reporter'],
+            //                 'title' => $data['title'],
+            //                 'date_in' => $data['date_in'],
+            //                 'date_visit' => $data['date_visit'],
+            //             ];
+
+            //             // Save to 'outstanding' table
+            //             $outstanding = Outstanding::create($outstandingData);
+
+            //             // Extract relevant data for 'reporting' table
+            //             $reportingData = [
+            //                 'outstanding_id' => $outstanding->id,
+            //                 'date_visit' => $data['date_visit'],
+            //                 'reporter' => $data['reporter'],
+            //                 'user_id' => $data['user_id']
+            //             ];
+
+            //             // Save to 'reporting' table
+            //             Reporting::create($reportingData);
+            //         } elseif ($data['tab'] === 'lama') {
+            //             // Handle action for 'Outstanding lama'
+            //             // Example: Create a new schedule record for 'Outstanding lama'
+            //             // YourModel::create($data);
+            //         }
+            //     })
+            //     ->modalHeading('Schedule Outstanding Task')
+            //     ->modalDescription('!! Kosongkan field Outstanding jika data baru')
         ];
     }
 }

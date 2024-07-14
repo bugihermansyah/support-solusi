@@ -22,6 +22,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -98,20 +99,20 @@ class OutstandingResource extends Resource
                                 ->maxDate(now())
                                 ->native(false)
                                 ->required(),
-                            Forms\Components\Select::make('user_id')
-                                ->label('Jadwal')
-                                ->options(function () {
-                                    $teams = Team::with('users')->get();
-                                    $options = [];
+                            // Forms\Components\Select::make('user_id')
+                            //     ->label('Jadwal')
+                            //     ->options(function () {
+                            //         $teams = Team::with('users')->get();
+                            //         $options = [];
 
-                                    foreach ($teams as $team) {
-                                        $teamUsers = $team->users->pluck('name', 'id')->toArray();
-                                        $options[$team->name] = $teamUsers;
-                                    }
+                            //         foreach ($teams as $team) {
+                            //             $teamUsers = $team->users->pluck('name', 'id')->toArray();
+                            //             $options[$team->name] = $teamUsers;
+                            //         }
 
-                                    return $options;
-                                })
-                                ->searchable(),
+                            //         return $options;
+                            //     })
+                            //     ->searchable(),
                             Forms\Components\DatePicker::make('date_visit')
                                 ->label('Visit/Remote')
                                 ->native(false),
@@ -121,7 +122,7 @@ class OutstandingResource extends Resource
                                 ->native(false)
                                 ->maxDate(now()),
                         ])
-                        ->columns(4),
+                        ->columns(3),
 
                     Forms\Components\Fieldset::make('Tipe masalah')
                         ->schema([
@@ -277,6 +278,9 @@ class OutstandingResource extends Resource
             ->actions([
                 Action::make('assign')
                     ->label('Assign')
+                    ->visible(function ($record) {
+                        return $record->status === 1;
+                    })
                     ->form([
                         Forms\Components\DatePicker::make('date_visit')
                             ->label('Visit/Remote')
