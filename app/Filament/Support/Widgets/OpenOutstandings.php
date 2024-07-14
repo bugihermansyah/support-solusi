@@ -24,14 +24,19 @@ class OpenOutstandings extends BaseWidget
     public function table(Table $table): Table
     {
         $user = Auth::user();
-
+        // $a = Outstanding::query()
+        // ->whereHas('location', function (Builder $query) use ($user) {
+        //     $query->where('location.user_id', $user->id)
+        //         ->where('outstanding.status', 0);
+        // });
+        // dd($a);
         return $table
             ->defaultPaginationPageOption(5)
             ->query(
                 Outstanding::query()
                     ->whereHas('location', function (Builder $query) use ($user) {
-                        $query->where('user_id', $user->id)
-                            ->where('status', 0);
+                        $query->where('locations.user_id', $user->id)
+                            ->where('outstandings.status', 0);
                     })
             )
             ->columns([
