@@ -27,12 +27,14 @@ class Location extends Model
         'address',
         'description',
         'type_contract',
-        'status'
+        'status',
+        'is_default'
     ];
 
     protected $casts = [
         'status' => LocationStatus::class,
         'type_contract' => TypeContract::class,
+        'is_default' => 'boolean',
     ];
 
     /**
