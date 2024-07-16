@@ -122,9 +122,9 @@ class ScheduleOutstandings extends BaseWidget
                                         ->image()
                                         ->multiple()
                                         ->resize(30)
-                                        ->optimize('webp')
+                                        ->optimize('jpg')
                                         ->openable()
-                                        ->maxSize(7000)
+                                        ->maxSize(2500)
                                         ->maxFiles(10)
                                         ->preserveFilenames()
                                         ->columnSpanFull()
@@ -137,38 +137,38 @@ class ScheduleOutstandings extends BaseWidget
                                     Forms\Components\TextInput::make('cause')
                                         ->label('Sebab')
                                         ->required(),
-                                    Forms\Components\Textarea::make('action')
+                                    Forms\Components\RichEditor::make('action')
                                         ->label('Aksi')
                                         ->required()
-                                        // ->toolbarButtons([
-                                        //     'bold',
-                                        //     'bulletList',
-                                        //     'italic',
-                                        //     'orderedList',
-                                        // ])
+                                        ->toolbarButtons([
+                                            'bold',
+                                            'bulletList',
+                                            'italic',
+                                            'orderedList',
+                                        ])
                                         ->extraInputAttributes([
                                             'style' => 'min-height: 90px;',
                                         ]),
-                                    Forms\Components\Textarea::make('solution')
+                                    Forms\Components\RichEditor::make('solution')
                                         ->label('Solusi')
-                                        // ->toolbarButtons([
-                                        //     'bold',
-                                        //     'bulletList',
-                                        //     'italic',
-                                        //     'orderedList',
-                                        // ])
+                                        ->toolbarButtons([
+                                            'bold',
+                                            'bulletList',
+                                            'italic',
+                                            'orderedList',
+                                        ])
                                         ->extraInputAttributes([
                                             'style' => 'min-height: 70px;',
                                         ]),
 
-                                    Forms\Components\Textarea::make('note')
+                                    Forms\Components\RichEditor::make('note')
                                         ->label('Keterangan')
-                                        // ->toolbarButtons([
-                                        //     'bold',
-                                        //     'bulletList',
-                                        //     'italic',
-                                        //     'orderedList',
-                                        // ])
+                                        ->toolbarButtons([
+                                            'bold',
+                                            'bulletList',
+                                            'italic',
+                                            'orderedList',
+                                        ])
                                         ->extraInputAttributes([
                                             'style' => 'min-height: 50px;',
                                         ])
