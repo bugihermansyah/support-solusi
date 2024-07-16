@@ -12,69 +12,82 @@
             padding: 30px;
         }
         table {
-            width: 100%;
+            width:100%;
             border-collapse: collapse;
-            margin-bottom: 30px;
-            font-size: 14px;
+            /* margin: 0 auto; */
+            font-size: 13px;
         }
         th, td {
             padding: 5px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
         .top {
             vertical-align: top;
         }
         th {
-            background-color: #4CAF50;
+            background-color: #a4a5a6;
             color: white;
         }
     </style>
 </head>
 <body>
+    <div style="display:block; max-width:700px;">
     <table>
         <tr>
-            <th colspan="2">Detail Laporan</th>
+            <th colspan="2" style="font-size:15px">{{ $data['number'] }}</th>
         </tr>
         <tr>
-            <td style="width: 30%;">Tanggal Lapor :</td>
+            <td style="width:31%">Tanggal Lapor:</td>
             <td>{{ $data['date_lapor'] }}</td>
         </tr>
         <tr>
-            <td>Tanggal Visit :</td>
+            <td>Tanggal Visit:</td>
             <td>{{ $data['date_visit'] }}</td>
         </tr>
         <tr>
-            <td>Support :</td>
+            <td>Tipe:</td>
+            <td>{{ $data['work'] }}</td>
+        </tr>
+        <tr>
+            <td>Support:</td>
             <td>{{ $data['support'] }}</td>
         </tr>
         <tr>
-            <td>Pelapor :</td>
+            <td>Pelapor:</td>
             <td>{{ $data['pelapor'] }}</td>
         </tr>
         <tr>
             <td colspan="2"><br></td>
         </tr>
         <tr>
-            <td>Masalah :</td>
+            <td>Masalah:</td>
             <td>{{ $data['masalah'] }}</td>
         </tr>
         <tr>
-            <td>Sebab :</td>
+            <td>Sebab:</td>
             <td>{!! $data['sebab'] !!}</td>
         </tr>
         <tr>
-            <td class="top">Aksi :</td>
-            <td class="top">{!! $data['aksi'] !!}{!! $data['solusi'] !!}</td>
+            <td class="top">Aksi:</td>
+            <td class="top">{!! $data['aksi'] !!}</td>
         </tr>
+        @isset($data['solusi'])
         <tr>
-            <td>Status :</td>
+            <td class="top">Solusi:</td>
+            <td class="top">{!! $data['solusi'] !!}</td>
+        </tr>
+        @endisset
+        <tr>
+            <td>Status:</td>
             <td>{{ $data['status'] }}</td>
         </tr>
+        @isset($data['note'])
         <tr>
-            <td class="top">Keterangan :</td>
+            <td class="top">Keterangan:</td>
             <td class="top">{!! $data['note'] !!}</td>
         </tr>
+        @endisset
     </table>
+    </div>
 </body>
 </html>
