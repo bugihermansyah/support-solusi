@@ -158,10 +158,10 @@ class OutstandingResource extends Resource
             Tables\Columns\TextColumn::make('product.name')
                 ->label('Produk')
                 ->searchable()
-                ->limit(15),
+                ->limit(8),
             Tables\Columns\TextColumn::make('title')
                 ->label('Masalah')
-                ->limit(25)
+                ->limit(20)
                 ->searchable(),
             Tables\Columns\TextColumn::make('reporter')
                 ->label('Pelapor')

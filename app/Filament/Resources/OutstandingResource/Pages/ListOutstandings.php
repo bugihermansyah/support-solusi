@@ -116,11 +116,21 @@ class ListOutstandings extends ListRecords
                                 ->searchable()
                                 ->options(Location::all()->pluck('name', 'id'))
                                 ->required(),
+                            Select::make('reporter')
+                                ->label('Pelapor')
+                                ->visible(fn ($get) => $get('task'))
+                                ->options([
+                                    'client' => 'Client',
+                                    'preventif' => 'Preventif',
+                                    'support' => 'Support',
+                                ])
+                                ->default('client')
+                                ->required(),
                             TextInput::make('title')
                                 ->label('Masalah')
                                 ->visible(fn ($get) => $get('task'))
                                 ->columnSpan([
-                                    'md' => 3
+                                    'md' => 2
                                 ])
                                 ->required(),
                             DatePicker::make('date_in')
@@ -170,6 +180,7 @@ class ListOutstandings extends ListRecords
                             'number' => $data['number'],
                             'location_id' => $data['location_id'],
                             'product_id' => $product->product_id ?? null,
+                            'reporter' => $data['reporter'],
                             'title' => $data['title'],
                             'date_in' => $data['date_in'],
                         ]);
