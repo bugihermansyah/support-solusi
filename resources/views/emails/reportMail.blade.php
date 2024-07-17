@@ -14,8 +14,12 @@
         table {
             width:100%;
             border-collapse: collapse;
-            /* margin: 0 auto; */
+            margin-bottom: 30px;
             font-size: 13px;
+        }
+        p {
+            margin: 0;
+            padding: 0;
         }
         th, td {
             padding: 5px;
@@ -45,12 +49,8 @@
             <td>{{ $data['date_visit'] }}</td>
         </tr>
         <tr>
-            <td>Tipe:</td>
-            <td>{{ $data['work'] }}</td>
-        </tr>
-        <tr>
             <td>Support:</td>
-            <td>{{ $data['support'] }}</td>
+            <td>{{ $data['support'] }} / {{ $data['work'] }}</td>
         </tr>
         <tr>
             <td>Pelapor:</td>
