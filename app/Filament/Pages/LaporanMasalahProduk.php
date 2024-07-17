@@ -33,7 +33,7 @@ class LaporanMasalahProduk extends Page implements HasTable
         return (string) $record->getKeyName();
     }
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
+    // protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
 
     protected static string $view = 'filament.pages.laporan-masalah-produk';
 

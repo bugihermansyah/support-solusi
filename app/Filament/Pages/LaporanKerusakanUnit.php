@@ -28,7 +28,7 @@ class LaporanKerusakanUnit extends Page implements HasTable
 
     protected static ?string $navigationLabel = 'Kerusakan Unit';
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    // protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.laporan-kerusakan-unit';
 

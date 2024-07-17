@@ -35,7 +35,7 @@ class SlaFinish extends Page implements HasTable
         return (string) $record->getKeyName();
     }
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    // protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.sla-finish';
 
