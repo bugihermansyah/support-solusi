@@ -183,6 +183,7 @@ class ListOutstandings extends ListRecords
                             'reporter' => $data['reporter'],
                             'title' => $data['title'],
                             'date_in' => $data['date_in'],
+                            'date_visit' => $data['date_visit'],
                         ]);
                         // Create new reporting
                         Reporting::create([
