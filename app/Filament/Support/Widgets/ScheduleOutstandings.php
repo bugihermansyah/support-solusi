@@ -194,6 +194,15 @@ class ScheduleOutstandings extends BaseWidget
                         $sendUserHeadLocation = User::withRoleInSpecificLocation('Head', $location->id)->first();
                         $sendUserLocation = User::find($userLocation);
 
+                        if ($data['status'] == 1) {
+                            if ($outstanding) {
+                                $outstanding->update([
+                                    'date_finish' => $data['date_visit'],
+                                    'status' => 1,
+                                ]);
+                            }
+                        }
+
                         if($location->user_id !== null){
                             Notification::make()
                                 ->title("{$user->firstname} {$user->lastname}")
