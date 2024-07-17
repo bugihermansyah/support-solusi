@@ -13,7 +13,7 @@ class ReportingsChart extends ChartWidget
 {
     protected static ?string $heading = 'Outstanding';
 
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 5;
 
     protected function getFilters(): ?array
     {
