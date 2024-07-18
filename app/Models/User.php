@@ -64,6 +64,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         return $this->username;
     }
 
+    public function getTeamId()
+    {
+        return $this->team ? $this->team->id : null;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         // if ($panel->getId() === 'admin') {
