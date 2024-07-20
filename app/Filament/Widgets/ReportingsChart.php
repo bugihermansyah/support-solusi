@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Location;
 use App\Models\Reporting;
 use App\Models\Outstanding;
 use Filament\Widgets\ChartWidget;
@@ -26,10 +27,17 @@ class ReportingsChart extends ChartWidget
 
     protected function getData(): array
     {
+
         $filter = $this->filter ?? 'week';
         $user = Auth::user();
         $team = $user->team;
-        $locationIds = $team->locations->pluck('id');
+        $isHead = $user && $user->hasRole('head');
+
+        if ($isHead) {
+            $locationIds = $team->locations->pluck('id');
+        }
+
+        $locationIds = Location::pluck('id');
 
         switch ($filter) {
             case 'week':
