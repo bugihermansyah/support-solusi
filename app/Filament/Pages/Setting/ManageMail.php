@@ -66,7 +66,9 @@ class ManageMail extends SettingsPage
                                             ])
                                             ->native(false)
                                             ->required()
-                                            ->columnSpan(2),
+                                            ->columnSpan([
+                                                'md' => 2,
+                                            ]),
                                         Forms\Components\TextInput::make('host')->label(fn () => __('page.mail_settings.fields.host'))
                                             ->required(),
                                         Forms\Components\TextInput::make('port')->label(fn () => __('page.mail_settings.fields.port')),
@@ -84,49 +86,50 @@ class ManageMail extends SettingsPage
                                     ])
                                     ->columns(3),
                             ]),
-                        Forms\Components\Section::make('Configuration')
+                        Forms\Components\Section::make('Configuration Mail Support')
                             ->label(fn () => __('page.mail_settings.sections.config.title'))
                             ->icon('fluentui-calendar-settings-32-o')
                             ->schema([
-                                Forms\Components\Grid::make()
-                                    ->schema([
-                                        Forms\Components\TextInput::make('to_address')
-                                            ->label('Mail To')
-                                            ->columnSpanFull()
-                                            ->required(),
-                                        Forms\Components\TextInput::make('to_barat')
-                                            ->label('To Barat')
-                                            ->email()
-                                            ->required(),
-                                        Forms\Components\TagsInput::make('cc_barat')
-                                            ->label('CC Barat')
-                                            // ->rules(['email'])
-                                            // ->separator(',')
-                                            ->columnSpan(2),
-                                        Forms\Components\TextInput::make('to_pusat')
-                                            ->label('To Pusat')
-                                            ->required(),
-                                        Forms\Components\TagsInput::make('cc_pusat')
-                                            ->label('CC Pusat')
-                                            ->columnSpan(2),
-                                        Forms\Components\TextInput::make('to_timur')
-                                            ->label('To Timur')
-                                            ->required(),
-                                        Forms\Components\TagsInput::make('cc_timur')
-                                            ->label('CC Timur')
-                                            ->columnSpan(2),
-                                        Forms\Components\TextInput::make('to_cass_barat')
-                                            ->label('To CASS Barat')
-                                            ->required(),
-                                        Forms\Components\TagsInput::make('cc_cass_barat')
-                                            ->label('CC CASS Barat')
-                                            ->columnSpan(2),
-                                    ])
-                                    ->columns(3),
-                            ])
+                                Forms\Components\TextInput::make('to_address')
+                                    ->label('Mail To')
+                                    ->columnSpanFull()
+                                    ->required(),
+                                Forms\Components\TextInput::make('to_barat')
+                                    ->label('To Barat')
+                                    ->email()
+                                    ->required(),
+                                Forms\Components\TagsInput::make('cc_barat')
+                                    ->label('CC Barat')
+                                    ->columnSpan(['md' => 2]),
+                                Forms\Components\TextInput::make('to_pusat')
+                                    ->label('To Pusat')
+                                    ->required(),
+                                Forms\Components\TagsInput::make('cc_pusat')
+                                    ->label('CC Pusat')
+                                    ->columnSpan(['md' => 2]),
+                                Forms\Components\TextInput::make('to_timur')
+                                    ->label('To Timur')
+                                    ->required(),
+                                Forms\Components\TagsInput::make('cc_timur')
+                                    ->label('CC Timur')
+                                    ->columnSpan(['md' => 2]),
+                                Forms\Components\TextInput::make('to_cass_barat')
+                                    ->label('To CASS Barat')
+                                    ->required(),
+                                Forms\Components\TagsInput::make('cc_cass_barat')
+                                    ->label('CC CASS Barat')
+                                    ->columnSpan(['md' => 2]),
+                                Forms\Components\TextInput::make('to_luar_kota')
+                                    ->label('To Luar Kota')
+                                    ->required(),
+                                Forms\Components\TagsInput::make('cc_luar_kota')
+                                    ->label('CC Luar Kota')
+                                    ->columnSpan(['md' => 2]),
+
+                            ])->columns(3),
                     ])
                     ->columnSpan([
-                        "md" => 2
+                        "lg" => 2
                     ]),
 
                 Forms\Components\Group::make()
@@ -159,7 +162,7 @@ class ManageMail extends SettingsPage
                             ])
                     ])
                     ->columnSpan([
-                        "md" => 1
+                        "lg" => 1
                     ]),
             ])
             ->columns(3)

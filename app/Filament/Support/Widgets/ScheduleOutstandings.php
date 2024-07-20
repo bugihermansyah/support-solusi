@@ -6,7 +6,9 @@ use App\Filament\Resources\OutstandingResource;
 use App\Jobs\SupportMailJob;
 use App\Models\Location;
 use App\Models\Outstanding;
+use App\Models\OutstandingUnit;
 use App\Models\Reporting;
+use App\Models\Unit;
 use App\Models\User;
 use App\Settings\MailSettings;
 use Carbon\Carbon;
@@ -256,8 +258,11 @@ class ScheduleOutstandings extends BaseWidget
                                 } elseif ($user->team && $user->team->name === 'CASS Barat') {
                                     $mailTo = $settings->to_cass_barat;
                                     $mailCc = $settings->cc_cass_barat;
+                                } elseif ($user->team && $user->team->name === 'Luar Kota') {
+                                    $mailTo = $settings->to_luar_kota;
+                                    $mailCc = $settings->cc_luar_kota;
                                 } else {
-                                    $mailTo = null;
+                                    $mailTo = $settings->to_address;
                                     $mailCc = [];
                                 }
 

@@ -17,6 +17,8 @@ class MailSettings extends Settings
     public ?array $cc_pusat;
     public string $to_cass_barat;
     public ?array $cc_cass_barat;
+    public string $to_luar_kota;
+    public ?array $cc_luar_kota;
     public ?string $driver;
     public ?string $host;
     public int $port;
@@ -58,6 +60,8 @@ class MailSettings extends Settings
             'mail.cc.pusat' => $data['cc_pusat'] ?? $this->cc_pusat,
             'mail.to.cass_barat' => $data['to_cass_barat'] ?? $this->to_cass_barat,
             'mail.cc.cass_barat' => $data['cc_cass_barat'] ?? $this->cc_cass_barat,
+            'mail.to.luar_kota' => $data['to_luar_kota'] ?? $this->to_luar_kota,
+            'mail.cc.luar_kota' => $data['cc_luar_kota'] ?? $this->cc_luar_kota,
         ]);
     }
 }
