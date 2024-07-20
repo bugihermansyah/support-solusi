@@ -129,6 +129,9 @@ class ReportingsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]))
             ->recordTitleAttribute('cause')
             ->columns([
                 Tables\Columns\TextColumn::make('date_visit')
@@ -152,7 +155,7 @@ class ReportingsRelationManager extends RelationManager
                     ->badge(),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
@@ -160,10 +163,15 @@ class ReportingsRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
                 Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
+                Tables\Actions\ForceDeleteAction::make()->hiddenLabel()->tooltip('Hapus selamanya'),
+                Tables\Actions\RestoreAction::make()->hiddenLabel()->tooltip('Kembalikan data'),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }

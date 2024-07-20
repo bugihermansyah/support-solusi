@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\OutstandingStatus;
 use App\Filament\Resources\OutstandingResource\Pages;
 use App\Filament\Resources\OutstandingResource\RelationManagers;
+use App\Models\Contract;
 use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Product;
@@ -19,6 +20,7 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -62,17 +64,10 @@ class OutstandingResource extends Resource
                                 ->required(),
                             Forms\Components\Select::make('product_id')
                                 ->label('Produk')
-                                ->options(function (callable $get){
-                                    $product = Location::find($get('location_id'));
-
-                                    if (!$product) {
-                                        return Product::all()->pluck('name', 'id');
-                                    }
-                                    if ($product->contracts) {
-                                        return $product->contracts->pluck('product.name', 'product.id');
-                                    }
-                                    return collect();
-                                })
+                                ->options(fn (Get $get): Collection => Contract::query()
+                                    ->where('location_id', $get('location_id'))
+                                    ->join('products', 'products.id', '=', 'contracts.product_id')
+                                    ->pluck('products.name', 'products.id'))
                                 ->required(),
                             Forms\Components\Select::make('reporter')
                                 ->label('Pelapor')
@@ -273,52 +268,29 @@ class OutstandingResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Action::make('assign')
-                    ->label('Assign')
-                    ->visible(function ($record) {
-                        return $record->status === 1;
-                    })
-                    ->form([
-                        Forms\Components\DatePicker::make('date_visit')
-                            ->label('Visit/Remote')
-                            ->native(false)
-                            ->required(),
-                        Forms\Components\Select::make('user_id')
-                            ->label('Support')
-                            ->options(function () {
-                                $teams = Team::with('users')->get();
-                                $options = [];
-
-                                foreach ($teams as $team) {
-                                    $teamUsers = $team->users->pluck('name', 'id')->toArray();
-                                    $options[$team->name] = $teamUsers;
-                                }
-
-                                return $options;
-                            })
-                            ->required(),
-                    ])
-                    ->action(function (array $data, Outstanding $record): void {
-                        // Create a new Reporting instance and associate it with the Outstanding record
-                        $reporting = new Reporting();
-                        $reporting->date_visit = $data['date_visit'];
-                        $reporting->user_id = $data['user_id'];
-                        $reporting->status = null;
-                        $reporting->outstanding_id = $record->id;
-                        $reporting->save();
-
-                        $record->save();
-                    }),
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
                 Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
+                Tables\Actions\ForceDeleteAction::make()->hiddenLabel()->tooltip('Hapus selamanya'),
+                Tables\Actions\RestoreAction::make()->hiddenLabel()->tooltip('Kembalikan data'),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
             ]);
     }
 

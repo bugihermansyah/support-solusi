@@ -20,7 +20,9 @@ use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -46,6 +48,8 @@ class UserResource extends Resource
                                     ->avatar()
                                     ->collection('avatars')
                                     ->alignCenter()
+                                    ->maxSize(2048)
+                                    ->resize(50)
                                     ->columnSpanFull(),
                                 Forms\Components\TextInput::make('username')
                                     ->unique(ignoreRecord:true)
@@ -160,16 +164,29 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
+                Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
+                Tables\Actions\ForceDeleteAction::make()->hiddenLabel()->tooltip('Hapus selamanya'),
+                Tables\Actions\RestoreAction::make()->hiddenLabel()->tooltip('Kembalikan data'),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
             ]);
     }
 

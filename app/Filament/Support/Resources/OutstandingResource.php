@@ -20,8 +20,10 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 
@@ -152,16 +154,17 @@ class OutstandingResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('location.name')
                 ->label('Lokasi')
+                ->description(fn (Model $record) => $record->product?->name)
                 ->searchable()
                 ->sortable()
                 ->limit(15),
-            Tables\Columns\TextColumn::make('product.name')
-                ->label('Produk')
-                ->searchable()
-                ->limit(8),
+            // Tables\Columns\TextColumn::make('product.name')
+            //     ->label('Produk')
+            //     ->searchable()
+            //     ->limit(8),
             Tables\Columns\TextColumn::make('title')
                 ->label('Masalah')
-                ->limit(20)
+                // ->limit(20)
                 ->searchable(),
             Tables\Columns\TextColumn::make('reporter')
                 ->label('Pelapor')
@@ -178,11 +181,21 @@ class OutstandingResource extends Resource
                 ->date()
                 ->sortable(),
             Tables\Columns\TextColumn::make('date_visit')
-                ->label('Aksi Pertama')
+                ->label('Pertama')
                 ->date(),
             Tables\Columns\TextColumn::make('date_finish')
                 ->label('Selesai')
                 ->date(),
+            SpatieMediaLibraryImageColumn::make('reportings.user.media')
+                ->label('Support')
+                ->collection('avatars')
+                ->circular()
+                ->conversion('thumb')
+                ->stacked()
+                ->limit(4)
+                ->ring(3)
+                ->limitedRemainingText()
+                ->wrap(),
             Tables\Columns\TextColumn::make('reportings_count')
                 ->label('Aksi')
                 ->suffix('x')
