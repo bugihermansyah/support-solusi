@@ -149,6 +149,7 @@ class UserResource extends Resource
                     ->formatStateUsing(fn ($state): string => Str::headline($state))
                     ->colors(['info'])
                     ->badge(),
+                Tables\Columns\TextColumn::make('team.name')->label('Team'),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')->label('Verified at')
