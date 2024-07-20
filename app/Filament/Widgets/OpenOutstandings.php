@@ -40,6 +40,8 @@ class OpenOutstandings extends BaseWidget
             ->defaultPaginationPageOption(5)
             ->query($query->select('outstandings.*'))
             ->defaultSort('date_in', 'asc')
+            ->poll('30s')
+            ->deferLoading()
             ->columns([
                 TextColumn::make('location.name')
                     ->label('Lokasi')

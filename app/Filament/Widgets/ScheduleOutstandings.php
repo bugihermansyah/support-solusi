@@ -31,6 +31,8 @@ class ScheduleOutstandings extends BaseWidget
             ->defaultPaginationPageOption(5)
             ->query($query)
             ->defaultSort('reportings.date_visit', 'desc')
+            ->poll('30s')
+            ->deferLoading()
             ->columns([
                 TextColumn::make('date_visit')
                     ->label('Tanggal')
