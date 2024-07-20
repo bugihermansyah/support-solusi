@@ -86,22 +86,18 @@ class ReportDetail extends Page implements HasTable
                     ->formatStateUsing(fn ($state) => ucfirst($state)),
                 TextColumn::make('cause')
                     ->label('Sebab')
-                    ->html()
-                    ->wrap(),
+                    ->html(),
                 TextColumn::make('action')
                     ->label('Aksi')
-                    ->html()
-                    ->wrap(),
+                    ->html(),
                 TextColumn::make('solution')
                     ->label('Solusi')
-                    ->html()
-                    ->wrap(),
+                    ->html(),
                 TextColumn::make('status')
                     ->badge(),
                 TextColumn::make('note')
                     ->label('Ket.')
-                    ->html()
-                    ->wrap(),
+                    ->html(),
             ])
             ->persistSortInSession()
             ->persistFiltersInSession()
