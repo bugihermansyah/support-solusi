@@ -143,7 +143,7 @@ class ReportDetail extends Page implements HasTable
                     ->label('Export XLS/XLSX/CSV')
                     ->exports([
                         ExcelExport::make()
-                            ->queue()
+                            // ->queue()
                             ->withFilename('LaporanDetail-'.date('Ymd'))
                             ->askForWriterType()
                             ->fromTable()
