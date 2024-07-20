@@ -9,13 +9,13 @@ use Filament\Support\Contracts\HasLabel;
 enum ReportStatus: string implements HasColor, HasLabel
 {
     case Pending = '0';
-    case Finish = '1';
+    case Selesai = '1';
 
     public function getLabel(): string
     {
         return match ($this) {
             self::Pending => 'Pending',
-            self::Finish => 'Finish',
+            self::Selesai => 'Selesai',
         };
     }
 
@@ -23,7 +23,7 @@ enum ReportStatus: string implements HasColor, HasLabel
     {
         return match ($this) {
             self::Pending => 'danger',
-            self::Finish => 'success',
+            self::Selesai => 'success',
         };
     }
 
