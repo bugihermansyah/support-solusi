@@ -160,15 +160,9 @@ class ReportDetail extends Page implements HasTable
                                 Column::make('cause')->heading('Sebab'),
                                 Column::make('action')->heading('Aksi')
                                     ->formatStateUsing(fn ($state) => strip_tags($state)),
-                                    // ->formatStateUsing(fn ($state) => str_replace('</p><p>', "\n", $state))
-                                    // ->formatStateUsing(fn ($state) => str_replace('<p>', "", $state))
-                                    // ->formatStateUsing(fn ($state) => str_replace('</p>', "", $state)),
                                 Column::make('solution')->heading('Solusi')
                                     ->formatStateUsing(fn ($state) => strip_tags($state)),
-                                Column::make('status')->heading('Status')
-                                    ->formatStateUsing(function ($state) {
-                                        return $state == 1 ? 'Selesai' : 'Pending';
-                                    }),
+                                Column::make('status')->heading('Status'),
                                 Column::make('note')->heading('Ket.')
                                     ->formatStateUsing(fn ($state) => strip_tags($state)),
                             ]),
