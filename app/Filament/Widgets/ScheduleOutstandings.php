@@ -24,8 +24,7 @@ class ScheduleOutstandings extends BaseWidget
 
         if ($isHead) {
                 $query->join('users', 'users.id', '=', 'reportings.user_id')
-                      ->where('users.team_id', $userTeam)
-                      ->select('reportings.*');
+                      ->where('users.team_id', $userTeam);
         }
 
         return $table
@@ -39,7 +38,8 @@ class ScheduleOutstandings extends BaseWidget
                 TextColumn::make('user.firstname')
                     ->label('Support'),
                 TextColumn::make('outstanding.location.name')
-                    ->label('Lokasi'),
+                    ->label('Lokasi')
+                    ->limit(15),
                 TextColumn::make('outstanding.title')
                     ->label('Masalah'),
             ]);
