@@ -2,10 +2,13 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\OutstandingResource;
 use App\Models\Outstanding;
 use App\Tables\Columns\SlaFinishColumn;
 use Carbon\Carbon;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -13,6 +16,11 @@ use Illuminate\Support\Facades\Auth;
 
 class OpenOutstandings extends BaseWidget
 {
+    // public function getTableRecordKey($record): string
+    // {
+    //     return (string) $record->id;
+    // }
+
     protected static ?int $sort = 1;
 
     public function table(Table $table): Table
@@ -28,10 +36,9 @@ class OpenOutstandings extends BaseWidget
                 $query->join('locations', 'locations.id', '=', 'outstandings.location_id')
                       ->where('locations.team_id', $userTeam);
         }
-
         return $table
             ->defaultPaginationPageOption(5)
-            ->query($query)
+            ->query($query->select('outstandings.*'))
             ->defaultSort('date_in', 'asc')
             ->columns([
                 TextColumn::make('location.name')
@@ -39,7 +46,7 @@ class OpenOutstandings extends BaseWidget
                     ->limit(15)
                     ->badge()
                     ->color(function ($record): string {
-                        $createdAt = Carbon::parse($record->created_at);
+                        $createdAt = Carbon::parse($record->date_in);
                         $daysDifference = $createdAt->diffInDays(Carbon::now());
 
                         if ($daysDifference < 3) {
@@ -54,7 +61,7 @@ class OpenOutstandings extends BaseWidget
                     ->label('Masalah')
                     ->badge()
                     ->color(function ($record): string {
-                        $createdAt = Carbon::parse($record->created_at);
+                        $createdAt = Carbon::parse($record->date_in);
                         $daysDifference = $createdAt->diffInDays(Carbon::now());
 
                         if ($daysDifference < 3) {
@@ -81,6 +88,13 @@ class OpenOutstandings extends BaseWidget
                             return 'danger';
                         }
                     }),
+            ])
+            ->actions([
+                Action::make('edit')
+                    ->icon('heroicon-m-eye')
+                    ->hiddenLabel()
+                    ->url(fn (Outstanding $record): string => route('filament.admin.resources.outstandings.edit', $record->id))
+                    ->openUrlInNewTab(),
             ]);
     }
 }
