@@ -10,6 +10,7 @@ use Awcodes\FilamentGravatar\GravatarProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -72,6 +73,18 @@ class SupportPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Buku Mantra Sihir')
+                    ->url('https://supportx.gitbook.io/buku-mantra-sihir', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-book-open')
+                    ->group('Dokumentasi')
+                    ->sort(3),
+                NavigationItem::make('Alat Tempur')
+                    ->url('https://drive.google.com/drive/folders/17AXS4HOwaFD8UQZCo4MFmfUTk2_JkRk8', shouldOpenInNewTab: true)
+                    ->icon('heroicon-c-cube')
+                    ->group('Dokumentasi')
+                    ->sort(4),
             ])
             ->plugins([
                 GravatarPlugin::make()
