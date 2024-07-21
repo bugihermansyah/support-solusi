@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -90,6 +91,12 @@ class OpenOutstandings extends BaseWidget
                             return 'danger';
                         }
                     }),
+                IconColumn::make('temporary')
+                    ->label('Temp')
+                    ->getStateUsing(function (Outstanding $record){
+                        return $record->date_finish ? true : false;
+                    })
+                    ->boolean(),
             ])
             ->actions([
                 Action::make('edit')
