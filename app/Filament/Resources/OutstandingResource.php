@@ -124,9 +124,9 @@ class OutstandingResource extends Resource
                             Forms\Components\ToggleButtons::make('is_type_problem')
                                 ->label('')
                                 ->options([
-                                    '1' => 'Hardware',
-                                    '2' => 'Software',
-                                    '3' => 'H/W Non Unit',
+                                    '1' => 'H/W',
+                                    '2' => 'S/W',
+                                    '3' => 'H/W No-Unit',
                                     '4' => 'Sipil'
                                 ])
                                 ->default(3)
@@ -139,27 +139,28 @@ class OutstandingResource extends Resource
             Forms\Components\Group::make()
                 ->schema([
                     Forms\Components\Fieldset::make('Informasi status')
+                        ->columns([
+                            'sm' => 3,
+                            'lg' => 3,
+                        ])
                         ->schema([
                             Forms\Components\Checkbox::make('lpm')
-                                ->label('LPM'),
-                            Forms\Components\Checkbox::make('is_implement')
-                                ->label('Implementasi'),
+                                ->label('LPM')
+                                ->columnSpan(['sm' => 1]),
                             Forms\Components\Checkbox::make('status')
-                                ->label('Status Closed'),
-                        ]),
-                    Forms\Components\Section::make('Gambar')
-                        ->schema([
+                                ->label('Closed')
+                                ->columnSpan(['sm' => 1]),
+                            Forms\Components\Checkbox::make('is_implement')
+                                ->label('Imple')
+                                ->columnSpan(['sm' => 1]),
                             SpatieMediaLibraryFileUpload::make('image')
                                 ->imageEditor()
                                 ->resize(20)
-                                ->openable(),
-                        ])
-                        ->collapsed(),
-
-                    Forms\Components\Section::make('Unit')
-                        ->schema([
+                                ->openable()
+                                ->collection('outstandings')
+                                ->columnSpanFull(),
                             TableRepeater::make('outstandingunits')
-                                ->label('')
+                                ->label('Unit')
                                 ->collapsible()
                                 ->relationship()
                                 ->headers([
@@ -168,6 +169,8 @@ class OutstandingResource extends Resource
                                 ])
                                 // ->renderHeader(false)
                                 ->streamlined()
+                                ->columnSpanFull()
+                                ->defaultItems(0)
                                 ->schema([
                                     Forms\Components\Select::make('unit_id')
                                         ->label('Unit')
@@ -188,13 +191,56 @@ class OutstandingResource extends Resource
                                         // ->columnSpan([
                                         //     'md' => 3,
                                         // ]),
-                                ])
-                            ->defaultItems(0),
-                            // ->columns([
-                            //     'md' => 10,
-                            // ]),
-                        ])
-                        ->collapsed(),
+                                ]),
+                        ]),
+                    // Forms\Components\Section::make('Gambar')
+                    //     ->schema([
+                    //         SpatieMediaLibraryFileUpload::make('image')
+                    //             ->imageEditor()
+                    //             ->resize(20)
+                    //             ->openable(),
+                    //     ])
+                    //     ->collapsed(),
+
+                    // Forms\Components\Section::make('Unit')
+                    //     ->schema([
+                    //         TableRepeater::make('outstandingunits')
+                    //             ->label('')
+                    //             ->collapsible()
+                    //             ->relationship()
+                    //             ->headers([
+                    //                 Header::make('nama')->width('200px'),
+                    //                 Header::make('qty')->width('50px'),
+                    //             ])
+                    //             // ->renderHeader(false)
+                    //             ->streamlined()
+                    //             ->schema([
+                    //                 Forms\Components\Select::make('unit_id')
+                    //                     ->label('Unit')
+                    //                     ->options(Unit::where('is_visible', 1)->pluck('name', 'id'))
+                    //                     ->placeholder('Pilih unit')
+                    //                     ->searchable()
+                    //                     ->required(),
+                    //                     // ->columnSpan([
+                    //                     //     'md' => 7,
+                    //                     // ]),
+
+                    //                 Forms\Components\TextInput::make('qty')
+                    //                     ->numeric()
+                    //                     ->minValue(1)
+                    //                     ->maxValue(20)
+                    //                     ->default(1)
+                    //                     ->required(),
+                    //                     // ->columnSpan([
+                    //                     //     'md' => 3,
+                    //                     // ]),
+                    //             ])
+                    //         ->defaultItems(0),
+                    //         // ->columns([
+                    //         //     'md' => 10,
+                    //         // ]),
+                    //     ])
+                    //     ->collapsible(),
                 ])
                 ->columnSpan(['lg' => 1]),
 
@@ -236,7 +282,6 @@ class OutstandingResource extends Resource
                 ->searchable(),
             Tables\Columns\TextColumn::make('reporter')
                 ->label('Pelapor')
-                // ->formatStateUsing(fn ($state) => Str::headline($state))
                 ->formatStateUsing(fn ($state) => ucwords($state))
                 ->colors([
                     'danger' => 'client',
@@ -258,6 +303,9 @@ class OutstandingResource extends Resource
                 ->label('Status')
                 ->badge()
                 ->sortable(),
+            Tables\Columns\TextColumn::make('outstandingunits.unit.name')
+                ->label('Unit')
+                ->badge(),
             Tables\Columns\TextColumn::make('created_at')
                 ->dateTime()
                 ->sortable()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OutstandingResource\RelationManagers;
 
+use App\Models\Reporting;
 use App\Models\Team;
 use Carbon\Carbon;
 use Filament\Forms;
@@ -75,6 +76,21 @@ class ReportingsRelationManager extends RelationManager
                             ->default('1')
                             ->grouped()
                             ->required(),
+                        SpatieMediaLibraryFileUpload::make('attachments')
+                            ->image()
+                            ->disabled()
+                            ->multiple()
+                            ->resize(30)
+                            ->optimize('jpg')
+                            ->imagePreviewHeight('50')
+                            ->downloadable()
+                            ->openable()
+                            ->maxSize(2048)
+                            ->maxFiles(10)
+                            ->preserveFilenames()
+                            ->columnSpanFull()
+                            ->previewable()
+                            ->deletable(false),
                     ])
                     ->columns(),
 
@@ -118,10 +134,10 @@ class ReportingsRelationManager extends RelationManager
                                 'style' => 'min-height: 100px;',
                             ])
                             ->columnSpanFull(),
-                        SpatieMediaLibraryFileUpload::make('attachments')
-                            ->multiple()
-                            ->preserveFilenames()
-                            ->previewable(false),
+                        // SpatieMediaLibraryFileUpload::make('attachments')
+                        //     ->multiple()
+                        //     ->preserveFilenames()
+                        //     ->previewable(false),
                     ]),
             ]);
     }
@@ -132,7 +148,7 @@ class ReportingsRelationManager extends RelationManager
             ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]))
-            ->recordTitleAttribute('cause')
+            ->recordTitleAttribute('date_visit')
             ->columns([
                 Tables\Columns\TextColumn::make('date_visit')
                     ->label('Tanggal')
@@ -140,7 +156,8 @@ class ReportingsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('user.firstname')
                     ->label('Support'),
                 Tables\Columns\TextColumn::make('work')
-                    ->label('Tipe Aksi'),
+                    ->label('Tipe')
+                    ->formatStateUsing(fn ($state) => ucwords($state)),
                 Tables\Columns\TextColumn::make('cause')
                     ->label('Sebab')
                     ->html(),
@@ -153,6 +170,12 @@ class ReportingsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge(),
+                Tables\Columns\IconColumn::make('attachments')
+                    ->getStateUsing(function (Reporting $record){
+                        return $record->getFirstMedia() ? true : false;
+                    })
+                    ->label('Berkas')
+                    ->boolean(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
