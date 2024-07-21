@@ -40,6 +40,12 @@ class Outstanding extends Model implements HasMedia
         'status' => OutstandingStatus::class,
     ];
 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('outstandings')
+            ->singleFile();
+    }
+
     /**
      * Get all of the reportings for the Outstanding
      *
