@@ -8,5 +8,6 @@ export default {
         './vendor/filament/**/*.blade.php',
         './vendor/awcodes/filament-quick-create/resources/**/*.blade.php',
         './Vendor/awcodes/filament-table-repeater/resources/**/*.blade.php',
+        './vendor/guava/calendar/resources/**/*.blade.php',
     ],
 }
