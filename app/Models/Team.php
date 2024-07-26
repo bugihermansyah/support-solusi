@@ -14,6 +14,10 @@ class Team extends Model
     use HasUlids;
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'color'
+    ];
     /**
      * Get all of the users for the Team
      *
