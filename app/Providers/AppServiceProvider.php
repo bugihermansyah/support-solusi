@@ -5,8 +5,6 @@ namespace App\Providers;
 use App\Http\Responses\StaffLoginResponse;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as LoginResponseContract;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,8 +29,8 @@ class AppServiceProvider extends ServiceProvider
                 ->striped()
                 ->defaultPaginationPageOption(10)
                 ->paginated([5, 10, 25, 50])
-                ->extremePaginationLinks()
-                ->defaultSort('created_at', 'desc');
+                ->extremePaginationLinks();
+                // ->defaultSort('created_at', 'desc');
         });
         FilamentShield::configurePermissionIdentifierUsing(
             fn($resource) => str($resource::getModel())
