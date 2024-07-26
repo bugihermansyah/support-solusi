@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\Product;
 use App\Models\Reporting;
 use App\Models\Team;
+use App\Models\User;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Pages\Page;
@@ -53,20 +54,30 @@ class ReportDetail extends Page implements HasTable
         // $currentYear = Carbon::now()->format('Y');
 
         return $table
-            ->query(Reporting::query())
+            ->query(Reporting::query()
+                    ->join('outstandings', 'outstandings.id', '=', 'reportings.outstanding_id')
+                    ->orderBy('outstandings.date_in', 'asc')
+                    ->orderBy('outstandings.date_visit', 'asc')
+                    ->select('reportings.*')
+                )
+            // ->defaultSort('outstanding.date_in', 'asc')
+            // ->defaultSort('date_visit', 'asc')
             ->columns([
                 TextColumn::make('outstanding.number')
                     ->label('No. Tiket')
                     ->limit('13')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('outstanding.location.name')
                     ->label('Lokasi')
                     ->limit('10'),
                 TextColumn::make('outstanding.product.name')
                     ->label('Produk')
-                    ->limit('15'),
+                    ->limit('15')
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('outstanding.reporter')
                     ->label('Pelapor')
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->formatStateUsing(fn ($state) => ucfirst($state)),
                 TextColumn::make('outstanding.title')
                     ->label('Masalah'),
@@ -75,14 +86,17 @@ class ReportDetail extends Page implements HasTable
                     ->date(),
                 TextColumn::make('date_visit')
                     ->label('Aksi')
-                    ->date(),
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('outstanding.date_finish')
                     ->label('Selesai')
-                    ->date(),
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('user.firstname')
                     ->label('Support'),
                 TextColumn::make('work')
                     ->label('Tipe')
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->formatStateUsing(fn ($state) => ucfirst($state)),
                 TextColumn::make('cause')
                     ->label('Sebab')
@@ -90,13 +104,19 @@ class ReportDetail extends Page implements HasTable
                 TextColumn::make('action')
                     ->label('Aksi')
                     ->html(),
-                TextColumn::make('solution')
-                    ->label('Solusi')
-                    ->html(),
                 TextColumn::make('status')
+                    ->badge(),
+                TextColumn::make('outstanding.is_type_problem')
+                    ->label('Tipe Problem')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->badge(),
+                TextColumn::make('outstanding.outstandingunits.unit.name')
+                    ->label('Unit')
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->badge(),
                 TextColumn::make('note')
                     ->label('Ket.')
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->html(),
             ])
             ->persistSortInSession()
@@ -122,6 +142,12 @@ class ReportDetail extends Page implements HasTable
                             ->label('Produk')
                             ->icon('heroicon-m-star')
                             ->options(Product::all()->pluck('name', 'name'))
+                            ->multiple()
+                            ->searchable(),
+                        SelectConstraint::make('user.firstname')
+                            ->label('Support')
+                            ->icon('heroicon-m-users')
+                            ->options(User::all()->pluck('firstname', 'firstname'))
                             ->multiple()
                             ->searchable(),
                         SelectConstraint::make('outstanding.reporter')
@@ -163,6 +189,8 @@ class ReportDetail extends Page implements HasTable
                                 Column::make('solution')->heading('Solusi')
                                     ->formatStateUsing(fn ($state) => strip_tags($state)),
                                 Column::make('status')->heading('Status'),
+                                Column::make('outstanding.is_type_problem')->heading('Tipe Problem'),
+                                Column::make('outstanding.outstandingunits.unit.name')->heading('Unit'),
                                 Column::make('note')->heading('Ket.')
                                     ->formatStateUsing(fn ($state) => strip_tags($state)),
                             ]),
