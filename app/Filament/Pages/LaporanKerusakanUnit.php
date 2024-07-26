@@ -55,7 +55,6 @@ class LaporanKerusakanUnit extends Page implements HasTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama Unit')
-                    ->searchable()
                     ->sortable(),
                 TextColumn::make('unit_sums')
                     ->label('Jumlah')
