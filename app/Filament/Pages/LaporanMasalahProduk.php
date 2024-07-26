@@ -1,9 +1,8 @@
 <?php
 
-// App\Filament\Pages\LaporanMasalahProduk.php
-
 namespace App\Filament\Pages;
 
+use App\Filament\Pages\Widgets\TotalForReportOverview;
 use App\Models\Product;
 use App\Models\Team;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
@@ -128,5 +127,12 @@ class LaporanMasalahProduk extends Page implements HasTable
             ->bulkActions([
                 // ...
             ]);
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TotalForReportOverview::class
+        ];
     }
 }
