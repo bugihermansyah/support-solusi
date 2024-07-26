@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\OutstandingStatus;
+use App\Enums\OutstandingTypeProblem;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +39,7 @@ class Outstanding extends Model implements HasMedia
 
     protected $casts = [
         'status' => OutstandingStatus::class,
+        'is_type_problem' => OutstandingTypeProblem::class,
     ];
 
     public function registerMediaCollections(): void
