@@ -5,6 +5,7 @@ namespace App\Filament\Support\Resources;
 use App\Enums\OutstandingStatus;
 use App\Filament\Support\Resources\OutstandingResource\Pages;
 use App\Filament\Support\Resources\OutstandingResource\RelationManagers;
+use App\Models\Contract;
 use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Product;
@@ -18,6 +19,7 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -55,17 +57,10 @@ class OutstandingResource extends Resource
                             Forms\Components\Select::make('product_id')
                                 ->label('Produk')
                                 ->disabled()
-                                ->options(function (callable $get){
-                                    $product = Location::find($get('location_id'));
-
-                                    if (!$product) {
-                                        return Product::all()->pluck('name', 'id');
-                                    }
-                                    if ($product->contracts) {
-                                        return $product->contracts->pluck('product.name', 'product.id');
-                                    }
-                                    return collect();
-                                })
+                                ->options(fn (Get $get): Collection => Contract::query()
+                                    ->where('location_id', $get('location_id'))
+                                    ->join('products', 'products.id', '=', 'contracts.product_id')
+                                    ->pluck('products.name', 'products.id'))
                                 ->required(),
                             Forms\Components\Select::make('reporter')
                                 ->label('Pelapor')
