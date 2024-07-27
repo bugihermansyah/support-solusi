@@ -24,7 +24,8 @@ class SupportDailyWidget extends CalendarWidget
         $events = Reporting::with('user.team')->get()->map(function ($reporting) {
             // dd($reporting->user->team->color);
             return [
-                'title' => $reporting->user->firstname .': '. $reporting->outstanding->location->name,
+                'title' => $reporting->user->firstname,
+                //  .': '. $reporting->outstanding->location->name,
                 'start' => $reporting->date_visit,
                 'end' => $reporting->date_visit, // Jika date_visit juga berfungsi sebagai end date
                 // 'textColor' => '#000'
