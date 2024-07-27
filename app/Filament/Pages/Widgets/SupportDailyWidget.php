@@ -16,7 +16,7 @@ class SupportDailyWidget extends CalendarWidget
     //     return Reporting::with('user')->get();
     // }
 
-    protected bool $eventClickEnabled = true;
+    // protected bool $eventClickEnabled = true;
 
     public function getEvents(array $fetchInfo = []): Collection | array
     {
@@ -39,7 +39,7 @@ class SupportDailyWidget extends CalendarWidget
             $locationName = $reporting->outstanding && $reporting->outstanding->location ? $reporting->outstanding->location->name : 'No Location';
 
             return [
-                'title' => $status .' | '. $reporting->user->username .': '. $locationName,
+                'title' => $status .' | '. $reporting->user->firstname .': '. $locationName,
                 'start' => $reporting->date_visit,
                 'end' => $reporting->date_visit, // Jika date_visit juga berfungsi sebagai end date
                 // 'textColor' => '#000'

@@ -21,6 +21,8 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Pages\Page;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -39,6 +41,8 @@ class OutstandingResource extends Resource
     protected static ?string $recordTitleAttribute = 'title';
 
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     public static function form(Form $form): Form
     {
@@ -342,10 +346,19 @@ class OutstandingResource extends Resource
             ]);
     }
 
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            // Pages\ViewPost::class,
+            Pages\EditOutstanding::class,
+            Pages\ManageOutstandingReport::class,
+        ]);
+    }
+
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ReportingsRelationManager::class,
+            // RelationManagers\ReportingsRelationManager::class,
         ];
     }
 
@@ -355,6 +368,7 @@ class OutstandingResource extends Resource
             'index' => Pages\ListOutstandings::route('/'),
             'create' => Pages\CreateOutstanding::route('/create'),
             'edit' => Pages\EditOutstanding::route('/{record}/edit'),
+            'reportings' => Pages\ManageOutstandingReport::route('/{record}/reportings'),
         ];
     }
 
