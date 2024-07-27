@@ -108,6 +108,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         return $this->belongsTo(Team::class);
     }
 
+    public function reporting()
+    {
+        return $this->belongsTo(Reporting::class);
+    }
+
     /**
      * Get all of the evaluations for the User
      *
