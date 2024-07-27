@@ -23,9 +23,23 @@ class SupportDailyWidget extends CalendarWidget
         // Ambil semua event dari model Reporting dan transformasikan sesuai kebutuhan
         $events = Reporting::with('user.team')->get()->map(function ($reporting) {
             // dd($reporting->user->team->color);
+            $statusValue = $reporting->status ? $reporting->status->value : null;
+            switch ($statusValue) {
+                case '1':
+                    $status = 'S';
+                    break;
+                case '0':
+                    $status = 'P';
+                    break;
+                default:
+                    $status = '?';
+                    break;
+            }
+
+            $locationName = $reporting->outstanding && $reporting->outstanding->location ? $reporting->outstanding->location->name : 'No Location';
+
             return [
-                'title' => $reporting->user->firstname,
-                //  .': '. $reporting->outstanding->location->name,
+                'title' => $status .' | '. $reporting->user->username .': '. $locationName,
                 'start' => $reporting->date_visit,
                 'end' => $reporting->date_visit, // Jika date_visit juga berfungsi sebagai end date
                 // 'textColor' => '#000'
