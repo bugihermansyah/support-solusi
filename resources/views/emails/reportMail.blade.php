@@ -71,16 +71,16 @@
             <td class="top">Aksi:</td>
             <td class="top">{!! $data['aksi'] !!}</td>
         </tr>
-        @isset($data['solusi'])
-        <tr>
-            <td class="top">Solusi:</td>
-            <td class="top">{!! $data['solusi'] !!}</td>
-        </tr>
-        @endisset
         <tr>
             <td>Status:</td>
             <td>{{ $data['status'] }}</td>
         </tr>
+        @isset($data['revisit'])
+        <tr>
+            <td>Maksimal:</td>
+            <td>{{ $data['revisit'] }}</td>
+        </tr>
+        @endisset
         @isset($data['note'])
         <tr>
             <td class="top">Keterangan:</td>
