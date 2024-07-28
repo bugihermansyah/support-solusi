@@ -19,6 +19,8 @@ class SupportDaily extends Page
     //     return Reporting::with('user')->get();
     // }
 
+    protected static ?int $navigationSort = 2;
+
     public function mount()
     {
         $this->form->fill([
