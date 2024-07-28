@@ -28,10 +28,11 @@ class Reporting extends Model implements HasMedia, Eventable
         'solution',
         'work',
         'date_visit',
-        'user_id',
+        // 'user_id',
         'status',
         'revisit',
-        'note'
+        'note',
+        'user_created_at'
     ];
 
     protected $casts = [
@@ -43,6 +44,11 @@ class Reporting extends Model implements HasMedia, Eventable
             ->title($this->cause)
             ->start($this->date_visit)
             ->end($this->date_visit);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'reporting_users', 'reporting_id', 'user_id')->withTimestamps();
     }
 
     /**

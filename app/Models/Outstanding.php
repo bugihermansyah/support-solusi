@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OutstandingPriority;
 use App\Enums\OutstandingStatus;
 use App\Enums\OutstandingTypeProblem;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -32,6 +33,7 @@ class Outstanding extends Model implements HasMedia
         'lpm',
         'is_implement',
         'is_type_problem',
+        'priority',
         'status',
         'user_id',
         'create_user_id'
@@ -40,6 +42,10 @@ class Outstanding extends Model implements HasMedia
     protected $casts = [
         'status' => OutstandingStatus::class,
         'is_type_problem' => OutstandingTypeProblem::class,
+        'priority' => OutstandingPriority::class,
+        'lpm' => 'boolean',
+        'is_implement' => 'boolean',
+        'is_oncall' => 'boolean',
     ];
 
     public function registerMediaCollections(): void

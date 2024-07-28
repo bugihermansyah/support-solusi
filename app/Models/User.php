@@ -113,6 +113,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         return $this->belongsTo(Reporting::class);
     }
 
+    public function reportings()
+    {
+        return $this->belongsToMany(Reporting::class, 'reporting_users', 'user_id', 'reporting_id')->withTimestamps();
+    }
+
     /**
      * Get all of the evaluations for the User
      *
