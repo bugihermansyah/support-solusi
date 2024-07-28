@@ -23,7 +23,7 @@ class TotalForReportOverview extends BaseWidget
                                     ->groupBy('locations.id')
                                     ->groupBy('outstandings.date_in')
                                     ->select('locations.name')
-                                    ->get()
+                                    // ->get()
                                     ->count();
 
         $totalSlaVisit = DB::table('outstandings')
