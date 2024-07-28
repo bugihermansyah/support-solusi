@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\OutstandingPriority;
 use App\Enums\OutstandingStatus;
 use App\Filament\Resources\OutstandingResource\Pages;
 use App\Filament\Resources\OutstandingResource\RelationManagers;
@@ -16,6 +17,7 @@ use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -58,16 +60,19 @@ class OutstandingResource extends Resource
                                 ->disabled()
                                 ->dehydrated()
                                 ->required()
+                                ->columnSpanFull()
                                 ->maxLength(32)
                                 ->unique(Outstanding::class, 'number', ignoreRecord: true),
                             Forms\Components\Select::make('location_id')
                                 ->label('Lokasi')
                                 ->options(Location::query()->pluck('name', 'id'))
                                 ->live()
+                                ->columnSpan(2)
                                 ->searchable()
                                 ->required(),
                             Forms\Components\Select::make('product_id')
                                 ->label('Produk')
+                                ->columnSpan(2)
                                 ->options(fn (Get $get): Collection => Contract::query()
                                     ->where('location_id', $get('location_id'))
                                     ->join('products', 'products.id', '=', 'contracts.product_id')
@@ -90,52 +95,35 @@ class OutstandingResource extends Resource
                         ])
                         ->columns(4),
 
-                    Forms\Components\Fieldset::make('Informasi tanggal')
+                    // Forms\Components\Fieldset::make('Informasi tanggal')
+                    //     ->schema([
+                    //         Forms\Components\DatePicker::make('date_in')
+                    //             ->label('Awal')
+                    //             ->default(now())
+                    //             ->maxDate(now())
+                    //             ->native(false)
+                    //             ->required(),
+                    //         Forms\Components\DatePicker::make('date_visit')
+                    //             ->label('Visit/Remote')
+                    //             ->native(false),
+                    //             // ->maxDate(now()),
+                    //         Forms\Components\DatePicker::make('date_finish')
+                    //             ->label('Selesai')
+                    //             ->native(false)
+                    //             ->maxDate(now()),
+                    //     ])
+                    //     ->columns(3),
+
+                    Forms\Components\Fieldset::make('Foto')
                         ->schema([
-                            Forms\Components\DatePicker::make('date_in')
-                                ->label('Awal')
-                                ->default(now())
-                                ->maxDate(now())
-                                ->native(false)
-                                ->required(),
-                            // Forms\Components\Select::make('user_id')
-                            //     ->label('Jadwal')
-                            //     ->options(function () {
-                            //         $teams = Team::with('users')->get();
-                            //         $options = [];
-
-                            //         foreach ($teams as $team) {
-                            //             $teamUsers = $team->users->pluck('name', 'id')->toArray();
-                            //             $options[$team->name] = $teamUsers;
-                            //         }
-
-                            //         return $options;
-                            //     })
-                            //     ->searchable(),
-                            Forms\Components\DatePicker::make('date_visit')
-                                ->label('Visit/Remote')
-                                ->native(false),
-                                // ->maxDate(now()),
-                            Forms\Components\DatePicker::make('date_finish')
-                                ->label('Selesai')
-                                ->native(false)
-                                ->maxDate(now()),
-                        ])
-                        ->columns(3),
-
-                    Forms\Components\Fieldset::make('Tipe masalah')
-                        ->schema([
-                            Forms\Components\ToggleButtons::make('is_type_problem')
-                                ->label('')
-                                ->options([
-                                    '1' => 'H/W',
-                                    '2' => 'S/W',
-                                    '3' => 'H/W No-Unit',
-                                    '4' => 'Sipil'
-                                ])
-                                ->default(3)
-                                ->inline()
-                                ->inlineLabel(false),
+                            SpatieMediaLibraryFileUpload::make('image')
+                                ->hiddenLabel()
+                                ->image()
+                                ->imageEditor()
+                                ->resize(20)
+                                ->openable()
+                                ->collection('outstandings')
+                                ->columnSpanFull(),
                                 ]),
                 ])
                 ->columnSpan(['lg' => 2]),
@@ -143,26 +131,61 @@ class OutstandingResource extends Resource
             Forms\Components\Group::make()
                 ->schema([
                     Forms\Components\Fieldset::make('Informasi status')
-                        ->columns([
-                            'sm' => 3,
-                            'lg' => 3,
-                        ])
+                        // ->columns([
+                        //     'sm' => 3,
+                        //     'lg' => 3,
+                        // ])
                         ->schema([
                             Forms\Components\Checkbox::make('lpm')
-                                ->label('LPM')
-                                ->columnSpan(['sm' => 1]),
+                                ->label('LPM'),
+                                // ->columnSpan(['sm' => 1]),
                             Forms\Components\Checkbox::make('status')
-                                ->label('Closed')
-                                ->columnSpan(['sm' => 1]),
+                                ->label('Closed'),
+                                // ->columnSpan(['sm' => 1]),
                             Forms\Components\Checkbox::make('is_implement')
-                                ->label('Imple')
-                                ->columnSpan(['sm' => 1]),
-                            SpatieMediaLibraryFileUpload::make('image')
-                                ->imageEditor()
-                                ->resize(20)
-                                ->openable()
-                                ->collection('outstandings')
+                                ->label('Imple'),
+                                // ->columnSpan(['sm' => 1]),
+                            Forms\Components\Checkbox::make('is_oncall')
+                                ->label('Oncall'),
+                            Grid::make(3)
+                                ->schema([
+                                    Forms\Components\DatePicker::make('date_in')
+                                        ->label('Lapor')
+                                        // ->columnSpan(3)
+                                        ->default(now())
+                                        ->maxDate(now())
+                                        ->native(false)
+                                        ->required(),
+                                    Forms\Components\DatePicker::make('date_visit')
+                                        ->label('Visit/Remote')
+                                        // ->columnSpanFull()
+                                        ->native(false),
+                                        // ->maxDate(now()),
+                                    Forms\Components\DatePicker::make('date_finish')
+                                        ->label('Selesai')
+                                        // ->columnSpanFull()
+                                        ->native(false)
+                                        ->maxDate(now()),
+                                ]),
+                            Forms\Components\Select::make('priority')
+                                ->label('Priority')
+                                ->options(OutstandingPriority::class)
+                                ->default('normal')
                                 ->columnSpanFull(),
+                            // ->columnSpan(['sm' => 1]),
+                            Forms\Components\ToggleButtons::make('is_type_problem')
+                                ->label('Tipe Problem')
+                                ->options([
+                                    '3' => 'H/W-Non',
+                                    '1' => 'H/W',
+                                    '2' => 'S/W',
+                                    '4' => 'Sipil'
+                                ])
+                                ->columnSpanFull()
+                                ->default(3)
+                                ->required()
+                                ->inline(),
+                                // ->inlineLabel(false),
                             TableRepeater::make('outstandingunits')
                                 ->label('Unit')
                                 ->collapsible()
@@ -321,6 +344,26 @@ class OutstandingResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\Filter::make('sla')
+                    ->query(function (Builder $query, array $data) {
+                        switch ($data['value']) {
+                            case 'sla1':
+                                return $query->whereRaw('DATEDIFF(date_finish, date_visit) BETWEEN 0 AND 3');
+                            case 'sla2':
+                                return $query->whereRaw('DATEDIFF(date_finish, date_visit) BETWEEN 4 AND 7');
+                            case 'sla3':
+                                return $query->whereRaw('DATEDIFF(date_finish, date_visit) > 7');
+                        }
+                    })
+                    ->form([
+                        Forms\Components\Select::make('value')
+                            ->options([
+                                'sla1' => 'SLA 1 (0 - 3)',
+                                'sla2' => 'SLA 2 (4 - 7)',
+                                'sla3' => 'SLA 3 (> 7)',
+                            ])
+                            ->required(),
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),

@@ -55,7 +55,7 @@ class ListOutstandings extends ListRecords
 
         return [
             Action::make('createAnother')
-                ->label('Buat Cepat')
+                ->label('Buat Jadwal')
                 ->icon('heroicon-o-briefcase')
                 ->form([
                     Section::make()
@@ -187,6 +187,7 @@ class ListOutstandings extends ListRecords
                             Select::make('user_id')
                                 ->label('Support')
                                 // ->visible(fn ($get) => $get('task'))
+                                ->multiple()
                                 ->searchable()
                                 ->required()
                                 // ->columnSpan([
@@ -205,7 +206,7 @@ class ListOutstandings extends ListRecords
                         ])
                         // ->columns(2)
                 ])
-                ->modalHeading('Buat Cepat Schedule / Outstanding')
+                ->modalHeading('Buat Jadwal')
                 // ->extraModalFooterActions(fn (Action $action): array => [
                 //     $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
                 //         ->label('Kirim & buat lainnya'),
@@ -226,12 +227,16 @@ class ListOutstandings extends ListRecords
                             'date_visit' => $data['date_visit'],
                         ]);
                         // Create new reporting
-                        Reporting::create([
+                        $reporting = Reporting::create([
                             'outstanding_id' => $outstanding->id,
-                            'user_id' => $data['user_id'],
+                            // 'user_id' => $data['user_id'],
                             'date_visit' => $data['date_visit'],
                             'status' => null,
                         ]);
+                        // Attach multiple users to the reporting
+                        if (isset($data['user_id']) && is_array($data['user_id'])) {
+                            $reporting->users()->attach($data['user_id']);
+                        }
 
                         Notification::make()
                             ->title('Data berhasil dibuat')
@@ -240,12 +245,22 @@ class ListOutstandings extends ListRecords
                     } else {
                         // Create new reporting
                         foreach($data['outstanding_id'] as $check_id){
-                            Reporting::create([
+                            // Reporting::create([
+                            //     'outstanding_id' => $check_id,
+                            //     'user_id' => $data['user_id'],
+                            //     'date_visit' => $data['date_visit'],
+                            //     'status' => null,
+                            // ]);
+                            $reporting = Reporting::create([
                                 'outstanding_id' => $check_id,
-                                'user_id' => $data['user_id'],
+                                // 'user_id' => $data['user_id'],
                                 'date_visit' => $data['date_visit'],
                                 'status' => null,
                             ]);
+                            // Attach multiple users to the reporting
+                            if (isset($data['user_id']) && is_array($data['user_id'])) {
+                                $reporting->users()->attach($data['user_id']);
+                            }
                         }
 
                         Notification::make()

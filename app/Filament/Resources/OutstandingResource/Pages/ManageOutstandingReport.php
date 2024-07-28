@@ -11,10 +11,13 @@ use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -104,7 +107,7 @@ class ManageOutstandingReport extends ManageRelatedRecords
                             ->required(),
                         SpatieMediaLibraryFileUpload::make('attachments')
                             ->image()
-                            ->disabled()
+                            // ->disabled()
                             ->multiple()
                             ->resize(30)
                             ->optimize('jpg')
@@ -115,8 +118,8 @@ class ManageOutstandingReport extends ManageRelatedRecords
                             ->maxFiles(10)
                             ->preserveFilenames()
                             ->columnSpanFull()
-                            ->previewable()
-                            ->deletable(false),
+                            ->previewable(),
+                            // ->deletable(false),
                     ])
                     ->columns(),
 
@@ -173,12 +176,7 @@ class ManageOutstandingReport extends ManageRelatedRecords
         return $infolist
             ->columns(1)
             ->schema([
-                TextEntry::make('title'),
-                TextEntry::make('customer.name'),
-                IconEntry::make('is_visible')
-                    ->label('Visibility'),
-                TextEntry::make('content')
-                    ->markdown(),
+                SpatieMediaLibraryImageEntry::make('attachments')
             ]);
     }
 
@@ -188,13 +186,16 @@ class ManageOutstandingReport extends ManageRelatedRecords
             ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]))
-            ->recordTitleAttribute('date_visit')
+            ->recordTitleAttribute('cause')
             ->columns([
                 Tables\Columns\TextColumn::make('date_visit')
                     ->label('Tanggal')
                     ->date(),
-                Tables\Columns\TextColumn::make('user.firstname')
-                    ->label('Support'),
+                Tables\Columns\TextColumn::make('users.firstname')
+                    ->label('Support')
+                    ->listWithLineBreaks()
+                    ->limitList(1),
+                    // ->expandableLimitedList(),
                 Tables\Columns\TextColumn::make('work')
                     ->label('Tipe')
                     ->formatStateUsing(fn ($state) => ucwords($state)),
@@ -224,6 +225,7 @@ class ManageOutstandingReport extends ManageRelatedRecords
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()->hiddenLabel()->icon('heroicon-m-folder'),
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
                 Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
                 Tables\Actions\ForceDeleteAction::make()->hiddenLabel()->tooltip('Hapus selamanya'),
