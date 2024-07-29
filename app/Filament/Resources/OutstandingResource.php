@@ -294,6 +294,7 @@ class OutstandingResource extends Resource
                 ->label('Tim Area')
                 ->searchable()
                 ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true)
                 ->limit(5),
             Tables\Columns\TextColumn::make('location.name')
                 ->label('Lokasi')
@@ -328,9 +329,17 @@ class OutstandingResource extends Resource
                 ->suffix('x')
                 ->sortable()
                 ->counts('reportings'),
-            Tables\Columns\TextColumn::make('status')
+            Tables\Columns\SelectColumn::make('priority')
+                ->label('Priority')
+                ->options(OutstandingPriority::class)
+                ->selectablePlaceholder(false)
+                ->rules(['required'])
+                ->sortable(),
+            Tables\Columns\SelectColumn::make('status')
                 ->label('Status')
-                ->badge()
+                ->options(OutstandingStatus::class)
+                ->selectablePlaceholder(false)
+                ->rules(['required'])
                 ->sortable(),
             Tables\Columns\TextColumn::make('outstandingunits.unit.name')
                 ->label('Unit')
