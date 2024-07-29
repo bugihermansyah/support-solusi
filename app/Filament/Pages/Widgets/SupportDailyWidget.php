@@ -18,65 +18,70 @@ class SupportDailyWidget extends CalendarWidget
 
     // protected bool $eventClickEnabled = true;
 
-    public function getEvents(array $fetchInfo = []): Collection | array
-    {
-        // Ambil semua event dari model Reporting dengan relasi users, team, outstanding, dan location
-        $events = Reporting::with('users.team', 'outstanding.location')->get()->flatMap(function ($reporting) {
-            $locationName = $reporting->outstanding && $reporting->outstanding->location ? $reporting->outstanding->location->name : 'No Location';
-
-            // Iterasi melalui setiap pengguna yang terkait dengan Reporting
-            return $reporting->users->map(function ($user) use ($locationName, $reporting) {
-                return [
-                    'title' => $user->firstname .': '. $locationName,
-                    // 'user' => $user->firstname,
-                    // 'location' => $locationName,
-                    'start' => $reporting->date_visit,
-                    'end' => $reporting->date_visit,
-                    'backgroundColor' => $user->team->color,
-                ];
-            });
-        });
-
-        // Gabungkan event berdasarkan user dan location
-        $groupedEvents = $events->unique(function ($event) {
-            return $event['title'];
-            // return $event['user'] . $event['location'];
-        });
-
-        return $groupedEvents->values();
-    }
     // public function getEvents(array $fetchInfo = []): Collection | array
     // {
-    //     // Ambil semua event dari model Reporting dan transformasikan sesuai kebutuhan
+    //     // Ambil semua event dari model Reporting dengan relasi users, team, outstanding, dan location
     //     $events = Reporting::with('users.team', 'outstanding.location')->get()->flatMap(function ($reporting) {
-    //         $statusValue = $reporting->status ? $reporting->status->value : null;
-    //         switch ($statusValue) {
-    //             case '1':
-    //                 $status = 'S';
-    //                 break;
-    //             case '0':
-    //                 $status = 'P';
-    //                 break;
-    //             default:
-    //                 $status = '?';
-    //                 break;
-    //         }
-
     //         $locationName = $reporting->outstanding && $reporting->outstanding->location ? $reporting->outstanding->location->name : 'No Location';
 
     //         // Iterasi melalui setiap pengguna yang terkait dengan Reporting
-    //         return $reporting->users->map(function ($user) use ($status, $locationName, $reporting) {
+    //         return $reporting->users->map(function ($user) use ($locationName, $reporting) {
     //             return [
-    //                 'title' => $status .' | '. $user->firstname .': '. $locationName,
+    //                 'user' => $user->firstname,
+    //                 'location' => $locationName,
     //                 'start' => $reporting->date_visit,
-    //                 'end' => $reporting->date_visit, // Jika date_visit juga berfungsi sebagai end date
+    //                 'end' => $reporting->date_visit,
     //                 'backgroundColor' => $user->team->color,
     //             ];
     //         });
     //     });
 
-    //     return $events;
+    //     // Gabungkan event berdasarkan user dan location
+    //     $groupedEvents = $events->unique(function ($event) {
+    //         return $event['user'] . '|' . $event['location'];
+    //     });
+
+    //     return $groupedEvents->values()->map(function ($event) {
+    //         return [
+    //             'title' => $event['user'] . ': ' . $event['location'],
+    //             'start' => $event['start'],
+    //             'end' => $event['end'],
+    //             'backgroundColor' => $event['backgroundColor'],
+    //         ];
+    //     });
     // }
+    public function getEvents(array $fetchInfo = []): Collection | array
+    {
+        // Ambil semua event dari model Reporting dan transformasikan sesuai kebutuhan
+        $events = Reporting::with('users.team', 'outstanding.location')->get()->flatMap(function ($reporting) {
+            $statusValue = $reporting->status ? $reporting->status->value : null;
+            switch ($statusValue) {
+                case '1':
+                    $status = 'S';
+                    break;
+                case '0':
+                    $status = 'P';
+                    break;
+                default:
+                    $status = '?';
+                    break;
+            }
+
+            $locationName = $reporting->outstanding && $reporting->outstanding->location ? $reporting->outstanding->location->name : 'No Location';
+
+            // Iterasi melalui setiap pengguna yang terkait dengan Reporting
+            return $reporting->users->map(function ($user) use ($status, $locationName, $reporting) {
+                return [
+                    'title' => $status .' | '. $user->firstname .': '. $locationName,
+                    'start' => $reporting->date_visit,
+                    'end' => $reporting->date_visit, // Jika date_visit juga berfungsi sebagai end date
+                    'backgroundColor' => $user->team->color,
+                ];
+            });
+        });
+
+        return $events;
+    }
 
     // public function getEventClickContextMenuActions(): array
     // {
