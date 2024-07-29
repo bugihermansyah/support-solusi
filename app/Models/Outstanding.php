@@ -33,6 +33,7 @@ class Outstanding extends Model implements HasMedia
         'lpm',
         'is_implement',
         'is_type_problem',
+        'is_oncall',
         'priority',
         'status',
         'user_id',
