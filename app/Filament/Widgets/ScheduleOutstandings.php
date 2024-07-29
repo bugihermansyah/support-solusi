@@ -22,9 +22,14 @@ class ScheduleOutstandings extends BaseWidget
         $query = Reporting::query()
                     ->whereNull('reportings.status');
 
+        // if ($isHead) {
+        //         $query->join('users', 'users.id', '=', 'reportings.user_id')
+        //               ->where('users.team_id', $userTeam);
+        // }
         if ($isHead) {
-                $query->join('users', 'users.id', '=', 'reportings.user_id')
-                      ->where('users.team_id', $userTeam);
+            $query->whereHas('users', function ($query) use ($userTeam) {
+                $query->where('team_id', $userTeam);
+            });
         }
 
         return $table
@@ -37,7 +42,7 @@ class ScheduleOutstandings extends BaseWidget
                 TextColumn::make('date_visit')
                     ->label('Tanggal')
                     ->date(),
-                TextColumn::make('user.firstname')
+                TextColumn::make('users.firstname')
                     ->label('Support'),
                 TextColumn::make('outstanding.location.name')
                     ->label('Lokasi')
