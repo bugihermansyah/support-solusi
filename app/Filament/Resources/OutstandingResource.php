@@ -171,6 +171,7 @@ class OutstandingResource extends Resource
                                 ->label('Priority')
                                 ->options(OutstandingPriority::class)
                                 ->default('normal')
+                                ->required()
                                 ->columnSpanFull(),
                             // ->columnSpan(['sm' => 1]),
                             Forms\Components\ToggleButtons::make('is_type_problem')
