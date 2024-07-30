@@ -20,6 +20,8 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Pages\Page;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -40,6 +42,8 @@ class OutstandingResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
 
     protected static ?int $navigationSort = 1;
+
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     public static function form(Form $form): Form
     {
@@ -137,6 +141,7 @@ class OutstandingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->defaultSort('created_at', 'desc')
         ->columns([
             Tables\Columns\TextColumn::make('number')
                 ->label('No. Tiket')
@@ -149,14 +154,14 @@ class OutstandingResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('location.name')
                 ->label('Lokasi')
-                ->description(fn (Model $record) => $record->product?->name)
+                // ->description(fn (Model $record) => $record->product?->name)
                 ->searchable()
                 ->sortable()
                 ->limit(15),
-            // Tables\Columns\TextColumn::make('product.name')
-            //     ->label('Produk')
-            //     ->searchable()
-            //     ->limit(8),
+            Tables\Columns\TextColumn::make('product.name')
+                ->label('Produk')
+                ->searchable()
+                ->limit(8),
             Tables\Columns\TextColumn::make('title')
                 ->label('Masalah')
                 // ->limit(20)
@@ -181,16 +186,6 @@ class OutstandingResource extends Resource
             Tables\Columns\TextColumn::make('date_finish')
                 ->label('Selesai')
                 ->date(),
-            SpatieMediaLibraryImageColumn::make('reportings.user.media')
-                ->label('Support')
-                ->collection('avatars')
-                ->circular()
-                ->conversion('thumb')
-                ->stacked()
-                ->limit(4)
-                ->ring(3)
-                ->limitedRemainingText()
-                ->wrap(),
             Tables\Columns\TextColumn::make('reportings_count')
                 ->label('Aksi')
                 ->suffix('x')
@@ -227,10 +222,19 @@ class OutstandingResource extends Resource
             ]);
     }
 
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            // Pages\ViewPost::class,
+            Pages\EditOutstanding::class,
+            Pages\ManageOutstandingReport::class,
+        ]);
+    }
+
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ReportingsRelationManager::class,
+            // RelationManagers\ReportingsRelationManager::class,
         ];
     }
 
@@ -240,6 +244,7 @@ class OutstandingResource extends Resource
             'index' => Pages\ListOutstandings::route('/'),
             // 'create' => Pages\CreateOutstanding::route('/create'),
             'edit' => Pages\EditOutstanding::route('/{record}/edit'),
+            'reportings' => Pages\ManageOutstandingReport::route('/{record}/reportings'),
         ];
     }
 
