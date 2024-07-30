@@ -16,6 +16,8 @@ class SupportDailyWidget extends CalendarWidget
     //     return Reporting::with('user')->get();
     // }
 
+    protected string $calendarView = 'listWeek';
+
     // protected bool $eventClickEnabled = true;
 
     // public function getEvents(array $fetchInfo = []): Collection | array
