@@ -103,7 +103,9 @@ class ReportDailyResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->hiddenLabel()
+                    ->hidden(fn(Reporting $record) => !$record->status)
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([
