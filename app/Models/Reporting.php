@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\ReportStatus;
-use Guava\Calendar\Contracts\Eventable;
 use Guava\Calendar\ValueObjects\Event;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Reporting extends Model implements HasMedia, Eventable
+class Reporting extends Model implements HasMedia
 {
     use HasFactory;
     use HasUlids;
