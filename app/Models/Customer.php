@@ -28,6 +28,7 @@ class Customer extends Model
      */
     public function locations(): BelongsToMany
     {
-        return $this->belongsToMany(Location::class);
+        return $this->belongsToMany(Location::class, 'customer_locations')
+            ->withPivot('is_to');
     }
 }
