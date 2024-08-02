@@ -141,7 +141,7 @@
                 </tr>
                 <tr>
                     <th>Status</th>
-                    <td>{{ $reporting->status == 1 ? 'Selesai' : 'Pending' }}</td>
+                    <td>{{ $reporting->status->name }}</td>
                 </tr>
                 @isset($reporting->revisit)
                 <tr>
