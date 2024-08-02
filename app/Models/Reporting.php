@@ -28,15 +28,40 @@ class Reporting extends Model implements HasMedia, Eventable
         'solution',
         'work',
         'date_visit',
-        // 'user_id',
         'status',
         'revisit',
         'note',
+        'send_mail_at',
         'user_created_at'
     ];
 
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::deleting(function ($outstanding) {
+
+    //         foreach ($outstanding->reportings()->get() as $reporting) {
+    //             $reporting->delete();
+    //         }
+
+    //         $outstanding->outstandingUnits()->updateExistingPivot(null, ['deleted_at' => now()]);
+    //     });
+
+    //     static::restoring(function ($outstanding) {
+
+    //         foreach ($outstanding->reportings()->withTrashed()->get() as $reporting) {
+    //             $reporting->restore();
+    //         }
+
+    //         $outstanding->outstandingUnits()->withTrashed()->get()->each(function ($unit) use ($outstanding) {
+    //             $outstanding->outstandingUnits()->updateExistingPivot($unit->id, ['deleted_at' => null]);
+    //         });
+    //     });
+    // }
+
     protected $casts = [
-        'status' => ReportStatus::class,
+        'status' => ReportStatus::class
     ];
 
     public function toEvent(): Event|array {

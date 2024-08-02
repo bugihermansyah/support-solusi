@@ -42,6 +42,15 @@ class ReportDailyResource extends Resource
                     ->schema([
                         Section::make('Info')
                             ->schema([
+                                Placeholder::make('number')
+                                    ->label('No. Tiket')
+                                    ->content(fn (Reporting $record): string => $record->outstanding->number),
+                                Placeholder::make('location')
+                                    ->label('Lokasi')
+                                    ->content(fn (Reporting $record): string => $record->outstanding->location->name),
+                                Placeholder::make('title')
+                                    ->label('Masalah')
+                                    ->content(fn (Reporting $record): string => $record->outstanding->title),
                                 Placeholder::make('date_visit')
                                     ->label('Tanggal Aksi')
                                     ->content(fn (Reporting $record): string => $record->date_visit),
@@ -49,8 +58,11 @@ class ReportDailyResource extends Resource
                                     ->label('Support')
                                     ->content(fn (Reporting $record): string => $record->users()->pluck('firstname')->join(', ')),
                                 Placeholder::make('status')
-                                    ->label('Status')
+                                    ->label('status')
                                     ->content(fn (Reporting $record): ?string => $record->status->name),
+                                Placeholder::make('status')
+                                    ->label('Mail')
+                                    ->content(fn (Reporting $record): ?string => $record->send_mail_at),
                             ])
                             ->columnSpan(['lg' => 1])
                             ->hidden(fn (?Reporting $record) => $record === null),
