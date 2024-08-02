@@ -4,6 +4,8 @@ namespace App\Filament\Resources\ReportDailyResource\Pages;
 
 use App\Events\ClientMailEvent;
 use App\Filament\Resources\ReportDailyResource;
+use App\Jobs\ClientMailJob;
+use App\Models\Location;
 use App\Models\Reporting;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -76,15 +78,20 @@ class EditReportDaily extends EditRecord
             $supportNames[] = $user->firstname;
         }
 
-        // dd($supportNames);
-        // Trigger event with the collected emails on 'emailClient' queue
-        ClientMailEvent::dispatch($reporting, $toEmails, $ccEmails, $locationName, $outstandingNumber, $outstandingTitle, $outstandingReporter, $supportNames);
-            // ->onQueue('emailClients');
+        ClientMailJob::dispatch($reporting,
+            $toEmails,
+            $ccEmails,
+            $locationName,
+            $outstandingNumber,
+            $outstandingTitle,
+            $outstandingReporter,
+            $supportNames
+        )->onQueue('clientEmails');
+
     }
 
-
-    // protected function getFormActions(): array
-    // {
-    //     return [];
-    // }
+    protected function getFormActions(): array
+    {
+        return [];
+    }
 }
