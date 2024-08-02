@@ -71,13 +71,13 @@ class SupportDailyWidget extends CalendarWidget
 
             $locationName = $reporting->outstanding && $reporting->outstanding->location ? $reporting->outstanding->location->name : 'No Location';
 
-            // Iterasi melalui setiap pengguna yang terkait dengan Reporting
             return $reporting->users->map(function ($user) use ($status, $locationName, $reporting) {
+                $backgroundColor = $user->team ? $user->team->color : '#000000'; // Default color if team is null
                 return [
                     'title' => $status .' | '. $user->firstname .': '. $locationName,
                     'start' => $reporting->date_visit,
-                    'end' => $reporting->date_visit, // Jika date_visit juga berfungsi sebagai end date
-                    'backgroundColor' => $user->team->color,
+                    'end' => $reporting->date_visit,
+                    'backgroundColor' => $backgroundColor,
                 ];
             });
         });
