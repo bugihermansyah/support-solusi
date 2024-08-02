@@ -13,6 +13,7 @@ use App\Models\Team;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -125,51 +126,107 @@ class LocationResource extends Resource
                     ->columnSpan(['lg' => 2]),
 
                     Forms\Components\Group::make()
-                    ->schema([
-                        Forms\Components\Section::make()
-                            ->schema([
-                                Forms\Components\DatePicker::make('first_project')
-                                    ->label('Tanggal Proyek')
-                                    ->native(false),
-                            ]),
-
-                        Forms\Components\Section::make()
-                            ->schema([
-                                Forms\Components\Repeater::make('customerlocations')
-                                    ->label('Pelanggan')
-                                    ->relationship()
-                                    ->schema([
-                                        Forms\Components\Select::make('customer_id')
-                                            ->label('Nama')
-                                            ->relationship('customer', 'name')
-                                            ->preload()
-                                            ->searchable()
-                                            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
-                                            ->required()
-                                            ->createOptionForm([
-                                                Forms\Components\TextInput::make('name')
-                                                    ->required()
-                                                    ->maxLength(255),
-                                                Forms\Components\TextInput::make('tlp')
-                                                    ->maxLength(255),
-                                                Forms\Components\TextInput::make('email')
-                                                    ->label('Email address')
-                                                    ->required()
-                                                    ->email()
-                                                    ->maxLength(255)
-                                                    ->unique(),
-                                            ])
-                                            ->createOptionAction(function (Action $action) {
-                                                return $action
-                                                    ->modalHeading('Buat Pelanggan')
-                                                    ->modalSubmitActionLabel('Buat Pelanggan')
-                                                    ->modalWidth('lg');
-                                            }),
+                        ->schema([
+                            Tabs::make('Tabs')
+                                ->tabs([
+                                    Tabs\Tab::make('Mail Notifications')
+                                        ->icon('heroicon-m-bell')
+                                        ->schema([
+                                            Forms\Components\Repeater::make('customerlocations')
+                                                ->label('Pelanggan')
+                                                ->relationship()
+                                                // ->itemLabel(fn (array $state): ?string => $state['email'] ?? null)
+                                                ->deleteAction(
+                                                    fn (Action $action) => $action->requiresConfirmation(),
+                                                )
+                                                ->schema([
+                                                    Forms\Components\Grid::make(4)
+                                                        ->schema([
+                                                            Forms\Components\Select::make('customer_id')
+                                                                ->label('Nama')
+                                                                ->relationship('customer', 'email')
+                                                                ->preload()
+                                                                // ->live(onBlur:true)
+                                                                ->columnSpan(3)
+                                                                ->distinct()
+                                                                ->searchable()
+                                                                ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                                                ->required()
+                                                                ->createOptionForm([
+                                                                    Forms\Components\TextInput::make('name')
+                                                                        ->required()
+                                                                        ->maxLength(255),
+                                                                    Forms\Components\TextInput::make('tlp')
+                                                                        ->maxLength(255),
+                                                                    Forms\Components\TextInput::make('email')
+                                                                        ->label('Email address')
+                                                                        ->required()
+                                                                        ->email()
+                                                                        ->maxLength(255)
+                                                                        ->unique(),
+                                                                ])
+                                                                ->createOptionAction(function (Action $action) {
+                                                                    return $action
+                                                                        ->modalHeading('Buat Pelanggan')
+                                                                        ->modalSubmitActionLabel('Buat Pelanggan')
+                                                                        ->modalWidth('lg');
+                                                                }),
+                                                            Forms\Components\Toggle::make('is_to')
+                                                                ->label('CC/To')
+                                                                ->inline(false)
+                                                        ])
+                                                ])
+                                                ->collapsible()
+                                                ->defaultItems(0),
+                                        ]),
+                                    // ...
                                     ])
-                                    ->collapsible()
-                                    ->defaultItems(0),
-                            ]),
-                    ])
+                        ])
+                    // ->schema([
+                    //     Forms\Components\Section::make()
+                    //         ->schema([
+                    //             Forms\Components\DatePicker::make('first_project')
+                    //                 ->label('Tanggal Proyek')
+                    //                 ->native(false),
+                    //         ]),
+
+                    //     Forms\Components\Section::make()
+                    //         ->schema([
+                    //             Forms\Components\Repeater::make('customerlocations')
+                    //                 ->label('Pelanggan')
+                    //                 ->relationship()
+                    //                 ->schema([
+                    //                     Forms\Components\Select::make('customer_id')
+                    //                         ->label('Nama')
+                    //                         ->relationship('customer', 'name')
+                    //                         ->preload()
+                    //                         ->searchable()
+                    //                         ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                    //                         ->required()
+                    //                         ->createOptionForm([
+                    //                             Forms\Components\TextInput::make('name')
+                    //                                 ->required()
+                    //                                 ->maxLength(255),
+                    //                             Forms\Components\TextInput::make('tlp')
+                    //                                 ->maxLength(255),
+                    //                             Forms\Components\TextInput::make('email')
+                    //                                 ->label('Email address')
+                    //                                 ->required()
+                    //                                 ->email()
+                    //                                 ->maxLength(255)
+                    //                                 ->unique(),
+                    //                         ])
+                    //                         ->createOptionAction(function (Action $action) {
+                    //                             return $action
+                    //                                 ->modalHeading('Buat Pelanggan')
+                    //                                 ->modalSubmitActionLabel('Buat Pelanggan')
+                    //                                 ->modalWidth('lg');
+                    //                         }),
+                    //                 ])
+                    //                 ->collapsible()
+                    //                 ->defaultItems(0),
+                    //         ]),
+                    // ])
                     ->columnSpan(['lg' => 1]),
             ])
             ->columns(3);
