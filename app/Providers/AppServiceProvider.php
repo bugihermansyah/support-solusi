@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Responses\StaffLoginResponse;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
+use BezhanSalleh\PanelSwitch\PanelSwitch;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as LoginResponseContract;
 use Filament\Tables\Table;
 use Illuminate\Support\ServiceProvider;
@@ -38,5 +39,17 @@ class AppServiceProvider extends ServiceProvider
                 ->lower()
                 ->toString()
         );
+        PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
+            $panelSwitch
+                ->simple()
+                ->labels([
+                    'admin' => 'HD',
+                    'support' => 'SP'
+                ])
+                // ->canSwitchPanels(fn (): bool => auth()->user()?->can('switch_panels'))
+                ->visible(fn (): bool => auth()->user()?->hasAnyRole([
+                    'head',
+                ]));
+        });
     }
 }

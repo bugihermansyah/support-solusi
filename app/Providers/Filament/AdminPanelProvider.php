@@ -38,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('/')
+            ->path('')
             ->login(Login::class)
             ->defaultAvatarProvider(GravatarProvider::class)
             // ->passwordReset(RequestPasswordReset::class)
