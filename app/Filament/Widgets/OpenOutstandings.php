@@ -31,7 +31,15 @@ class OpenOutstandings extends BaseWidget
         $isHead = $user && $user->hasRole('head');
 
         $query = Outstanding::query()
-                    ->where('outstandings.status', 0);
+                    ->where('outstandings.status', 0)
+                    ->orderByRaw("
+                    CASE
+                        WHEN priority = 'high' THEN 1
+                        WHEN priority = 'normal' THEN 2
+                        WHEN priority = 'low' THEN 3
+                        ELSE 4
+                    END
+                    ");
 
         if ($isHead) {
                 $query->join('locations', 'locations.id', '=', 'outstandings.location_id')
@@ -41,6 +49,7 @@ class OpenOutstandings extends BaseWidget
             ->defaultPaginationPageOption(5)
             ->query($query->select('outstandings.*'))
             ->defaultSort('date_in', 'asc')
+            // ->defaultSort('priority', 'asc')
             ->poll('30s')
             ->deferLoading()
             ->columns([
