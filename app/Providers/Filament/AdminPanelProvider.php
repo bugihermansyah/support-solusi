@@ -43,6 +43,7 @@ class AdminPanelProvider extends PanelProvider
             ->defaultAvatarProvider(GravatarProvider::class)
             // ->passwordReset(RequestPasswordReset::class)
             // ->emailVerification(EmailVerification::class)
+            ->globalSearch(false)
             ->favicon(fn (GeneralSettings $settings) => Storage::url($settings->site_favicon))
             ->brandName(fn (GeneralSettings $settings) => $settings->brand_name)
             ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
@@ -52,6 +53,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Main',
                 'Reports',
+                'Gudang',
                 'Indicator Performances',
                 'Access',
             ])
@@ -126,6 +128,7 @@ class AdminPanelProvider extends PanelProvider
                     ->myProfileComponents([
                         'personal_info' => MyProfileExtended::class,
                     ]),
+                \EightyNine\Approvals\ApprovalPlugin::make()
             ])
             ->plugin(PanelRoles::make()
                 // ->roleToAssign('staff')
