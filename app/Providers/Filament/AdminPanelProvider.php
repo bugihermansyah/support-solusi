@@ -127,8 +127,7 @@ class AdminPanelProvider extends PanelProvider
                     )
                     ->myProfileComponents([
                         'personal_info' => MyProfileExtended::class,
-                    ]),
-                \EightyNine\Approvals\ApprovalPlugin::make()
+                    ])
             ])
             ->plugin(PanelRoles::make()
                 // ->roleToAssign('staff')
