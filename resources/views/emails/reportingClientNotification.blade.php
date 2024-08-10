@@ -87,31 +87,15 @@
 <body>
     <div class="container">
         <div class="header">
-            <!-- <h1>Laporan Pekerjaan</h1> -->
         </div>
         <div class="content">
-            <p>Hai, <strong>{{ $locationName }}</strong></p>
+            <p>Kepada, <strong>{{ $locationName }}</strong></p>
             <p>Berikut adalah laporan pekerjaan Tim Support:</p>
-
-            <!-- <h2>Detail Laporan:</h2> -->
-            <!-- <div class="details">
-                {{-- <div><span>Tanggal Lapor:</span> 31 Jul 2024</div> --}}
-                <div><span>No.:</span> {{ $outstandingNumber }}</div>
-                <div><span>{{ ucfirst($reporting->work) }}:</span> {{ \Carbon\Carbon::parse($reporting->date_visit)->format('d M Y') }}</div>
-                <div><span>Support:</span> {{ implode(', ', $supportNames) }}</div>
-                <div><span>Pelapor:</span> {{ ucfirst($outstandingReporter) }}</div>
-            </div> -->
-
-            <!-- <h2>Detail Masalah:</h2> -->
             <table>
                 <tr>
                     <th>No.:</th>
                     <td>{{ $outstandingNumber }}</td>
                 </tr>
-                {{-- <tr>
-                    <th>Lapor:</th>
-                    <td>{{ $outstandingNumber }}</td>
-                </tr> --}}
                 <tr>
                     <th>{{ ucfirst($reporting->work) }}:</th>
                     <td> {{ \Carbon\Carbon::parse($reporting->date_visit)->format('d M Y') }}</td>
