@@ -10,6 +10,7 @@ use App\Models\User;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Pages\Page;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -92,7 +93,7 @@ class ReportDetail extends Page implements HasTable
                     ->label('Selesai')
                     ->date()
                     ->toggleable(isToggledHiddenByDefault: false),
-                TextColumn::make('user.firstname')
+                TextColumn::make('users.firstname')
                     ->label('Support'),
                 TextColumn::make('work')
                     ->label('Tipe')
@@ -144,7 +145,7 @@ class ReportDetail extends Page implements HasTable
                             ->options(Product::all()->pluck('name', 'name'))
                             ->multiple()
                             ->searchable(),
-                        SelectConstraint::make('user.firstname')
+                        SelectConstraint::make('users.firstname')
                             ->label('Support')
                             ->icon('heroicon-m-users')
                             ->options(User::all()->pluck('firstname', 'firstname'))
@@ -164,6 +165,7 @@ class ReportDetail extends Page implements HasTable
                             ->icon('heroicon-m-calendar')
                     ]),
             ], layout: FiltersLayout::Modal)
+            ->filtersFormWidth(MaxWidth::ExtraLarge)
             ->headerActions([
                 ExportAction::make()
                     ->label('Export XLS/XLSX/CSV')
