@@ -41,7 +41,11 @@ class Location extends Model
 
     public function getNameAliasAttribute()
     {
-        return "{$this->name} - {$this->company->alias}";
+        if ($this->company && $this->company->alias) {
+            return "{$this->name} - {$this->company->alias}";
+        }
+
+        return "{$this->name}";
     }
 
     public function team(): BelongsTo

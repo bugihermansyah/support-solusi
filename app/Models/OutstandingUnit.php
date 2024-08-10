@@ -18,11 +18,6 @@ class OutstandingUnit extends Model
         'qty'
     ];
 
-    /**
-     * Get the unit that owns the OutstandingUnit
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
