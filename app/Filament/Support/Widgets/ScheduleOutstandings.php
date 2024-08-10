@@ -31,6 +31,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater as ComponentsTableRepeater;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
@@ -267,7 +268,7 @@ class ScheduleOutstandings extends BaseWidget
                                 Forms\Components\DatePicker::make('revisit')
                                     ->label('Revisit')
                                     ->required()
-                                    ->visible(fn ($get) => $get('status') == 0)
+                                    ->hidden(fn ($get) => $get('status') !== '0')
                                     ->native(false),
                                 Forms\Components\ToggleButtons::make('is_type_problem')
                                     ->label('Tipe Problem')
@@ -276,33 +277,62 @@ class ScheduleOutstandings extends BaseWidget
                                     ->options(OutstandingTypeProblem::class)
                                     ->formatStateUsing(fn (Model $record) => $record->outstanding->is_type_problem ?? 'NON')
                                     ->inline(),
-                                TableRepeater::make('outstandingunits')
-                                    ->label('')
-                                    ->collapsible()
+                                ComponentsTableRepeater::make('outstandingunits')
+                                    ->label('Peminjaman Unit')
                                     ->relationship()
-                                    ->headers([
-                                        Header::make('nama')->width('700px'),
-                                        Header::make('qty')->width('50px'),
-                                    ])
-                                    // ->renderHeader(false)
-                                    ->streamlined()
+                                    ->addActionLabel('Tambah unit')
+                                    ->reorderable(false)
+                                    ->defaultItems(1)
+                                    ->minItems(1)
                                     ->schema([
                                         Forms\Components\Select::make('unit_id')
                                             ->label('Unit')
                                             ->options(Unit::where('is_visible', 1)->pluck('name', 'id'))
-                                            ->placeholder('Pilih unit')
                                             ->searchable()
-                                            ->distinct()
-                                            ->required(),
+                                            ->placeholder('Pilih unit')
+                                            ->required()
+                                            ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
                                         Forms\Components\TextInput::make('qty')
                                             ->numeric()
-                                            ->minValue(1)
-                                            ->maxValue(20)
+                                            ->integer()
                                             ->default(1)
-                                            ->required(),
+                                            ->required()
+                                            ->maxValue(20)
+                                            ->minValue(1),
                                     ])
-                                ->defaultItems(1)
-                                ->minItems(1),
+                                    ->colStyles([
+                                        'unit_id' => 'width: 1300px;',
+                                        'qty' => 'width: 70px;',
+                                    ])
+                                    ->reorderable()
+                                    ->collapsible()
+                                    ->columnSpan('full'),
+                                // TableRepeater::make('outstandingunits')
+                                //     ->label('')
+                                //     ->collapsible()
+                                //     ->relationship()
+                                //     ->headers([
+                                //         Header::make('nama')->width('700px'),
+                                //         Header::make('qty')->width('50px'),
+                                //     ])
+                                //     ->defaultItems(1)
+                                //     ->minItems(1)
+                                //     ->streamlined()
+                                //     ->schema([
+                                //         Forms\Components\Select::make('unit_id')
+                                //             ->label('Unit')
+                                //             ->options(Unit::where('is_visible', 1)->pluck('name', 'id'))
+                                //             ->placeholder('Pilih unit')
+                                //             ->searchable()
+                                //             ->distinct()
+                                //             ->required(),
+                                //         Forms\Components\TextInput::make('qty')
+                                //             ->numeric()
+                                //             ->minValue(1)
+                                //             ->maxValue(20)
+                                //             ->default(1)
+                                //             ->required(),
+                                //     ]),
                                 SpatieMediaLibraryFileUpload::make('attachments')
                                     ->image()
                                     ->multiple()
@@ -316,11 +346,6 @@ class ScheduleOutstandings extends BaseWidget
                                     ->previewable(false),
                             ]),
                     ])
-                    // ->stickyModalFooter()
-                    // ->extraModalFooterActions(fn (Action $action): array => [
-                    //     $action->makeModalSubmitAction('sendEmailAction', ['sendEmailArgument' => true])
-                    //         ->label('Simpan & Kirim email')
-                    // ])
                     ->after(function (array $data, Model $record, array $arguments){
 
                         $report = Reporting::find($record->id);
@@ -373,8 +398,6 @@ class ScheduleOutstandings extends BaseWidget
                                 ])
                                 ->sendToDatabase($sendUserHeadLocation);
                         }
-
-                        // if($arguments['sendEmailArgument'] ?? false){
 
                             try {
                                 $reporting = Reporting::find($record->id);
@@ -455,7 +478,6 @@ class ScheduleOutstandings extends BaseWidget
                                     ->danger()
                                     ->send();
                             }
-                        // }
                     }),
             ]);
     }
