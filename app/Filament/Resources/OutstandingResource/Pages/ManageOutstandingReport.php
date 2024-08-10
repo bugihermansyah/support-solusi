@@ -139,18 +139,6 @@ class ManageOutstandingReport extends ManageRelatedRecords
                             ->extraInputAttributes([
                                 'style' => 'min-height: 100px;',
                             ]),
-                        Forms\Components\RichEditor::make('solution')
-                            ->label('Solusi')
-                            ->toolbarButtons([
-                                'bold',
-                                'bulletList',
-                                'italic',
-                                'orderedList',
-                            ])
-                            ->extraInputAttributes([
-                                'style' => 'min-height: 100px;',
-                            ]),
-
                         Forms\Components\RichEditor::make('note')
                             ->label('Keterangan')
                             ->toolbarButtons([
@@ -183,9 +171,9 @@ class ManageOutstandingReport extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]))
+            // ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes([
+            //     SoftDeletingScope::class,
+            // ]))
             ->recordTitleAttribute('cause')
             ->columns([
                 Tables\Columns\TextColumn::make('date_visit')
@@ -205,9 +193,6 @@ class ManageOutstandingReport extends ManageRelatedRecords
                 Tables\Columns\TextColumn::make('action')
                     ->label('Aksi')
                     ->html(),
-                Tables\Columns\TextColumn::make('solution')
-                    ->label('Solusi')
-                    ->html(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge(),
@@ -219,7 +204,7 @@ class ManageOutstandingReport extends ManageRelatedRecords
                     ->boolean(),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                // Tables\Filters\TrashedFilter::make(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
@@ -228,16 +213,16 @@ class ManageOutstandingReport extends ManageRelatedRecords
                 Tables\Actions\ViewAction::make()->hiddenLabel()->icon('heroicon-m-folder'),
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
                 Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
-                Tables\Actions\ForceDeleteAction::make()->hiddenLabel()->tooltip('Hapus selamanya'),
-                Tables\Actions\RestoreAction::make()->hiddenLabel()->tooltip('Kembalikan data'),
+                // Tables\Actions\ForceDeleteAction::make()->hiddenLabel()->tooltip('Hapus selamanya'),
+                // Tables\Actions\RestoreAction::make()->hiddenLabel()->tooltip('Kembalikan data'),
 
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                //     Tables\Actions\ForceDeleteBulkAction::make(),
+                //     Tables\Actions\RestoreBulkAction::make(),
+                // ]),
             ]);
     }
 }
