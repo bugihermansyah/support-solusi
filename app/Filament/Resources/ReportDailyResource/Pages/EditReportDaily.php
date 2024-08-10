@@ -62,17 +62,15 @@ class EditReportDaily extends EditRecord
         $outstandingReporter = $outstanding->reporter;
         $outstandingNumber = $outstanding->number;
 
-        $toEmails = [];
-        $ccEmails = [];
         $supportNames = [];
 
-        foreach ($location->customers as $customer) {
-            if ($customer->pivot->is_to) {
-                $toEmails[] = $customer->email;
-            } else {
-                $ccEmails[] = $customer->email;
-            }
-        }
+        // Get email_to and email_cc directly from the reporting record
+        $toEmails = $reporting->email_to ?? [];
+        $ccEmails = $reporting->email_cc ?? [];
+
+        // Ensure that email_to and email_cc are arrays
+        $toEmails = is_array($toEmails) ? $toEmails : json_decode($toEmails, true);
+        $ccEmails = is_array($ccEmails) ? $ccEmails : json_decode($ccEmails, true);
 
         foreach ($reporting->users as $user) {
             $supportNames[] = $user->firstname;
