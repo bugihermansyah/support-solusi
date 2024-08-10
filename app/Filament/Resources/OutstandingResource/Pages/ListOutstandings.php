@@ -119,7 +119,7 @@ class ListOutstandings extends ListRecords
                                 ->label('Lokasi')
                                 // ->visible(fn ($get) => $get('task'))
                                 ->searchable()
-                                ->options(Location::where('team_id', $userTeam)->pluck('name', 'id'))
+                                ->options(Location::where('team_id', $userTeam)->get()->pluck('name_alias', 'id'))
                                 ->live()
                                 ->required(),
                             TextInput::make('title')

@@ -39,82 +39,47 @@ class Location extends Model
         'is_default' => 'boolean',
     ];
 
-    /**
-     * Get the team that owns the Location
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    public function getNameAliasAttribute()
+    {
+        return "{$this->name} - {$this->company->alias}";
+    }
+
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
     }
 
-    /**
-     * The customers that belong to the Location
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function customers(): BelongsToMany
     {
         return $this->belongsToMany(Customer::class, 'customer_locations')
             ->withPivot('is_to');
     }
 
-    /**
-     * Get all of the locationcustomers for the Location
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function customerlocations(): HasMany
     {
         return $this->hasMany(CustomerLocation::class);
     }
 
-    /**
-     * Get all of the contracts for the Lycation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function contracts(): HasMany
     {
         return $this->hasMany(Contract::class);
     }
 
-    /**
-     * Get all of the products for the Location
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
 
-    /**
-     * Get the user that owns the Location
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the BD that owns the Location
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function bd(): BelongsTo
     {
         return $this->belongsTo(User::class, 'bd_id');
     }
 
-    /**
-     * Get the company that owns the Location
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
