@@ -20,7 +20,7 @@ class EditReportDaily extends EditRecord
         return [
             $this->getSaveFormAction()
                 ->formId('form'),
-            Action::make('Send Notifications')
+            Action::make('Kirim Notifikasi')
                 ->icon('heroicon-m-bell')
                 ->requiresConfirmation()
                 ->action(function () {

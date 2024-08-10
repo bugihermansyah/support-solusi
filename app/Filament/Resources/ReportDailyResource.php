@@ -85,18 +85,40 @@ class ReportDailyResource extends Resource
                         TextInput::make('cause')
                             ->label('Sebab'),
                         RichEditor::make('action')
-                            ->label('Aksi'),
+                            ->label('Aksi')
+                            ->toolbarButtons([
+                                'bold',
+                                'bulletList',
+                                'italic',
+                                'orderedList',
+                                'strike',
+                                'underline',
+                            ]),
                         RichEditor::make('note')
                             ->label('Keterangan')
+                            ->toolbarButtons([
+                                'bold',
+                                'bulletList',
+                                'italic',
+                                'orderedList',
+                                'strike',
+                                'underline',
+                            ])
                     ])
                     ->columnSpan(['lg' => 2]),
                 Group::make()
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('attachments')
+                            ->imageEditor()
+                            ->image()
                             ->imagePreviewHeight('200')
                             ->multiple()
+                            ->optimize('jpg')
+                            ->maxSize(2048)
+                            ->maxFiles(10)
                             ->downloadable()
                             ->openable()
+                            ->preserveFilenames()
                             ->previewable(),
                     ])
                     ->columnSpan(['lg' => 1]),
