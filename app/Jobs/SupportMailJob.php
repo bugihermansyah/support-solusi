@@ -38,6 +38,8 @@ class SupportMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->mailTo)->cc($this->mailCc)->send(new SupportMail($this->mailData));
+        Mail::to($this->mailTo)
+            ->cc($this->mailCc)
+            ->send(new SupportMail($this->mailData));
     }
 }
