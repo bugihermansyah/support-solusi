@@ -27,11 +27,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     use HasApiTokens, HasFactory, Notifiable;
     use SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'username',
         'email',
@@ -41,21 +36,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         'team_id'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
@@ -118,11 +103,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         return $this->belongsToMany(Reporting::class, 'reporting_users', 'user_id', 'reporting_id')->withTimestamps();
     }
 
-    /**
-     * Get all of the evaluations for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function evaluations(): HasMany
     {
         return $this->hasMany(Evaluation::class);

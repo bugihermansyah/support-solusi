@@ -159,7 +159,7 @@ class ReportingsRelationManager extends RelationManager
                     ->searchable()
                     ->sortable()
                     ->date(),
-                UserAvatarColumn::make('user')
+                    Tables\Columns\TextColumn::make('users.firstname')
                     ->label('Support')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('gap')
@@ -174,10 +174,6 @@ class ReportingsRelationManager extends RelationManager
                     ->html(),
                 Tables\Columns\TextColumn::make('action')
                     ->label('Aksi')
-                    ->wrap()
-                    ->html(),
-                Tables\Columns\TextColumn::make('solution')
-                    ->label('Solusi')
                     ->wrap()
                     ->html(),
                 Tables\Columns\TextColumn::make('status')
