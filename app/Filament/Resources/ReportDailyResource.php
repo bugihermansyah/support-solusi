@@ -4,17 +4,21 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReportDailyResource\Pages;
 use App\Filament\Resources\ReportDailyResource\RelationManagers;
+use App\Models\Customer;
+use App\Models\Location;
 use App\Models\Reporting;
 use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -58,9 +62,9 @@ class ReportDailyResource extends Resource
                                     ->label('Support')
                                     ->content(fn (Reporting $record): string => $record->users()->pluck('firstname')->join(', ')),
                                 Placeholder::make('status')
-                                    ->label('status')
+                                    ->label('Status')
                                     ->content(fn (Reporting $record): ?string => $record->status->name),
-                                Placeholder::make('status')
+                                Placeholder::make('mail')
                                     ->label('Mail')
                                     ->content(fn (Reporting $record): ?string => $record->send_mail_at),
                             ])
@@ -70,7 +74,16 @@ class ReportDailyResource extends Resource
                     ->columnSpan(['lg' => 1]),
                 Group::make()
                     ->schema([
-                        TextInput::make('cause'),
+                        Select::make('email_to')
+                            ->label('Email To')
+                            ->multiple()
+                            ->options(Customer::all()->pluck('name_email', 'email')),
+                        Select::make('email_cc')
+                            ->label('Email CC')
+                            ->multiple()
+                            ->options(Customer::all()->pluck('name_email', 'email')),
+                        TextInput::make('cause')
+                            ->label('Sebab'),
                         RichEditor::make('action')
                             ->label('Aksi'),
                         RichEditor::make('note')
@@ -81,6 +94,7 @@ class ReportDailyResource extends Resource
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('attachments')
                             ->imagePreviewHeight('200')
+                            ->multiple()
                             ->downloadable()
                             ->openable()
                             ->previewable(),

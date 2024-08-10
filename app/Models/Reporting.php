@@ -31,11 +31,15 @@ class Reporting extends Model implements HasMedia
         'revisit',
         'note',
         'send_mail_at',
-        'user_created_at'
+        'user_created_at',
+        'email_to',
+        'email_cc'
     ];
 
     protected $casts = [
-        'status' => ReportStatus::class
+        'status' => ReportStatus::class,
+        'email_to' => 'array',
+        'email_cc' => 'array'
     ];
 
     // public function toEvent(): Event|array {

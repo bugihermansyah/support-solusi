@@ -6,7 +6,6 @@ use App\Filament\Resources\OutstandingResource;
 use App\Models\Contract;
 use App\Models\Location;
 use App\Models\Outstanding;
-use App\Models\Product;
 use App\Models\Reporting;
 use App\Models\Team;
 use Carbon\Carbon;
@@ -17,8 +16,6 @@ use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Split;
-use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
@@ -64,47 +61,6 @@ class ListOutstandings extends ListRecords
                                 ->label('Existing <-> New')
                                 ->live()
                                 ->columnSpanFull(),
-                            // old outstanding
-                            // Select::make('outstanding_id')
-                            //     ->label('Outstanding')
-                            //     ->options(
-                            //         Outstanding::where('outstandings.status', 0)
-                            //             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
-                            //             ->select(
-                            //                 DB::raw("CONCAT(locations.name, ' - ', outstandings.title) as title"),
-                            //                 'outstandings.id'
-                            //             )
-                            //             ->pluck('title', 'id')
-                            //     )
-                            //     ->visible(fn ($get) => !$get('task'))
-                            //     ->searchable()
-                            //     ->columnSpan([
-                            //         'md' => 2
-                            //     ])
-                            //     ->required(),
-                            // Select::make('user_id')
-                            //     ->label('Support')
-                            //     ->visible(fn ($get) => !$get('task'))
-                            //     ->searchable()
-                            //     ->required()
-                            //     ->options(function () {
-                            //         $teams = Team::with('users')->get();
-                            //         $options = [];
-
-                            //         foreach ($teams as $team) {
-                            //             $teamUsers = $team->users->pluck('name', 'id')->toArray();
-                            //             $options[$team->name] = $teamUsers;
-                            //         }
-
-                            //         return $options;
-                            //     }),
-                            // DatePicker::make('date_visit')
-                            //     ->label('Jadwal')
-                            //     ->visible(fn ($get) => !$get('task'))
-                            //     ->required()
-                            //     ->default(Carbon::now())
-                            //     ->native(false),
-                            // new outstanding
                             TextInput::make('number')
                                 ->label('No. Tiket')
                                 ->default('SP-' .Carbon::now()->format('ym').''.(random_int(100000, 999999)))
@@ -117,7 +73,6 @@ class ListOutstandings extends ListRecords
                                 ->unique(Outstanding::class, 'number', ignoreRecord: true),
                             Select::make('location_id')
                                 ->label('Lokasi')
-                                // ->visible(fn ($get) => $get('task'))
                                 ->searchable()
                                 ->options(Location::where('team_id', $userTeam)->get()->pluck('name_alias', 'id'))
                                 ->live()
@@ -125,9 +80,6 @@ class ListOutstandings extends ListRecords
                             TextInput::make('title')
                                 ->label('Masalah')
                                 ->visible(fn ($get) => $get('task'))
-                                // ->columnSpan([
-                                //     'md' => 2
-                                // ])
                                 ->required(),
                             CheckboxList::make('outstanding_id')
                                 ->label('Masalah')
@@ -148,16 +100,6 @@ class ListOutstandings extends ListRecords
                                     return !empty($options) ? $options : ['' => 'Tidak ada Outstanding'];
                                 })
                                 ->disableOptionWhen(fn (string $value): bool => $value === '')
-                                // ->options(fn (Get $get): Collection => Outstanding::query()
-                                //     ->where('location_id', $get('location_id'))
-                                //     ->where('outstandings.status', 0)
-                                //     ->whereNotExists(function ($query) {
-                                //         $query->select(DB::raw(1))
-                                //             ->from('reportings')
-                                //             ->whereColumn('reportings.outstanding_id', 'outstandings.id')
-                                //             ->whereNull('reportings.status');
-                                //     })
-                                //     ->pluck('title', 'id'))
                                 ->required(),
                             Select::make('reporter')
                                 ->label('Pelapor')
@@ -180,19 +122,14 @@ class ListOutstandings extends ListRecords
                                 ->native(false),
                             DatePicker::make('date_visit')
                                 ->label('Jadwal')
-                                // ->visible(fn ($get) => $get('task'))
                                 ->default(Carbon::now())
                                 ->required()
                                 ->native(false),
                             Select::make('user_id')
                                 ->label('Support')
-                                // ->visible(fn ($get) => $get('task'))
                                 ->multiple()
                                 ->searchable()
                                 ->required()
-                                // ->columnSpan([
-                                //     'md' => 2
-                                // ])
                                 ->options(function () {
                                     $teams = Team::with('users')->get();
                                     $options = [];
@@ -204,18 +141,15 @@ class ListOutstandings extends ListRecords
                                     return $options;
                                 }),
                         ])
-                        // ->columns(2)
                 ])
                 ->modalHeading('Buat Jadwal')
-                // ->extraModalFooterActions(fn (Action $action): array => [
-                //     $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
-                //         ->label('Kirim & buat lainnya'),
-                // ])
                 ->action(function (array $data, array $arguments): void {
                     if ($data['task']) {
                         // Create new outstanding
-                        $product = Contract::where('location_id', $data['location_id'])->where('is_default', 1)->first();
-                        // dd($product);
+                        $product = Contract::where('location_id', $data['location_id'])
+                                            ->where('is_default', 1)
+                                            ->first();
+
                         $outstanding = Outstanding::create([
                             'number' => $data['number'],
                             'location_id' => $data['location_id'],
@@ -226,12 +160,26 @@ class ListOutstandings extends ListRecords
                             'date_in' => $data['date_in'],
                             'date_visit' => $data['date_visit'],
                         ]);
+
+                        // Fetch email_to and email_cc from the pivot table
+                        $location = Location::find($data['location_id']);
+                        $emailTo = $location ? $location->customers()
+                            ->wherePivot('is_to', true)
+                            ->pluck('email')
+                            ->toArray() : [];
+
+                        $emailCc = $location ? $location->customers()
+                            ->wherePivot('is_to', false)
+                            ->pluck('email')
+                            ->toArray() : [];
+
                         // Create new reporting
                         $reporting = Reporting::create([
                             'outstanding_id' => $outstanding->id,
-                            // 'user_id' => $data['user_id'],
                             'date_visit' => $data['date_visit'],
                             'status' => null,
+                            'email_to' => $emailTo,
+                            'email_cc' => $emailCc,
                         ]);
                         // Attach multiple users to the reporting
                         if (isset($data['user_id']) && is_array($data['user_id'])) {
@@ -245,17 +193,27 @@ class ListOutstandings extends ListRecords
                     } else {
                         // Create new reporting
                         foreach($data['outstanding_id'] as $check_id){
-                            // Reporting::create([
-                            //     'outstanding_id' => $check_id,
-                            //     'user_id' => $data['user_id'],
-                            //     'date_visit' => $data['date_visit'],
-                            //     'status' => null,
-                            // ]);
+                            // Fetch the outstanding record
+                            $outstanding = Outstanding::find($check_id);
+
+                            // Fetch email_to and email_cc from the pivot table
+                            $location = $outstanding->location;
+                            $emailTo = $location ? $location->customers()
+                                ->wherePivot('is_to', true)
+                                ->pluck('email')
+                                ->toArray() : [];
+
+                            $emailCc = $location ? $location->customers()
+                                ->wherePivot('is_to', false)
+                                ->pluck('email')
+                                ->toArray() : [];
+
                             $reporting = Reporting::create([
                                 'outstanding_id' => $check_id,
-                                // 'user_id' => $data['user_id'],
                                 'date_visit' => $data['date_visit'],
                                 'status' => null,
+                                'email_to' => $emailTo,
+                                'email_cc' => $emailCc,
                             ]);
                             // Attach multiple users to the reporting
                             if (isset($data['user_id']) && is_array($data['user_id'])) {
