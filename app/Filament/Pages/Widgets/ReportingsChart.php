@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Pages\Widgets;
 
 use App\Models\Location;
 use App\Models\Reporting;
