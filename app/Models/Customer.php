@@ -21,11 +21,11 @@ class Customer extends Model
         'description'
     ];
 
-    /**
-     * The locations that belong to the Customer
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
+    public function getNameEmailAttribute()
+    {
+        return "{$this->name} <{$this->email}>";
+    }
+
     public function locations(): BelongsToMany
     {
         return $this->belongsToMany(Location::class, 'customer_locations')
