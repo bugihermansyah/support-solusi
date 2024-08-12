@@ -19,25 +19,17 @@ class Unit extends Model
         'parent_id',
         'sort',
         'image',
+        'stock',
+        'is_warehouse',
         'is_visible',
-        'unit_category_id'
+        'unit_category_id',
     ];
 
-    /**
-     * Get the parent that owns the Unit
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Unit::class, 'parent_id');
     }
 
-    /**
-     * Get the unitCategory that owns the Unit
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function unitCategory(): BelongsTo
     {
         return $this->belongsTo(UnitCategory::class, 'unit_category_id');

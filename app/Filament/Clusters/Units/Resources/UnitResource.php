@@ -66,6 +66,19 @@ class UnitResource extends Resource
                             ->required(),
                     ])
                     ->columns(3),
+                Forms\Components\Section::make('Warehouse')
+                    ->visible(auth()->user()->hasRole('admin'))
+                    ->schema([
+                        Forms\Components\TextInput::make('qty')
+                            ->label('Stock')
+                            ->numeric()
+                            ->required(),
+                        Forms\Components\Toggle::make('is_warehouse')
+                            ->label('Warehouse')
+                            ->inline(false)
+                            ->required(),
+                    ])
+                    ->columns(2)
             ]);
     }
 
@@ -88,6 +101,9 @@ class UnitResource extends Resource
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_visible')
                     ->label('Terlihat')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('is_warehouse')
+                    ->label('Gudang')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
