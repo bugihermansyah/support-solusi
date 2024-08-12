@@ -142,7 +142,36 @@ class BorrowResource extends Resource
             TextColumn::make('created_at')
                 ->label('Dibuat')
                 ->dateTime(),
-        ])
+            TextColumn::make('status')
+                ->label('Status')
+                ->badge()
+                ->getStateUsing(function ($record) {
+                    if ($record->rejected_at) {
+                        return 'Ditolak';
+                    } elseif ($record->completed_at) {
+                        return 'Selesai';
+                    } elseif ($record->approved_at) {
+                        return 'Disetujui';
+                    } elseif ($record->processed_at) {
+                        return 'Diproses';
+                    } else {
+                        return 'Pending';
+                    }
+                })
+                ->icons([
+                    'heroicon-o-x-circle' => fn ($state): bool => $state === 'Ditolak',
+                    'heroicon-o-check-circle' => fn ($state): bool => $state === 'Disetujui',
+                    'heroicon-o-arrow-path' => fn ($state): bool => $state === 'Diproses',
+                    'heroicon-o-check' => fn ($state): bool => $state === 'Selesai',
+                ])
+                ->colors([
+                    'danger' => 'Ditolak',
+                    'success' => 'Disetujui',
+                    'warning' => 'Diproses',
+                    'primary' => 'Selesai',
+                    'secondary' => 'Pending',
+                ]),
+            ])
             ->filters([
                 //
             ])
