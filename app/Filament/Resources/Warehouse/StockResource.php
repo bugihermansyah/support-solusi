@@ -21,8 +21,6 @@ class StockResource extends Resource
 
     protected static ?string $modelLabel = 'Stock';
 
-    // protected static ?string $navigationIcon = 'heroicon-o-star';
-
     protected static ?string $navigationGroup = 'Gudang';
 
     protected static ?int $navigationSort = 4;
