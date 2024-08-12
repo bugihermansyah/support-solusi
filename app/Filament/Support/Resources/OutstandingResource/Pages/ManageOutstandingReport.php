@@ -182,9 +182,6 @@ class ManageOutstandingReport extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]))
             ->recordTitleAttribute('cause')
             ->columns([
                 Tables\Columns\TextColumn::make('date_visit')
@@ -219,7 +216,7 @@ class ManageOutstandingReport extends ManageRelatedRecords
                     ->boolean(),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                // Tables\Filters\TrashedFilter::make(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
@@ -228,16 +225,14 @@ class ManageOutstandingReport extends ManageRelatedRecords
                 Tables\Actions\ViewAction::make()->hiddenLabel()->icon('heroicon-m-folder'),
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
                 Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
-                Tables\Actions\ForceDeleteAction::make()->hiddenLabel()->tooltip('Hapus selamanya'),
-                Tables\Actions\RestoreAction::make()->hiddenLabel()->tooltip('Kembalikan data'),
 
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                //     Tables\Actions\ForceDeleteBulkAction::make(),
+                //     Tables\Actions\RestoreBulkAction::make(),
+                // ]),
             ]);
     }
 }
