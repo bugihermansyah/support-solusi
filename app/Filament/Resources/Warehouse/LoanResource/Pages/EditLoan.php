@@ -21,8 +21,7 @@ class EditLoan extends EditRecord
     {
         return [
             Action::make('process')
-                ->hidden(fn(Model $record) => $record->processed_at)
-                ->hidden(fn(Model $record)=> $record->rejected_at)
+                ->visible(fn(Model $record) => !$record->processed_at && !$record->rejected_at && !$record->completed_at)
                 ->color('warning')
                 ->requiresConfirmation()
                 ->action(function (Model $record): void {
