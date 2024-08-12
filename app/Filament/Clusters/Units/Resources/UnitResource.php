@@ -69,7 +69,7 @@ class UnitResource extends Resource
                 Forms\Components\Section::make('Warehouse')
                     ->visible(auth()->user()->hasRole('admin'))
                     ->schema([
-                        Forms\Components\TextInput::make('qty')
+                        Forms\Components\TextInput::make('stock')
                             ->label('Stock')
                             ->numeric()
                             ->required(),
