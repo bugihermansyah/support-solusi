@@ -46,13 +46,17 @@ class BorrowDetailResource extends Resource
                     ->label('No. Request')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('loan.user.name')
-                    ->label('Nama Unit')
+                    ->label('Peminjam')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('unit.name')
                     ->label('Nama Unit')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('qty')
                     ->label('Qty')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('return_qty')
+                    ->label('Return')
+                    ->numeric()
                     ->searchable(),
                 // Tables\Columns\TextColumn::make('status')
                 //     ->label('Status')

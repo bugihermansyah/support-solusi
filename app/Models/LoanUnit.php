@@ -17,7 +17,8 @@ class LoanUnit extends Model
     protected $fillable = [
         'loan_id',
         'unit_id',
-        'qty'
+        'qty',
+        'return_qty'
     ];
 
     public function returns()

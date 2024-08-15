@@ -51,28 +51,32 @@ class StockResource extends Resource
                 TextColumn::make('pinjam')
                     ->label('Keluar')
                     ->getStateUsing(function ($record) {
-                        return \App\Models\LoanUnit::where('warehouse_loan_units.unit_id', $record->id)
-                            ->leftJoin('warehouse_return_units', function ($join) {
-                                $join->on('warehouse_loan_units.loan_id', '=', 'warehouse_return_units.loan_id')
-                                    ->on('warehouse_loan_units.unit_id', '=', 'warehouse_return_units.unit_id')
-                                    ->whereNotNull('warehouse_return_units.accepted_at');
+                        return \App\Models\LoanUnit::where('unit_id', $record->id)
+                            ->whereHas('loan', function ($query) {
+                                $query->whereNotNull('processed_at')
+                                      ->whereNull('rejected_at')
+                                      ->whereNull('completed_at');
                             })
-                            ->selectRaw('SUM(warehouse_loan_units.qty) - IFNULL(SUM(warehouse_return_units.qty), 0) as total_pinjam')
+                            ->selectRaw('SUM(qty) - IFNULL(SUM(return_qty), 0) as total_pinjam')
                             ->value('total_pinjam') ?? 0;
                     }),
                 TextColumn::make('sisa')
                     ->label('Sisa')
                     ->getStateUsing(function ($record) {
-                        $totalPinjam = \App\Models\LoanUnit::where('warehouse_loan_units.unit_id', $record->id)
-                            ->leftJoin('warehouse_return_units', function ($join) {
-                                $join->on('warehouse_loan_units.loan_id', '=', 'warehouse_return_units.loan_id')
-                                    ->on('warehouse_loan_units.unit_id', '=', 'warehouse_return_units.unit_id')
-                                    ->whereNotNull('warehouse_return_units.accepted_at');
+                        // Menghitung total pinjaman bersih (qty - return_qty)
+                        $totalPinjaman = \App\Models\LoanUnit::where('unit_id', $record->id)
+                            ->whereHas('loan', function ($query) {
+                                $query->whereNotNull('processed_at')  // Hanya Loans yang diproses
+                                    ->whereNull('rejected_at')      // Tidak termasuk Loans yang ditolak
+                                    ->whereNull('completed_at');    // Tidak termasuk Loans yang sudah selesai
                             })
-                            ->selectRaw('SUM(warehouse_loan_units.qty) - IFNULL(SUM(warehouse_return_units.qty), 0) as total_pinjam')
+                            ->selectRaw('SUM(qty - return_qty) as total_pinjam')
                             ->value('total_pinjam') ?? 0;
 
-                        return $record->stock - $totalPinjam;
+                        // Menghitung sisa unit dari stock yang ada di tabel units
+                        $sisaUnit = $record->stock - $totalPinjaman;
+
+                        return $sisaUnit;
                     }),
             ])
             ->filters([

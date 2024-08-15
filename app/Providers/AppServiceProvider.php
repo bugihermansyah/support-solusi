@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Http\Responses\StaffLoginResponse;
 use App\Models\Restock;
+use App\Models\ReturnUnit;
 use App\Observers\RestockObserver;
+use App\Observers\ReturnObserver;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use BezhanSalleh\PanelSwitch\PanelSwitch;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as LoginResponseContract;
@@ -54,5 +56,6 @@ class AppServiceProvider extends ServiceProvider
                 ]));
         });
         Restock::observe(RestockObserver::class);
+        ReturnUnit::observe(ReturnObserver::class);
     }
 }

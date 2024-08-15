@@ -7,6 +7,7 @@ use App\Filament\Support\Resources\BorrowResource;
 use App\Models\User;
 use Carbon\Carbon;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Actions\Action as ActionNotif;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -46,8 +47,7 @@ class EditLoan extends EditRecord
                 }),
             Action::make('approve')
                 ->color('success')
-                ->visible(fn(Model $record)=> $record->processed_at)
-                ->hidden(fn(Model $record)=> $record->approved_at)
+                ->visible(fn(Model $record)=> $record->processed_at && !$record->rejected_at && !$record->completed_at)
                 ->requiresConfirmation()
                 ->action(function (Model $record): void {
                     $record->approved_at = Carbon::now();
@@ -72,8 +72,13 @@ class EditLoan extends EditRecord
                 ->visible(fn(Model $record)=> !$record->processed_at)
                 ->visible(fn(Model $record)=> !$record->approved_at)
                 ->hidden(fn(Model $record)=> $record->rejected_at)
+                ->form([
+                    Textarea::make('comment')
+                        ->label('Catatan')
+                        ->required()
+                ])
                 ->requiresConfirmation()
-                ->action(function (Model $record): void {
+                ->action(function (Model $record, array $data): void {
                     $record->rejected_at = Carbon::now();
                     $record->completed_at = Carbon::now();
                     $record->save();

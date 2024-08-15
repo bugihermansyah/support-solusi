@@ -26,6 +26,7 @@ use Filament\Tables\Table;
 use Icetalker\FilamentTableRepeatableEntry\Infolists\Components\TableRepeatableEntry;
 use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class LoanResource extends Resource
@@ -83,8 +84,9 @@ class LoanResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('unit_id')
                                     ->label('Unit')
-                                    ->options(Unit::where('is_visible', 1)->pluck('name', 'id'))
+                                    ->options(Unit::where('is_warehouse', 1)->pluck('name', 'id'))
                                     ->searchable()
+                                    // ->disabled(fn(Model $record)=> $record->processed_at && $record->rejected_at && $record->completed_at)
                                     ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
                                 Forms\Components\TextInput::make('qty')
                                     ->numeric()
