@@ -73,7 +73,6 @@ class ReportDetail extends Page implements HasTable
                 TextColumn::make('outstanding.location.company.alias')
                     ->label('Group')
                     ->limit('13')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('outstanding.location.name')
                     ->label('Lokasi')
@@ -86,8 +85,6 @@ class ReportDetail extends Page implements HasTable
                     ->label('Pelapor')
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->formatStateUsing(fn ($state) => ucfirst($state)),
-                TextColumn::make('outstanding.title')
-                    ->label('Masalah'),
                 TextColumn::make('outstanding.date_in')
                     ->label('Lapor')
                     ->date(),
@@ -105,6 +102,8 @@ class ReportDetail extends Page implements HasTable
                     ->label('Tipe')
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->formatStateUsing(fn ($state) => ucfirst($state)),
+                TextColumn::make('outstanding.title')
+                    ->label('Masalah'),
                 TextColumn::make('cause')
                     ->label('Sebab')
                     ->html(),
