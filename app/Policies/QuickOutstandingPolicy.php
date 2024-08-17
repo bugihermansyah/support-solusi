@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\UnitCategory;
+use App\Models\QuickOutstanding;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UnitCategoryPolicy
+class QuickOutstandingPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class UnitCategoryPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_unitcategory');
+        return $user->can('view_any_quickoutstanding');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, UnitCategory $unitCategory): bool
+    public function view(User $user, QuickOutstanding $quickOutstanding): bool
     {
-        return $user->can('view_unitcategory');
+        return $user->can('view_quickoutstanding');
     }
 
     /**
@@ -31,23 +31,23 @@ class UnitCategoryPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_unitcategory');
+        return $user->can('create_quickoutstanding');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, UnitCategory $unitCategory): bool
+    public function update(User $user, QuickOutstanding $quickOutstanding): bool
     {
-        return $user->can('update_unitcategory');
+        return $user->can('update_quickoutstanding');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, UnitCategory $unitCategory): bool
+    public function delete(User $user, QuickOutstanding $quickOutstanding): bool
     {
-        return $user->can('delete_unitcategory');
+        return $user->can('delete_quickoutstanding');
     }
 
     /**
@@ -55,15 +55,15 @@ class UnitCategoryPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_unitcategory');
+        return $user->can('delete_any_quickoutstanding');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, UnitCategory $unitCategory): bool
+    public function forceDelete(User $user, QuickOutstanding $quickOutstanding): bool
     {
-        return $user->can('force_delete_unitcategory');
+        return $user->can('force_delete_quickoutstanding');
     }
 
     /**
@@ -71,15 +71,15 @@ class UnitCategoryPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_unitcategory');
+        return $user->can('force_delete_any_quickoutstanding');
     }
 
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, UnitCategory $unitCategory): bool
+    public function restore(User $user, QuickOutstanding $quickOutstanding): bool
     {
-        return $user->can('restore_unitcategory');
+        return $user->can('restore_quickoutstanding');
     }
 
     /**
@@ -87,15 +87,15 @@ class UnitCategoryPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_unitcategory');
+        return $user->can('restore_any_quickoutstanding');
     }
 
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, UnitCategory $unitCategory): bool
+    public function replicate(User $user, QuickOutstanding $quickOutstanding): bool
     {
-        return $user->can('replicate_unitcategory');
+        return $user->can('replicate_quickoutstanding');
     }
 
     /**
@@ -103,6 +103,6 @@ class UnitCategoryPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_unitcategory');
+        return $user->can('reorder_quickoutstanding');
     }
 }
