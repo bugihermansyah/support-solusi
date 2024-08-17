@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\Company;
 use App\Models\Location;
 use App\Models\Product;
 use App\Models\Reporting;
@@ -69,6 +70,11 @@ class ReportDetail extends Page implements HasTable
                     ->limit('13')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('outstanding.location.company.alias')
+                    ->label('Group')
+                    ->limit('13')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('outstanding.location.name')
                     ->label('Lokasi')
                     ->limit('10'),
@@ -127,6 +133,12 @@ class ReportDetail extends Page implements HasTable
             ->filters([
                 QueryBuilder::make()
                     ->constraints([
+                        SelectConstraint::make('outstanding.location.company.alias')
+                            ->label('Group')
+                            ->icon('heroicon-o-building-office-2')
+                            ->options(Company::all()->pluck('alias', 'alias'))
+                            ->multiple()
+                            ->searchable(),
                         SelectConstraint::make('outstanding.location.name')
                             ->label('Lokasi')
                             ->icon('heroicon-m-map-pin')
