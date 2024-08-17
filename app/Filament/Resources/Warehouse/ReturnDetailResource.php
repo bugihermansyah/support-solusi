@@ -28,11 +28,11 @@ class ReturnDetailResource extends Resource
 {
     protected static ?string $model = ReturnUnit::class;
 
-    protected static ?string $modelLabel = 'Pengembalian';
+    protected static ?string $pluralLabel = 'Pengembalian';
 
     // protected static ?string $navigationIcon = 'heroicon-o-star';
 
-    protected static ?string $navigationGroup = 'Gudang';
+    protected static ?string $navigationGroup = 'Warehouse';
 
     protected static ?int $navigationSort = 3;
 

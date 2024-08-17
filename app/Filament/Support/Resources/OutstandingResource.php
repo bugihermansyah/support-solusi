@@ -4,7 +4,6 @@ namespace App\Filament\Support\Resources;
 
 use App\Enums\OutstandingStatus;
 use App\Filament\Support\Resources\OutstandingResource\Pages;
-use App\Filament\Support\Resources\OutstandingResource\RelationManagers;
 use App\Models\Contract;
 use App\Models\Location;
 use App\Models\Outstanding;
@@ -20,11 +19,12 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Pages\Page;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -222,10 +222,18 @@ class OutstandingResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('number')
+            ]);
+    }
+
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
-            // Pages\ViewPost::class,
+            // Pages\ViewOutstanding::class,
             Pages\EditOutstanding::class,
             Pages\ManageOutstandingReport::class,
         ]);
@@ -244,6 +252,7 @@ class OutstandingResource extends Resource
             'index' => Pages\ListOutstandings::route('/'),
             // 'create' => Pages\CreateOutstanding::route('/create'),
             'edit' => Pages\EditOutstanding::route('/{record}/edit'),
+            // 'view' => Pages\ViewOutstanding::route('/{record}'),
             'reportings' => Pages\ManageOutstandingReport::route('/{record}/reportings'),
         ];
     }

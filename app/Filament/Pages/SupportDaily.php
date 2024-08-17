@@ -19,7 +19,9 @@ class SupportDaily extends Page
     //     return Reporting::with('user')->get();
     // }
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
+
+    protected static ?string $navigationGroup = 'Daily';
 
     public function mount()
     {

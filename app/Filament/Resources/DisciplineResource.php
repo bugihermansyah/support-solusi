@@ -28,7 +28,9 @@ class DisciplineResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static ?string $navigationGroup = 'Indicator Performances';
+    protected static ?string $navigationGroup = 'Utility';
+
+    // protected static ?string $navigationParentItem = 'IP';
 
     public static function form(Form $form): Form
     {

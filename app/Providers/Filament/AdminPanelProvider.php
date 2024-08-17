@@ -16,6 +16,7 @@ use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -51,12 +52,23 @@ class AdminPanelProvider extends PanelProvider
             ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
             ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->navigationGroups([
-                'Main',
-                'Reports',
-                'Gudang',
-                'Indicator Performances',
-                'Access',
+                NavigationGroup::make()
+                     ->label('Daily')
+                     ->icon('heroicon-o-calendar-days'),
+                NavigationGroup::make()
+                    ->label('Main')
+                    ->icon('heroicon-o-trophy'),
+                NavigationGroup::make()
+                    ->label('Warehouse')
+                    ->icon('heroicon-o-building-storefront'),
+                NavigationGroup::make()
+                    ->label('Reports')
+                    ->icon('heroicon-o-document-text'),
+                NavigationGroup::make()
+                    ->label('Utility')
+                    ->icon('heroicon-o-swatch'),
             ])
+            ->topNavigation()
             ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->sidebarCollapsibleOnDesktop()
@@ -94,13 +106,13 @@ class AdminPanelProvider extends PanelProvider
                     ->default('robohash')
                     ->size(200)
                     ->rating('pg'),
-                QuickCreatePlugin::make()
-                    ->sort(false)
-                    ->includes([
-                        // QuickOutstandingResource::class,
-                        // OutstandingResource::class,
-                        EvaluationResource::class,
-                    ]),
+                // QuickCreatePlugin::make()
+                //     ->sort(false)
+                //     ->includes([
+                //         // QuickOutstandingResource::class,
+                //         // OutstandingResource::class,
+                //         EvaluationResource::class,
+                //     ]),
                 // \BezhanSalleh\FilamentExceptions\FilamentExceptionsPlugin::make(),
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
                     ->gridColumns([

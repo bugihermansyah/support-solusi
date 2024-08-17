@@ -25,7 +25,7 @@ class LocationResource extends Resource
 {
     protected static ?string $model = Location::class;
 
-    protected static ?string $modelLabel = 'Lokasi';
+    protected static ?string $pluralLabel = 'Lokasi';
 
     protected static ?string $recordTitleAttribute = 'name';
 

@@ -42,7 +42,11 @@ class OutstandingResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    protected static ?int $navigationSort = -1;
+
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+
+    // protected static ?string $navigationGroup = 'Daily';
 
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 

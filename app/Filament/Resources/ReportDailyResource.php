@@ -34,9 +34,11 @@ class ReportDailyResource extends Resource
 
     protected static ?string $modelLabel = 'Reporting Daily';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+
+    protected static ?string $navigationGroup = 'Daily';
 
     public static function form(Form $form): Form
     {

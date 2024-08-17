@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Table::configureUsing(function (Table $table): void {
             $table
-                ->emptyStateHeading('Belum ada data nih.')
+                // ->emptyStateHeading('Belum ada data nih.')
                 ->striped()
                 ->defaultPaginationPageOption(10)
                 ->paginated([5, 10, 25, 50])

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
@@ -30,5 +31,10 @@ class Customer extends Model
     {
         return $this->belongsToMany(Location::class, 'customer_locations')
             ->withPivot('is_to');
+    }
+
+    public function customerLocations(): HasMany
+    {
+        return $this->hasMany(CustomerLocation::class);
     }
 }

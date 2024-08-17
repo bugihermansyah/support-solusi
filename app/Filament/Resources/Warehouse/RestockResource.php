@@ -26,7 +26,7 @@ class RestockResource extends Resource
 
     // protected static ?string $navigationIcon = 'heroicon-o-star';
 
-    protected static ?string $navigationGroup = 'Gudang';
+    protected static ?string $navigationGroup = 'Warehouse';
 
     protected static ?int $navigationSort = 5;
 

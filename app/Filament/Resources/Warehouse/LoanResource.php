@@ -33,13 +33,13 @@ class LoanResource extends Resource
 {
     protected static ?string $model = Loan::class;
 
-    protected static ?string $modelLabel = 'Permintaan Unit';
+    protected static ?string $pluralLabel = 'Permintaan Unit';
 
     protected static ?string $recordTitleAttribute = 'number';
 
     // protected static ?string $navigationIcon = 'heroicon-o-star';
 
-    protected static ?string $navigationGroup = 'Gudang';
+    protected static ?string $navigationGroup = 'Warehouse';
 
     protected static ?int $navigationSort = 1;
 
