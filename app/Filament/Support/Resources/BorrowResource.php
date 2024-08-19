@@ -78,8 +78,7 @@ class BorrowResource extends Resource
                             ->label('Peminjaman Unit')
                             ->relationship('loanUnits')
                             ->addActionLabel('Tambah unit')
-                            ->deletable(fn (?Model $record) => $record && $record->created_at)
-                            ->addable(fn (?Model $record) => $record && $record->created_at)
+                            // ->deletable(fn (?Model $record) => $record && $record->approved_at)
                             ->reorderable(false)
                             ->minItems(1)
                             ->schema([

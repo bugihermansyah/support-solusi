@@ -53,7 +53,7 @@ class StockResource extends Resource
                     ->getStateUsing(function ($record) {
                         return \App\Models\LoanUnit::where('unit_id', $record->id)
                             ->whereHas('loan', function ($query) {
-                                $query->whereNotNull('processed_at')
+                                $query->whereNotNull('approved_at')
                                       ->whereNull('rejected_at')
                                       ->whereNull('completed_at');
                             })
@@ -66,9 +66,9 @@ class StockResource extends Resource
                         // Menghitung total pinjaman bersih (qty - return_qty)
                         $totalPinjaman = \App\Models\LoanUnit::where('unit_id', $record->id)
                             ->whereHas('loan', function ($query) {
-                                $query->whereNotNull('processed_at')  // Hanya Loans yang diproses
-                                    ->whereNull('rejected_at')      // Tidak termasuk Loans yang ditolak
-                                    ->whereNull('completed_at');    // Tidak termasuk Loans yang sudah selesai
+                                $query->whereNotNull('approved_at')
+                                    ->whereNull('rejected_at')
+                                    ->whereNull('completed_at');
                             })
                             ->selectRaw('SUM(qty - return_qty) as total_pinjam')
                             ->value('total_pinjam') ?? 0;

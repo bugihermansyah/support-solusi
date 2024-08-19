@@ -92,4 +92,9 @@ class EditBorrow extends EditRecord
                 })
         ];
     }
+
+    protected function getFormActions(): array
+    {
+        return [];
+}
 }

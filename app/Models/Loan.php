@@ -23,6 +23,10 @@ class Loan extends Model
         'remark',
         'note',
         'user_id',
+        'comment',
+        'approved_at',
+        'rejected_at',
+        'completed_at'
     ];
 
     public function loanUnits(): HasMany

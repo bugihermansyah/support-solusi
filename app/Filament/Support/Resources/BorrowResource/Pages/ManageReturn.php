@@ -72,6 +72,29 @@ class ManageReturn extends ManageRelatedRecords
                     ->label('Remark'),
                 Tables\Columns\TextColumn::make('qty')
                     ->label('Qty'),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->getStateUsing(function ($record) {
+                        if ($record->accepted_at) {
+                            return 'Diterima';
+                        } elseif ($record->rejected_at) {
+                            return 'Ditolak';
+                        } else {
+                            return 'Pending';
+                        }
+                    })
+                    ->icons([
+                        'heroicon-o-x-circle' => fn ($state): bool => $state === 'Ditolak',
+                        'heroicon-o-check-circle' => fn ($state): bool => $state === 'Diterima',
+                    ])
+                    ->colors([
+                        'danger' => 'Ditolak',
+                        'success' => 'Diterima',
+                        'secondary' => 'Pending',
+                    ]),
+                Tables\Columns\TextColumn::make('comment')
+                    ->label('Catatan'),
             ])
             ->filters([
                 //
