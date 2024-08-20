@@ -133,19 +133,59 @@ class ReportDailyResource extends Resource
             ->defaultSort('date_visit', 'desc')
             ->columns([
                 TextColumn::make('outstanding.location.name')
-                    ->label('Lokasi'),
+                    ->label('Lokasi')
+                    ->limit(15)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return $state;
+                    }),
+                TextColumn::make('outstanding.reporter')
+                    ->label('Pelapor'),
                 TextColumn::make('users.firstname')
-                    ->label('Support'),
+                    ->label('Support')
+                    ->listWithLineBreaks(),
                 TextColumn::make('date_visit')
                     ->label('Tgl Aksi')
                     ->date(),
                 TextColumn::make('outstanding.title')
-                    ->label('Masalah'),
+                    ->label('Masalah')
+                    ->limit(15)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return $state;
+                    }),
                 TextColumn::make('cause')
                     ->label('Sebab')
+                    ->limit(15)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return $state;
+                    })
                     ->html(),
                 TextColumn::make('action')
                     ->label('Aksi')
+                    ->lineClamp(4)
+                    ->words(10)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return strip_tags($state);
+                    })
                     ->html(),
                 TextColumn::make('status'),
             ])
