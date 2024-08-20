@@ -89,7 +89,7 @@
         <div class="header">
         </div>
         <div class="content">
-            <p>Kepada, <strong>{{ $locationName }}</strong></p>
+            <p>Kepada <strong>{{ $locationName }}</strong>,</p>
             <p>Berikut adalah laporan pekerjaan Tim Support:</p>
             <table>
                 <tr>
@@ -140,14 +140,14 @@
                 </tr>
                 @endisset
             </table>
-
             <p>Terima kasih atas perhatian dan kerjasamanya.</p>
-            <p>Support,</p>
+            <hr>
+            <p>Support</p>
             <p>PT SAP</p>
         </div>
         <div class="footer">
             <p>&copy; 2024 PT. SISTEM AKSESINDO PERDANA.</p>
-            <p>Butuh bantuan? Email ke <a href="mailto:support@ptsap.co.id">support@ptsap.co.id</a></p>
+            <p>E-mail ini dibuat otomatis, mohon tidak membalas. Jika butuh bantuan, silakan hubungi Helpdesk.Butuh bantuan? Email ke <a href="mailto:support@ptsap.co.id">support@ptsap.co.id</a></p>
             <p>Website: <a href="http://www.ptsap.co.id" target="_blank">www.ptsap.co.id</a></p>
             <p>Alamat: Komp. Griya Inti Sentosa, Jl. Griya Agung Blok O 88-89 Jakarta</p>
             <p>Phone: 081210499169 | Mobile: (800) 555-0299</p>
