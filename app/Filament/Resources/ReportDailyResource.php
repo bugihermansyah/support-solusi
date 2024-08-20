@@ -23,6 +23,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -188,6 +189,14 @@ class ReportDailyResource extends Resource
                     })
                     ->html(),
                 TextColumn::make('status'),
+                IconColumn::make('send_mail_at')
+                    ->label('Mail')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->getStateUsing(function ($record) {
+                        return !is_null($record->send_mail_at);
+                    })
             ])
             ->filters([
                 //
