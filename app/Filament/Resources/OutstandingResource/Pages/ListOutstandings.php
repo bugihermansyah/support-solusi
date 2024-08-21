@@ -52,7 +52,7 @@ class ListOutstandings extends ListRecords
 
         return [
             Action::make('createAnother')
-                ->label('Buat Jadwal')
+                ->label('Create Schedule')
                 ->icon('heroicon-o-briefcase')
                 ->form([
                     Section::make()
@@ -143,7 +143,7 @@ class ListOutstandings extends ListRecords
                                 }),
                         ])->columns(2)
                 ])
-                ->modalHeading('Buat Jadwal')
+                ->modalHeading('Create Schedule')
                 ->action(function (array $data, array $arguments): void {
                     if ($data['task']) {
                         // Create new outstanding
