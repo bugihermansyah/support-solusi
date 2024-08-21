@@ -264,15 +264,18 @@ class LocationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contracts.product.name')
                     ->label('Produk')
+                    ->searchable()
                     ->listWithLineBreaks()
                     ->badge(),
                 Tables\Columns\TextColumn::make('contracts.bap')
                     ->label('BAP')
+                    ->searchable()
                     ->date()
                     ->listWithLineBreaks()
                     ->badge(),
                 Tables\Columns\TextColumn::make('contracts.type_contract')
                     ->label('Kontrak')
+                    ->searchable()
                     ->listWithLineBreaks()
                     ->badge(),
                 Tables\Columns\TextColumn::make('team.name')
@@ -285,11 +288,13 @@ class LocationResource extends Resource
                     ->label('BD')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.firstname')
-                    ->label('Support'),
+                    ->label('Support')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('type_contract')
                     ->label('Kontrak'),
                 Tables\Columns\TextColumn::make('status')
-                    ->badge(),
+                    ->badge()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

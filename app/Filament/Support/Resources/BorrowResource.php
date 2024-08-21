@@ -27,7 +27,7 @@ class BorrowResource extends Resource
 {
     protected static ?string $model = Loan::class;
 
-    protected static ?string $modelLabel = 'Permintaan Unit';
+    protected static ?string $pluralLabel = 'Permintaan Unit';
 
     protected static ?string $navigationGroup = 'Gudang';
 

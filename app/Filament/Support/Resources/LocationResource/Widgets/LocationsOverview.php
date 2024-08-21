@@ -23,12 +23,6 @@ class LocationsOverview extends BaseWidget
     {
         return [
             Stat::make('Total lokasi anda', $this->getPageTableQuery()->count()),
-            // Stat::make('Total produk unik', function () {
-            //     return DB::table($this->getPageTableQuery())
-            //         ->select(DB::raw('COUNT(DISTINCT product) as total'))
-            //         ->groupBy('contract_location')
-            //         ->count();
-            // }),
         ];
     }
 }

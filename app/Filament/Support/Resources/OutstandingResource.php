@@ -35,11 +35,11 @@ class OutstandingResource extends Resource
 {
     protected static ?string $model = Outstanding::class;
 
-    protected static ?string $modelLabel = 'Outstanding';
+    // protected static ?string $pluralLabel = 'Outstanding';
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
 
     protected static ?int $navigationSort = 1;
 
@@ -152,23 +152,24 @@ class OutstandingResource extends Resource
                 ->searchable()
                 ->limit(5)
                 ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('location.company.alias')
+                ->label('Group')
+                ->searchable(),
             Tables\Columns\TextColumn::make('location.name')
                 ->label('Lokasi')
-                // ->description(fn (Model $record) => $record->product?->name)
                 ->searchable()
                 ->sortable()
                 ->limit(15),
             Tables\Columns\TextColumn::make('product.name')
                 ->label('Produk')
                 ->searchable()
-                ->limit(8),
+                ->limit(13),
             Tables\Columns\TextColumn::make('title')
                 ->label('Masalah')
                 // ->limit(20)
                 ->searchable(),
             Tables\Columns\TextColumn::make('reporter')
                 ->label('Pelapor')
-                // ->formatStateUsing(fn ($state) => Str::headline($state))
                 ->formatStateUsing(fn ($state) => ucwords($state))
                 ->colors([
                     'danger' => 'client',
@@ -191,6 +192,10 @@ class OutstandingResource extends Resource
                 ->suffix('x')
                 ->sortable()
                 ->counts('reportings'),
+            Tables\Columns\TextColumn::make('is_type_problem')
+                ->label('Problem')
+                ->badge()
+                ->searchable(),
             Tables\Columns\TextColumn::make('outstandingunits.unit.name')
                 ->label('Unit')
                 ->badge()
@@ -216,9 +221,9 @@ class OutstandingResource extends Resource
                 // Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 

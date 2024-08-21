@@ -18,7 +18,7 @@ class LocationResource extends Resource
 {
     protected static ?string $model = Location::class;
 
-    protected static ?string $modelLabel = 'Lokasi';
+    // protected static ?string $pluralLabel = 'Lokasi';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -41,11 +41,27 @@ class LocationResource extends Resource
                 Tables\Columns\TextColumn::make('company.name')
                     ->label('Perusahaan')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('company.alias')
+                    ->label('Group')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Lokasi')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contracts.product.name')
                     ->label('Produk')
+                    ->searchable()
+                    ->listWithLineBreaks()
+                    ->badge(),
+                Tables\Columns\TextColumn::make('contracts.bap')
+                    ->label('BAP')
+                    ->searchable()
+                    ->date()
+                    ->listWithLineBreaks()
+                    ->badge(),
+                Tables\Columns\TextColumn::make('contracts.type_contract')
+                    ->label('Kontrak')
+                    ->searchable()
+                    ->listWithLineBreaks()
                     ->badge(),
                 Tables\Columns\TextColumn::make('team.name')
                     ->label('Area')
@@ -54,12 +70,13 @@ class LocationResource extends Resource
                     ->label('BD')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.firstname')
-                    ->label('Support'),
+                    ->label('Support')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('type_contract')
                     ->label('Kontrak'),
                 Tables\Columns\TextColumn::make('status')
-                    ->badge(),
-                // Tables\Columns\TextColumn::make('customers.name'),
+                    ->badge()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -73,12 +90,10 @@ class LocationResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make(),
-                // ]),
+                //
             ]);
     }
 
@@ -100,8 +115,8 @@ class LocationResource extends Resource
     {
         return [
             'index' => Pages\ListLocations::route('/'),
-            'create' => Pages\CreateLocation::route('/create'),
-            'edit' => Pages\EditLocation::route('/{record}/edit'),
+            // 'create' => Pages\CreateLocation::route('/create'),
+            // 'edit' => Pages\EditLocation::route('/{record}/edit'),
         ];
     }
 }
