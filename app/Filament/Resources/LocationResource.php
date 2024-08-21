@@ -18,6 +18,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -132,7 +133,7 @@ class LocationResource extends Resource
                                 Tabs\Tab::make('Mail Notifications')
                                     ->icon('heroicon-m-bell')
                                     ->schema([
-                                        Forms\Components\Repeater::make('customerlocations')
+                                        TableRepeater::make('customerlocations')
                                             ->label('Pelanggan')
                                             ->relationship()
                                             // ->itemLabel(fn (array $state): ?string => $state['email'] ?? null)
@@ -140,42 +141,58 @@ class LocationResource extends Resource
                                                 fn(Action $action) => $action->requiresConfirmation(),
                                             )
                                             ->schema([
-                                                Forms\Components\Grid::make(4)
-                                                    ->schema([
-                                                        Forms\Components\Select::make('customer_id')
-                                                            ->label('Nama')
-                                                            ->relationship('customer', 'email')
-                                                            ->preload()
-                                                            // ->live(onBlur:true)
-                                                            ->columnSpan(3)
-                                                            ->distinct()
-                                                            ->searchable()
-                                                            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
-                                                            ->required()
-                                                            ->createOptionForm([
-                                                                Forms\Components\TextInput::make('name')
-                                                                    ->required()
-                                                                    ->maxLength(255),
-                                                                Forms\Components\TextInput::make('tlp')
-                                                                    ->maxLength(255),
-                                                                Forms\Components\TextInput::make('email')
-                                                                    ->label('Email address')
-                                                                    ->required()
-                                                                    ->email()
-                                                                    ->maxLength(255)
-                                                                    ->unique(),
-                                                            ])
-                                                            ->createOptionAction(function (Action $action) {
-                                                                return $action
-                                                                    ->modalHeading('Buat Pelanggan')
-                                                                    ->modalSubmitActionLabel('Buat Pelanggan')
-                                                                    ->modalWidth('lg');
-                                                            }),
-                                                        Forms\Components\Toggle::make('is_to')
-                                                            ->label('CC/To')
-                                                            ->inline(false)
-                                                    ])
+                                                Forms\Components\Select::make('customer_id')
+                                                    ->label('Email')
+                                                    ->options(Customer::all()->pluck('name_email', 'id'))
+                                                    ->searchable()
+                                                    ->distinct()
+                                                    ->required(),
+                                                Forms\Components\Toggle::make('is_to')
+                                                    ->label('CC/To')
+                                                    ->inline(false)
+                                                    ->required(),
                                             ])
+                                            ->colStyles([
+                                                'customer_id' => 'width: 900px;',
+                                                'is_to' => 'width: 100px;',
+                                            ])
+                                            // ->schema([
+                                            //     Forms\Components\Grid::make(4)
+                                            //         ->schema([
+                                            //             Forms\Components\Select::make('customer_id')
+                                            //                 ->label('Nama')
+                                            //                 ->relationship('customer', 'email')
+                                            //                 ->preload()
+                                            //                 // ->live(onBlur:true)
+                                            //                 ->columnSpan(3)
+                                            //                 ->distinct()
+                                            //                 ->searchable()
+                                            //                 ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                            //                 ->required()
+                                            //                 ->createOptionForm([
+                                            //                     Forms\Components\TextInput::make('name')
+                                            //                         ->required()
+                                            //                         ->maxLength(255),
+                                            //                     Forms\Components\TextInput::make('tlp')
+                                            //                         ->maxLength(255),
+                                            //                     Forms\Components\TextInput::make('email')
+                                            //                         ->label('Email address')
+                                            //                         ->required()
+                                            //                         ->email()
+                                            //                         ->maxLength(255)
+                                            //                         ->unique(),
+                                            //                 ])
+                                            //                 ->createOptionAction(function (Action $action) {
+                                            //                     return $action
+                                            //                         ->modalHeading('Buat Pelanggan')
+                                            //                         ->modalSubmitActionLabel('Buat Pelanggan')
+                                            //                         ->modalWidth('lg');
+                                            //                 }),
+                                            //             Forms\Components\Toggle::make('is_to')
+                                            //                 ->label('CC/To')
+                                            //                 ->inline(false)
+                                            //         ])
+                                            // ])
                                             ->collapsible()
                                             ->defaultItems(0),
                                     ]),
@@ -247,6 +264,16 @@ class LocationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contracts.product.name')
                     ->label('Produk')
+                    ->listWithLineBreaks()
+                    ->badge(),
+                Tables\Columns\TextColumn::make('contracts.bap')
+                    ->label('BAP')
+                    ->date()
+                    ->listWithLineBreaks()
+                    ->badge(),
+                Tables\Columns\TextColumn::make('contracts.type_contract')
+                    ->label('Kontrak')
+                    ->listWithLineBreaks()
                     ->badge(),
                 Tables\Columns\TextColumn::make('team.name')
                     ->label('Tim')
