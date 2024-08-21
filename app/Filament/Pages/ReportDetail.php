@@ -52,9 +52,6 @@ class ReportDetail extends Page implements HasTable
 
     public static function table(Table $table): Table
     {
-        // $currentMonth = Carbon::now()->format('m');
-        // $currentYear = Carbon::now()->format('Y');
-
         return $table
             ->query(Reporting::query()
                     ->join('outstandings', 'outstandings.id', '=', 'reportings.outstanding_id')
@@ -62,8 +59,8 @@ class ReportDetail extends Page implements HasTable
                     ->orderBy('outstandings.date_visit', 'asc')
                     ->select('reportings.*')
                 )
-            // ->defaultSort('outstanding.date_in', 'asc')
-            // ->defaultSort('date_visit', 'asc')
+            ->defaultSort('outstanding.date_in', 'asc')
+            ->defaultSort('date_visit', 'asc')
             ->columns([
                 TextColumn::make('outstanding.number')
                     ->label('No. Tiket')
@@ -127,7 +124,6 @@ class ReportDetail extends Page implements HasTable
             ])
             ->persistSortInSession()
             ->persistFiltersInSession()
-            // ->defaultSort('number', 'asc')
             ->filtersFormColumns(4)
             ->filters([
                 QueryBuilder::make()
@@ -210,13 +206,10 @@ class ReportDetail extends Page implements HasTable
                     ])
             ])
             ->actions([
-                // Tables\Actions\EditAction::make(),
+                //
             ])
             ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make(),
-                // ]),
-                // ExportBulkAction::make()
+                //
             ]);
     }
 

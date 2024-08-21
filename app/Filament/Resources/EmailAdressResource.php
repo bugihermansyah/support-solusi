@@ -68,6 +68,9 @@ class EmailAdressResource extends Resource
                     ->copyable()
                     ->copyMessage('Email address copied')
                     ->copyMessageDuration(1500),
+                Tables\Columns\TextColumn::make('locations_count')
+                    ->label('Lokasi')
+                    ->counts('locations'),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Keterangan'),
                 Tables\Columns\TextColumn::make('created_at')
