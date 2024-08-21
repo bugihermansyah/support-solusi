@@ -9,18 +9,12 @@ use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\IconEntry;
-use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ManageOutstandingReport extends ManageRelatedRecords
 {
@@ -189,9 +183,7 @@ class ManageOutstandingReport extends ManageRelatedRecords
                     ->date(),
                 Tables\Columns\TextColumn::make('users.firstname')
                     ->label('Support')
-                    ->listWithLineBreaks()
-                    ->limitList(1),
-                    // ->expandableLimitedList(),
+                    ->listWithLineBreaks(),
                 Tables\Columns\TextColumn::make('work')
                     ->label('Tipe')
                     ->formatStateUsing(fn ($state) => ucwords($state)),
@@ -216,23 +208,18 @@ class ManageOutstandingReport extends ManageRelatedRecords
                     ->boolean(),
             ])
             ->filters([
-                // Tables\Filters\TrashedFilter::make(),
+                //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->hiddenLabel()->icon('heroicon-m-folder'),
-                Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
                 Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
 
             ])
             ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make(),
-                //     Tables\Actions\ForceDeleteBulkAction::make(),
-                //     Tables\Actions\RestoreBulkAction::make(),
-                // ]),
+                //
             ]);
     }
 }

@@ -61,6 +61,7 @@ class LocationResource extends Resource
                 Tables\Columns\TextColumn::make('contracts.type_contract')
                     ->label('Kontrak')
                     ->searchable()
+                    ->formatStateUsing(fn ($state) => ucwords($state))
                     ->listWithLineBreaks()
                     ->badge(),
                 Tables\Columns\TextColumn::make('team.name')
