@@ -113,6 +113,7 @@ class ListOutstandings extends ListRecords
                                 ->required(),
                             Toggle::make('lpm')
                                 ->label('Laporan Pertama')
+                                ->inline(false)
                                 ->visible(fn ($get) => $get('task')),
                             DatePicker::make('date_in')
                                 ->label('Lapor')
@@ -140,7 +141,7 @@ class ListOutstandings extends ListRecords
                                     }
                                     return $options;
                                 }),
-                        ])
+                        ])->columns(2)
                 ])
                 ->modalHeading('Buat Jadwal')
                 ->action(function (array $data, array $arguments): void {
