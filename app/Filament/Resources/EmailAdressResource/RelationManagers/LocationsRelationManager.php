@@ -5,15 +5,15 @@ namespace App\Filament\Resources\EmailAdressResource\RelationManagers;
 use App\Models\Company;
 use App\Models\Location;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class LocationsRelationManager extends RelationManager
 {
@@ -30,7 +30,7 @@ class LocationsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('name')
+            ->recordTitleAttribute('name_alias')
             ->columns([
                 Tables\Columns\TextColumn::make('company.alias')
                     ->label('Group'),
@@ -43,22 +43,12 @@ class LocationsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
-                    ->multiple()
-                    ->preloadRecordSelect()
-                    ->form(fn (AttachAction $action): array => [
-                        // Forms\Components\Select::make('alias')
-                        //     ->options(Company::all()->pluck('alias', 'id'))
-                        //     ->searchable()
-                        //     ->live(),
-                        $action->getRecordSelect(),
-                        // Forms\Components\Select::make('location_id')
-                        //     ->options(fn (Get $get): Collection => Location::query()
-                        //         ->where('company_id', $get('alias'))
-                        //         ->pluck('name', 'id')),
-                        Forms\Components\Toggle::make('is_to')
-                            ->required(),
-                    ]),
+                Action::make('attachLocations')
+                    ->label('Attach Locations')
+                    ->form($this->getAttachLocationsFormSchema())
+                    ->action(function (array $data) {
+                        $this->attachLocations($data);
+                    })
             ])
             ->actions([
                 // Tables\Actions\EditAction::make(),
@@ -66,10 +56,39 @@ class LocationsRelationManager extends RelationManager
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DetachBulkAction::make(),
-                //     Tables\Actions\DeleteBulkAction::make(),
-                // ]),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
             ]);
+    }
+
+    protected function getAttachLocationsFormSchema(): array
+    {
+        return [
+            Select::make('company')
+                ->options(Company::query()->pluck('alias', 'id'))
+                ->searchable()
+                ->live(),
+            Forms\Components\Select::make('locations')
+                ->label('Locations')
+                ->multiple()
+                ->distinct()
+                ->options(fn (Get $get): Collection => Location::query()
+                    ->where('company_id', $get('company'))
+                    ->pluck('name', 'id'))
+                ->required(),
+            Forms\Components\Toggle::make('is_to')
+                ->label('CC / To')
+                ->default(false),
+        ];
+    }
+
+    public function attachLocations(array $data)
+    {
+        foreach ($data['locations'] as $locationId) {
+            $this->getOwnerRecord()->locations()->attach($locationId, ['is_to' => $data['is_to']]);
+        }
     }
 }

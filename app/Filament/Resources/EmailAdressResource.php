@@ -47,7 +47,7 @@ class EmailAdressResource extends Resource
                     ->maxLength(100),
                 Forms\Components\Textarea::make('description')
                     ->label('Keterangan'),
-            ])->columns(3);
+            ])->columns(2);
     }
 
     public static function table(Table $table): Table
