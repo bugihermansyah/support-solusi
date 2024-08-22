@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Reporting;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -22,10 +21,6 @@ class ScheduleOutstandings extends BaseWidget
         $query = Reporting::query()
                     ->whereNull('reportings.status');
 
-        // if ($isHead) {
-        //         $query->join('users', 'users.id', '=', 'reportings.user_id')
-        //               ->where('users.team_id', $userTeam);
-        // }
         if ($isHead) {
             $query->whereHas('users', function ($query) use ($userTeam) {
                 $query->where('team_id', $userTeam);
@@ -44,7 +39,7 @@ class ScheduleOutstandings extends BaseWidget
                     ->date(),
                 TextColumn::make('users.firstname')
                     ->label('Support'),
-                TextColumn::make('outstanding.location.name')
+                TextColumn::make('outstanding.location.name_alias')
                     ->label('Lokasi')
                     ->limit(15),
                 TextColumn::make('outstanding.title')
