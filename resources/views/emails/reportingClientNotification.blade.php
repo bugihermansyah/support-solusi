@@ -55,6 +55,9 @@
             color: #007BFF;
             margin-bottom: 10px;
         }
+        ul, ol {
+            padding-left: 15px;
+        }
         .footer a {
             color: #007BFF;
             text-decoration: none;
@@ -89,7 +92,7 @@
         <div class="header">
         </div>
         <div class="content">
-            <p>Kepada <strong>{{ $locationName }}</strong>,</p>
+            <p>Kepada Yth Pengelola <strong>{{ $locationName }}</strong>,</p>
             <p>Berikut adalah laporan pekerjaan Tim Support:</p>
             <table>
                 <tr>
@@ -112,30 +115,30 @@
                     <th><td><br></td></th>
                 </tr>
                 <tr>
-                    <th>Masalah</th>
+                    <th>Masalah:</th>
                     <td>{{ $outstandingTitle }}</td>
                 </tr>
                 <tr>
-                    <th>Sebab</th>
+                    <th>Sebab:</th>
                     <td>{{ $reporting->cause }}</td>
                 </tr>
                 <tr>
-                    <th>Aksi</th>
+                    <th style="vertical-align:top">Aksi:</th>
                     <td>{!! $reporting->action !!}</td>
                 </tr>
                 <tr>
-                    <th>Status</th>
+                    <th>Status:</th>
                     <td>{{ $reporting->status->name }}</td>
                 </tr>
                 @isset($reporting->revisit)
                 <tr>
-                    <th>Maksimal</th>
+                    <th>Maksimal:</th>
                     <td>{{ $reporting->revisit }}</td>
                 </tr>
                 @endisset
                 @isset($reporting->note)
                 <tr>
-                    <th>Ket.</th>
+                    <th style="vertical-align:top">Ket.:</th>
                     <td>{!! $reporting->note !!}</td>
                 </tr>
                 @endisset
@@ -150,7 +153,7 @@
             <p>E-mail ini dibuat otomatis, mohon tidak membalas. Jika butuh bantuan, silakan Email ke <a href="mailto:support@ptsap.co.id">support@ptsap.co.id</a></p>
             <p>Website: <a href="http://www.ptsap.co.id" target="_blank">www.ptsap.co.id</a></p>
             <p>Alamat: Komp. Griya Inti Sentosa, Jl. Griya Agung Blok O 88-89 Jakarta</p>
-            <p>Phone: 081210499169 | Mobile: (800) 555-0299</p>
+            <p>Phone: (021) 6516318 | Mobile: +62 858-9100-0923</p>
             <p>
                 Ikuti kami di:
                 <a href="https://www.youtube.com/channel/UC9z6qGwywtGctQxiBL19ObQ" target="_blank">
