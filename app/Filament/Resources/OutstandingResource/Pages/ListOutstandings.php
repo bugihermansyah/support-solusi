@@ -3,11 +3,13 @@
 namespace App\Filament\Resources\OutstandingResource\Pages;
 
 use App\Filament\Resources\OutstandingResource;
+use App\Jobs\ScheduleMailJob;
 use App\Models\Contract;
 use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Reporting;
 use App\Models\Team;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -182,13 +184,35 @@ class ListOutstandings extends ListRecords
                             'email_to' => $emailTo,
                             'email_cc' => $emailCc,
                         ]);
-                        // Attach multiple users to the reporting
+                        // Attach multiple users to the reporting and send email
                         if (isset($data['user_id']) && is_array($data['user_id'])) {
                             $reporting->users()->attach($data['user_id']);
+
+                            // Get necessary data for the email
+                            $companyAlias = $location->company->alias ?? 'SAP';
+                            $locationName = $location->name;
+                            $title = $outstanding->title;
+                            $dateVisit = $data['date_visit'];
+
+                            // Collect all support emails
+                            $supportEmails = User::whereIn('id', $data['user_id'])
+                                ->pluck('email')
+                                ->toArray();
+
+                            // Dispatch a single email job with multiple recipients
+                            if (!empty($supportEmails)) {
+                                ScheduleMailJob::dispatch(
+                                    $supportEmails,
+                                    $dateVisit,
+                                    $companyAlias,
+                                    $locationName,
+                                    $title
+                                )->onQueue('scheduleEmails');
+                            }
                         }
 
                         Notification::make()
-                            ->title('Data berhasil dibuat')
+                            ->title('Jadwal berhasil dibuat')
                             ->success()
                             ->send();
                     } else {
@@ -216,14 +240,36 @@ class ListOutstandings extends ListRecords
                                 'email_to' => $emailTo,
                                 'email_cc' => $emailCc,
                             ]);
-                            // Attach multiple users to the reporting
+                            // Attach multiple users to the reporting and send email
                             if (isset($data['user_id']) && is_array($data['user_id'])) {
                                 $reporting->users()->attach($data['user_id']);
+
+                                // Get necessary data for the email
+                                $companyAlias = $location->company->alias ?? 'SAP';
+                                $locationName = $location->name;
+                                $title = $outstanding->title;
+                                $dateVisit = $data['date_visit'];
+
+                                // Collect all support emails
+                                $supportEmails = User::whereIn('id', $data['user_id'])
+                                    ->pluck('email')
+                                    ->toArray();
+
+                                // Dispatch a single email job with multiple recipients
+                                if (!empty($supportEmails)) {
+                                    ScheduleMailJob::dispatch(
+                                        $supportEmails,
+                                        $dateVisit,
+                                        $companyAlias,
+                                        $locationName,
+                                        $title
+                                    )->onQueue('scheduleEmails');
+                                }
                             }
                         }
 
                         Notification::make()
-                            ->title('Data berhasil dibuat')
+                            ->title('Jadwal berhasil dibuat')
                             ->success()
                             ->send();
 
