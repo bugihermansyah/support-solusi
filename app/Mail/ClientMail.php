@@ -46,7 +46,7 @@ class ClientMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        $companyAlias = $this->companyAlias?? 'SAP';
+        $companyAlias = $this->companyAlias ?? 'SAP';
         $location = $this->locationName ?? 'Location';
         $title = $this->outstandingTitle ?? '';
 
