@@ -20,6 +20,7 @@ class ClientMail extends Mailable
     public $outstandingTitle;
     public $outstandingReporter;
     public $supportNames;
+    public $companyAlias;
 
     public function __construct(
         Reporting $reporting,
@@ -27,7 +28,8 @@ class ClientMail extends Mailable
         string $outstandingNumber,
         string $outstandingTitle,
         string $outstandingReporter,
-        array $supportNames
+        array $supportNames,
+        string $companyAlias
         )
     {
         $this->reporting = $reporting;
@@ -36,6 +38,7 @@ class ClientMail extends Mailable
         $this->outstandingTitle = $outstandingTitle;
         $this->outstandingReporter = $outstandingReporter;
         $this->supportNames = $supportNames;
+        $this->companyAlias = $companyAlias;
     }
 
     /**
@@ -43,10 +46,11 @@ class ClientMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        $location = $this->locationName ?? '';
+        $companyAlias = $this->companyAlias?? 'SAP';
+        $location = $this->locationName ?? 'Location';
         $title = $this->outstandingTitle ?? '';
 
-        $subject = "{$location} - {$title}";
+        $subject = "{$companyAlias} - {$location} : {$title}";
 
         return new Envelope(
             subject: $subject,
@@ -55,8 +59,7 @@ class ClientMail extends Mailable
 
     public function build()
     {
-        $email = $this->from('noreply.support@ptsap.co.id', 'Support | PT SAP')
-                      ->view('emails.reportingClientNotification')
+        $email = $this->view('emails.reportingClientNotification')
                       ->with([
                           'reporting' => $this->reporting,
                           'locationName' => $this->locationName,
@@ -64,6 +67,7 @@ class ClientMail extends Mailable
                           'outstandingTitle' => $this->outstandingTitle,
                           'outstandingReporter' => $this->outstandingReporter,
                           'supportNames' => $this->supportNames,
+                          'companyAlias' => $this->companyAlias,
                         ]);
 
         // Add attachments

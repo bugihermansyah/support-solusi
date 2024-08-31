@@ -29,10 +29,11 @@ class SupportMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $company = $this->mailData['company'] ?? '';
         $location = $this->mailData['location'] ?? '';
         $title = $this->mailData['title'] ?? '';
 
-        $subject = "{$location} - {$title}";
+        $subject = "[Reporting] {$company} - {$location} : {$title}";
 
         return new Envelope(
             subject: $subject,

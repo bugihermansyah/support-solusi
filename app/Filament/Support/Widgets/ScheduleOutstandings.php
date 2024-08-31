@@ -5,6 +5,7 @@ namespace App\Filament\Support\Widgets;
 use App\Enums\OutstandingTypeProblem;
 use App\Filament\Resources\OutstandingResource;
 use App\Jobs\SupportMailJob;
+use App\Models\Company;
 use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Reporting;
@@ -273,6 +274,7 @@ class ScheduleOutstandings extends BaseWidget
 
                                 $outstanding = Outstanding::find($record->outstanding_id);
                                 $location = Location::find($outstanding->location_id);
+                                $company = Company::find($location->company_id);
                                 $dateLapor = Carbon::parse($outstanding->date_in)->format('d M Y');
                                 $dateVisit = Carbon::parse($data['date_visit'])->format('d M Y');
                                 $users = $reporting->users;
@@ -310,6 +312,7 @@ class ScheduleOutstandings extends BaseWidget
 
                                 $mailData = [
                                     'number' => $outstanding->number,
+                                    'company' => $company->alias,
                                     'location' => $location->name,
                                     'title' => $outstanding->title,
                                     'date_lapor' => $dateLapor,

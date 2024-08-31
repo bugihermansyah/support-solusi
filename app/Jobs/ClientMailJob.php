@@ -22,6 +22,7 @@ class ClientMailJob implements ShouldQueue
     protected $outstandingTitle;
     protected $outstandingReporter;
     protected $supportNames;
+    protected $companyAlias;
 
     /**
      * Create a new job instance.
@@ -34,8 +35,9 @@ class ClientMailJob implements ShouldQueue
      * @param string $outstandingTitle
      * @param string $outstandingReporter
      * @param array $supportNames
+     * @param string $companyAlias
      */
-    public function __construct($reporting, $toEmails, $ccEmails, $locationName, $outstandingNumber, $outstandingTitle, $outstandingReporter, $supportNames)
+    public function __construct($reporting, $toEmails, $ccEmails, $locationName, $outstandingNumber, $outstandingTitle, $outstandingReporter, $supportNames, $companyAlias)
     {
         $this->reporting = $reporting;
         $this->toEmails = $toEmails;
@@ -45,6 +47,7 @@ class ClientMailJob implements ShouldQueue
         $this->outstandingTitle = $outstandingTitle;
         $this->outstandingReporter = $outstandingReporter;
         $this->supportNames = $supportNames;
+        $this->companyAlias = $companyAlias;
     }
 
     /**
@@ -60,7 +63,8 @@ class ClientMailJob implements ShouldQueue
                 $this->outstandingNumber,
                 $this->outstandingTitle,
                 $this->outstandingReporter,
-                $this->supportNames
+                $this->supportNames,
+                $this->companyAlias,
             ));
 
         if (is_null($this->reporting->send_mail_at)) {

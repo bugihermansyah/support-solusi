@@ -92,7 +92,7 @@
         <div class="header">
         </div>
         <div class="content">
-            <p>Kepada Yth Pengelola <strong>{{ $locationName }}</strong>,</p>
+            <p>Kepada Yth Pengelola <strong>{{ $companyAlias }} - {{ $locationName }}</strong>,</p>
             <p>Berikut adalah laporan pekerjaan Tim Support:</p>
             <table>
                 <tr>
