@@ -145,7 +145,8 @@ class ReportDailyResource extends Resource
                         return $state;
                     }),
                 TextColumn::make('outstanding.reporter')
-                    ->label('Pelapor'),
+                    ->label('Pelapor')
+                    ->formatStateUsing(fn ($state) => ucwords($state)),
                 TextColumn::make('users.firstname')
                     ->label('Support')
                     ->listWithLineBreaks(),
