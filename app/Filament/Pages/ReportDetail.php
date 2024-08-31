@@ -10,12 +10,14 @@ use App\Models\Team;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
+use Filament\Forms\Components\Select;
 use Filament\Pages\Page;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\QueryBuilder;
 use Filament\Tables\Filters\QueryBuilder\Constraints\DateConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\SelectConstraint;
@@ -126,6 +128,50 @@ class ReportDetail extends Page implements HasTable
             ->persistFiltersInSession()
             ->filtersFormColumns(4)
             ->filters([
+                Filter::make('sla_visit')
+                    ->query(function (Builder $query, array $data) {
+                        switch ($data['value']) {
+                            case 'sla1':
+                                return $query->whereRaw('DATEDIFF(date_in, outstandings.date_visit) BETWEEN 0 AND 1');
+                            case 'sla2':
+                                return $query->whereRaw('DATEDIFF(date_in, outstandings.date_visit) BETWEEN 2 AND 3');
+                            case 'sla3':
+                                return $query->whereRaw('DATEDIFF(date_in, outstandings.date_visit) > 3');
+                        }
+                    })
+                    ->form([
+                        Select::make('value')
+                            ->label('SLA Visit')
+                            ->options([
+                                'sla1' => 'SLA 1 (0 - 1)',
+                                'sla2' => 'SLA 2 (2 - 3)',
+                                'sla3' => 'SLA 3 (> 3)',
+                            ])
+                            ->columnSpanFull()
+                            ->required(),
+                    ]),
+                Filter::make('sla_finish')
+                    ->query(function (Builder $query, array $data) {
+                        switch ($data['value']) {
+                            case 'sla1':
+                                return $query->whereRaw('DATEDIFF(date_finish, outstandings.date_visit) BETWEEN 0 AND 3');
+                            case 'sla2':
+                                return $query->whereRaw('DATEDIFF(date_finish, outstandings.date_visit) BETWEEN 4 AND 7');
+                            case 'sla3':
+                                return $query->whereRaw('DATEDIFF(date_finish, outstandings.date_visit) > 7');
+                        }
+                    })
+                    ->form([
+                        Select::make('value')
+                            ->label('SLA Finish')
+                            ->options([
+                                'sla1' => 'SLA 1 (0 - 3)',
+                                'sla2' => 'SLA 2 (4 - 7)',
+                                'sla3' => 'SLA 3 (> 7)',
+                            ])
+                            ->columnSpanFull()
+                            ->required(),
+                    ]),
                 QueryBuilder::make()
                     ->constraints([
                         SelectConstraint::make('outstanding.location.company.alias')
