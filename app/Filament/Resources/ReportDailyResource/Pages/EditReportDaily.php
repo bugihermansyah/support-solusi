@@ -2,10 +2,8 @@
 
 namespace App\Filament\Resources\ReportDailyResource\Pages;
 
-use App\Events\ClientMailEvent;
 use App\Filament\Resources\ReportDailyResource;
 use App\Jobs\ClientMailJob;
-use App\Models\Location;
 use App\Models\Reporting;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -36,7 +34,7 @@ class EditReportDaily extends EditRecord
 
     protected function sendNotificationEmail(Reporting $reporting)
     {
-        $reporting = $reporting->load('outstanding.location', 'users');
+        $reporting = $reporting->load('outstanding.location.company', 'users');
         $outstanding = $reporting->outstanding;
 
         if (!$outstanding) {
@@ -57,6 +55,7 @@ class EditReportDaily extends EditRecord
             return;
         }
 
+        $companyAlias = $location->company->alias ?? 'SAP';
         $locationName = $location->name;
         $outstandingTitle = $outstanding->title;
         $outstandingReporter = $outstanding->reporter;
@@ -83,9 +82,9 @@ class EditReportDaily extends EditRecord
             $outstandingNumber,
             $outstandingTitle,
             $outstandingReporter,
-            $supportNames
+            $supportNames,
+            $companyAlias
         )->onQueue('clientEmails');
-
     }
 
     protected function getFormActions(): array
