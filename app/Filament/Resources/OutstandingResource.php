@@ -359,26 +359,6 @@ class OutstandingResource extends Resource
             ])
             ->filters([
                 // Tables\Filters\TrashedFilter::make(),
-                Tables\Filters\Filter::make('sla')
-                    ->query(function (Builder $query, array $data) {
-                        switch ($data['value']) {
-                            case 'sla1':
-                                return $query->whereRaw('DATEDIFF(date_finish, date_visit) BETWEEN 0 AND 3');
-                            case 'sla2':
-                                return $query->whereRaw('DATEDIFF(date_finish, date_visit) BETWEEN 4 AND 7');
-                            case 'sla3':
-                                return $query->whereRaw('DATEDIFF(date_finish, date_visit) > 7');
-                        }
-                    })
-                    ->form([
-                        Forms\Components\Select::make('value')
-                            ->options([
-                                'sla1' => 'SLA 1 (0 - 3)',
-                                'sla2' => 'SLA 2 (4 - 7)',
-                                'sla3' => 'SLA 3 (> 7)',
-                            ])
-                            ->required(),
-                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
