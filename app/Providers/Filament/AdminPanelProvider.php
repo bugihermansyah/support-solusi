@@ -30,6 +30,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Shanerbaner82\PanelRoles\PanelRoles;
 
 class AdminPanelProvider extends PanelProvider
@@ -61,6 +62,9 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Warehouse')
                     ->icon('heroicon-o-building-storefront'),
+                NavigationGroup::make()
+                    ->label('Maintenance')
+                    ->icon('heroicon-o-wrench-screwdriver'),
                 NavigationGroup::make()
                     ->label('Reports')
                     ->icon('heroicon-o-document-text'),
@@ -102,6 +106,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
+                FilamentApexChartsPlugin::make(),
                 GravatarPlugin::make()
                     ->default('robohash')
                     ->size(200)
