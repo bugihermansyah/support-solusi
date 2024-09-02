@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "166a5f06fdd0486610ff605dc489e70c",
+    "content-hash": "fc04856b623df92e0cb3f95fbf2a878e",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -384,6 +384,83 @@
                 "source": "https://github.com/Bacon/BaconQrCode/tree/v3.0.0"
             },
             "time": "2024-04-18T11:16:25+00:00"
+        },
+        {
+            "name": "barryvdh/laravel-dompdf",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barryvdh/laravel-dompdf.git",
+                "reference": "2d814cd25e299be022a4fa0fb4509d7ccd353d8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/2d814cd25e299be022a4fa0fb4509d7ccd353d8a",
+                "reference": "2d814cd25e299be022a4fa0fb4509d7ccd353d8a",
+                "shasum": ""
+            },
+            "require": {
+                "dompdf/dompdf": "^3.0",
+                "illuminate/support": "^9|^10|^11",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.7.0",
+                "orchestra/testbench": "^7|^8|^9",
+                "phpro/grumphp": "^2.5",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Barryvdh\\DomPDF\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "Pdf": "Barryvdh\\DomPDF\\Facade\\Pdf",
+                        "PDF": "Barryvdh\\DomPDF\\Facade\\Pdf"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Barryvdh\\DomPDF\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "A DOMPDF Wrapper for Laravel",
+            "keywords": [
+                "dompdf",
+                "laravel",
+                "pdf"
+            ],
+            "support": {
+                "issues": "https://github.com/barryvdh/laravel-dompdf/issues",
+                "source": "https://github.com/barryvdh/laravel-dompdf/tree/v3.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://fruitcake.nl",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/barryvdh",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-07-31T14:45:16+00:00"
         },
         {
             "name": "bezhansalleh/filament-exceptions",
@@ -1801,6 +1878,161 @@
             "time": "2024-02-05T11:56:58+00:00"
         },
         {
+            "name": "dompdf/dompdf",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/dompdf.git",
+                "reference": "fbc7c5ee5d94f7a910b78b43feb7931b7f971b59"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/fbc7c5ee5d94f7a910b78b43feb7931b7f971b59",
+                "reference": "fbc7c5ee5d94f7a910b78b43feb7931b7f971b59",
+                "shasum": ""
+            },
+            "require": {
+                "dompdf/php-font-lib": "^1.0.0",
+                "dompdf/php-svg-lib": "^1.0.0",
+                "ext-dom": "*",
+                "ext-mbstring": "*",
+                "masterminds/html5": "^2.0",
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "ext-gd": "*",
+                "ext-json": "*",
+                "ext-zip": "*",
+                "mockery/mockery": "^1.3",
+                "phpunit/phpunit": "^7.5 || ^8 || ^9 || ^10",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symfony/process": "^4.4 || ^5.4 || ^6.2 || ^7.0"
+            },
+            "suggest": {
+                "ext-gd": "Needed to process images",
+                "ext-gmagick": "Improves image processing performance",
+                "ext-imagick": "Improves image processing performance",
+                "ext-zlib": "Needed for pdf stream compression"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dompdf\\": "src/"
+                },
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "The Dompdf Community",
+                    "homepage": "https://github.com/dompdf/dompdf/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
+            "homepage": "https://github.com/dompdf/dompdf",
+            "support": {
+                "issues": "https://github.com/dompdf/dompdf/issues",
+                "source": "https://github.com/dompdf/dompdf/tree/v3.0.0"
+            },
+            "time": "2024-04-29T14:01:28+00:00"
+        },
+        {
+            "name": "dompdf/php-font-lib",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/php-font-lib.git",
+                "reference": "991d6a954f6bbd7e41022198f00586b230731441"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/php-font-lib/zipball/991d6a954f6bbd7e41022198f00586b230731441",
+                "reference": "991d6a954f6bbd7e41022198f00586b230731441",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "^3 || ^4 || ^5 || ^6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FontLib\\": "src/FontLib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "The FontLib Community",
+                    "homepage": "https://github.com/dompdf/php-font-lib/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "A library to read, parse, export and make subsets of different types of font files.",
+            "homepage": "https://github.com/dompdf/php-font-lib",
+            "support": {
+                "issues": "https://github.com/dompdf/php-font-lib/issues",
+                "source": "https://github.com/dompdf/php-font-lib/tree/1.0.0"
+            },
+            "time": "2024-04-29T13:40:38+00:00"
+        },
+        {
+            "name": "dompdf/php-svg-lib",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/php-svg-lib.git",
+                "reference": "eb045e518185298eb6ff8d80d0d0c6b17aecd9af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/eb045e518185298eb6ff8d80d0d0c6b17aecd9af",
+                "reference": "eb045e518185298eb6ff8d80d0d0c6b17aecd9af",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1 || ^8.0",
+                "sabberworm/php-css-parser": "^8.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Svg\\": "src/Svg"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "The SvgLib Community",
+                    "homepage": "https://github.com/dompdf/php-svg-lib/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "A library to read, parse and export to PDF SVG files.",
+            "homepage": "https://github.com/dompdf/php-svg-lib",
+            "support": {
+                "issues": "https://github.com/dompdf/php-svg-lib/issues",
+                "source": "https://github.com/dompdf/php-svg-lib/tree/1.0.0"
+            },
+            "time": "2024-04-29T13:26:35+00:00"
+        },
+        {
             "name": "dragonmantank/cron-expression",
             "version": "v3.3.3",
             "source": {
@@ -1927,76 +2159,6 @@
                 }
             ],
             "time": "2023-10-06T06:47:41+00:00"
-        },
-        {
-            "name": "eightynine/filament-approvals",
-            "version": "3.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eighty9nine/filament-approvals.git",
-                "reference": "a5285435340068c39f5101a053005597ec6c5549"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eighty9nine/filament-approvals/zipball/a5285435340068c39f5101a053005597ec6c5549",
-                "reference": "a5285435340068c39f5101a053005597ec6c5549",
-                "shasum": ""
-            },
-            "require": {
-                "filament/filament": "^3.0",
-                "illuminate/contracts": "^10.0|^11.0",
-                "php": "^8.1",
-                "ringlesoft/laravel-process-approval": "^1.0",
-                "spatie/laravel-package-tools": "^1.15.0",
-                "spatie/laravel-permission": "^6.1"
-            },
-            "require-dev": {
-                "nunomaduro/collision": "^7.9",
-                "orchestra/testbench": "^8.0",
-                "pestphp/pest": "^2.0",
-                "pestphp/pest-plugin-arch": "^2.0",
-                "pestphp/pest-plugin-laravel": "^2.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "EightyNine\\Approvals\\ApprovalServiceProvider"
-                    ],
-                    "aliases": {
-                        "Approval": "EightyNine\\Approvals\\Facades\\Approval"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "EightyNine\\Approvals\\": "src/",
-                    "EightyNine\\Approvals\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Eighty Nine",
-                    "email": "eighty9nine@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Manage approval processes in your filament application",
-            "homepage": "https://github.com/eightynine/filament-approvals",
-            "keywords": [
-                "eightynine",
-                "filament-approvals",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/eightynine/filament-approvals/issues",
-                "source": "https://github.com/eightynine/filament-approvals"
-            },
-            "time": "2024-05-16T05:26:31+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -3305,6 +3467,79 @@
                 }
             ],
             "time": "2023-12-03T19:50:20+00:00"
+        },
+        {
+            "name": "hugomyb/filament-media-action",
+            "version": "v3.1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hugomyb/filament-media-action.git",
+                "reference": "7afdd48804c242f948a699e9c6b7f6c6a40e6516"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hugomyb/filament-media-action/zipball/7afdd48804c242f948a699e9c6b7f6c6a40e6516",
+                "reference": "7afdd48804c242f948a699e9c6b7f6c6a40e6516",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^7.9",
+                "orchestra/testbench": "^8.0",
+                "pestphp/pest": "^2.1",
+                "pestphp/pest-plugin-arch": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Hugomyb\\FilamentMediaAction\\FilamentMediaActionServiceProvider"
+                    ],
+                    "aliases": {
+                        "FilamentMediaAction": "Hugomyb\\FilamentMediaAction\\Facades\\FilamentMediaAction"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hugomyb\\FilamentMediaAction\\": "src/",
+                    "Hugomyb\\FilamentMediaAction\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mayonobe Hugo",
+                    "email": "hugomayonobe@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Automatically display your media (video, audio, document, image, ...) with an action",
+            "homepage": "https://github.com/hugomyb/filament-media-action",
+            "keywords": [
+                "filament-media-action",
+                "hugomyb",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/hugomyb/filament-media-action/issues",
+                "source": "https://github.com/hugomyb/filament-media-action"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/hugomyb",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-08-21T07:31:27+00:00"
         },
         {
             "name": "icetalker/filament-table-repeatable-entry",
@@ -4848,6 +5083,80 @@
                 }
             ],
             "time": "2024-03-23T07:42:40+00:00"
+        },
+        {
+            "name": "leandrocfe/filament-apex-charts",
+            "version": "3.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leandrocfe/filament-apex-charts.git",
+                "reference": "5278aefd1e5bb65ecf784824f77ab9ca74f55ff0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leandrocfe/filament-apex-charts/zipball/5278aefd1e5bb65ecf784824f77ab9ca74f55ff0",
+                "reference": "5278aefd1e5bb65ecf784824f77ab9ca74f55ff0",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "illuminate/contracts": "^9.0|^10.0|^11.0",
+                "livewire/livewire": "^3.0",
+                "php": "^8.1|^8.2",
+                "spatie/laravel-package-tools": "^1.13.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.0.1",
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^6.0|^7.0|^8.0",
+                "orchestra/testbench": "8.14|^9.0",
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5|^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Leandrocfe\\FilamentApexCharts\\FilamentApexChartsServiceProvider"
+                    ],
+                    "aliases": {
+                        "FilamentApexCharts": "Leandrocfe\\FilamentApexCharts\\Facades\\FilamentApexCharts"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Leandrocfe\\FilamentApexCharts\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Leandro Costa Ferreira",
+                    "email": "leandrocfe@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Apex Charts integration for Filament PHP.",
+            "homepage": "https://github.com/leandrocfe/filament-apex-charts",
+            "keywords": [
+                "apexcharts",
+                "filament-apex-charts",
+                "laravel",
+                "leandrocfe"
+            ],
+            "support": {
+                "issues": "https://github.com/leandrocfe/filament-apex-charts/issues",
+                "source": "https://github.com/leandrocfe/filament-apex-charts/tree/3.1.3"
+            },
+            "time": "2024-03-17T12:41:49+00:00"
         },
         {
             "name": "livewire/livewire",
@@ -6853,16 +7162,16 @@
         },
         {
             "name": "pxlrbt/filament-excel",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pxlrbt/filament-excel.git",
-                "reference": "d955106220c3fc5e80e64b666dbdcc0f85e73571"
+                "reference": "0d6f3f252ce7d998e5f92fc8703a241b6816fcb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pxlrbt/filament-excel/zipball/d955106220c3fc5e80e64b666dbdcc0f85e73571",
-                "reference": "d955106220c3fc5e80e64b666dbdcc0f85e73571",
+                "url": "https://api.github.com/repos/pxlrbt/filament-excel/zipball/0d6f3f252ce7d998e5f92fc8703a241b6816fcb9",
+                "reference": "0d6f3f252ce7d998e5f92fc8703a241b6816fcb9",
                 "shasum": ""
             },
             "require": {
@@ -6908,7 +7217,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pxlrbt/filament-excel/issues",
-                "source": "https://github.com/pxlrbt/filament-excel/tree/v2.3.2"
+                "source": "https://github.com/pxlrbt/filament-excel/tree/v2.3.3"
             },
             "funding": [
                 {
@@ -6916,7 +7225,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-11T07:50:12+00:00"
+            "time": "2024-08-12T08:25:24+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -7144,75 +7453,6 @@
             "time": "2024-04-27T21:32:50+00:00"
         },
         {
-            "name": "ringlesoft/laravel-process-approval",
-            "version": "1.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ringlesoft/laravel-process-approval.git",
-                "reference": "bde7fda32cf45ae5bfa2f0a1bc4d34fab181de26"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ringlesoft/laravel-process-approval/zipball/bde7fda32cf45ae5bfa2f0a1bc4d34fab181de26",
-                "reference": "bde7fda32cf45ae5bfa2f0a1bc4d34fab181de26",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/auth": "^10.0|^11.0",
-                "illuminate/broadcasting": "^10.7|^11.0",
-                "illuminate/database": "^10.0|^11.0",
-                "illuminate/routing": "^10.24|^11.0",
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "roave/security-advisories": "dev-latest"
-            },
-            "type": "laravel-package",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "RingleSoft\\LaravelProcessApproval\\LaravelProcessApprovalServiceProvider"
-                    ],
-                    "aliases": {
-                        "ProcessApproval": "RingleSoft\\LaravelProcessApproval\\Facade"
-                    },
-                    "dont-discover": []
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "RingleSoft\\LaravelProcessApproval\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "David Ringle",
-                    "email": "ringunger@gmail.com",
-                    "homepage": "https://ringlesoft.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A package to handle process approval flow in a laravel application.",
-            "homepage": "https://ringlesoft.com/packages/laravel-process-approval",
-            "keywords": [
-                "approval",
-                "approve",
-                "flow",
-                "laravel",
-                "procedure",
-                "ringlesoft"
-            ],
-            "support": {
-                "issues": "https://github.com/ringlesoft/laravel-process-approval/issues",
-                "source": "https://github.com/ringlesoft/laravel-process-approval/tree/1.0.8"
-            },
-            "time": "2024-07-17T11:12:29+00:00"
-        },
-        {
             "name": "riodwanto/filament-ace-editor",
             "version": "v1.0.0",
             "source": {
@@ -7361,6 +7601,152 @@
                 }
             ],
             "time": "2024-02-26T18:08:49+00:00"
+        },
+        {
+            "name": "saade/filament-autograph",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/saade/filament-autograph.git",
+                "reference": "0603f536b811055d034563c33d873093ff381be1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/saade/filament-autograph/zipball/0603f536b811055d034563c33d873093ff381be1",
+                "reference": "0603f536b811055d034563c33d873093ff381be1",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "filament/forms": "^3.0",
+                "illuminate/contracts": "^10.0|^11.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.0|^8.0",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^8.0|^9.0",
+                "pestphp/pest": "^2.0",
+                "pestphp/pest-plugin-arch": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Saade\\FilamentAutograph\\FilamentAutographServiceProvider"
+                    ],
+                    "aliases": {
+                        "FilamentAutograph": "Saade\\FilamentAutograph\\Facades\\FilamentAutograph"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Saade\\FilamentAutograph\\": "src/",
+                    "Saade\\FilamentAutograph\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Saade",
+                    "email": "saade@outlook.com.br",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Filament package to manage signatures.",
+            "homepage": "https://github.com/saade/filament-autograph",
+            "keywords": [
+                "filament-autograph",
+                "laravel",
+                "saade"
+            ],
+            "support": {
+                "issues": "https://github.com/saade/filament-autograph/issues",
+                "source": "https://github.com/saade/filament-autograph"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/saade",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-12T16:15:47+00:00"
+        },
+        {
+            "name": "sabberworm/php-css-parser",
+            "version": "v8.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MyIntervals/PHP-CSS-Parser.git",
+                "reference": "d2fb94a9641be84d79c7548c6d39bbebba6e9a70"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/d2fb94a9641be84d79c7548c6d39bbebba6e9a70",
+                "reference": "d2fb94a9641be84d79c7548c6d39bbebba6e9a70",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "php": ">=5.6.20"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.27"
+            },
+            "suggest": {
+                "ext-mbstring": "for parsing UTF-8 CSS"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "9.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sabberworm\\CSS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Schweikert"
+                },
+                {
+                    "name": "Oliver Klee",
+                    "email": "github@oliverklee.de"
+                },
+                {
+                    "name": "Jake Hotson",
+                    "email": "jake.github@qzdesign.co.uk"
+                }
+            ],
+            "description": "Parser for CSS Files written in PHP",
+            "homepage": "https://www.sabberworm.com/blog/2010/6/10/php-css-parser",
+            "keywords": [
+                "css",
+                "parser",
+                "stylesheet"
+            ],
+            "support": {
+                "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
+                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v8.6.0"
+            },
+            "time": "2024-07-01T07:33:21+00:00"
         },
         {
             "name": "shanerbaner82/panel-roles",
