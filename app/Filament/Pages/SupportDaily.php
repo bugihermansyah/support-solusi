@@ -12,13 +12,6 @@ class SupportDaily extends Page
 
     protected static string $view = 'filament.pages.support-daily';
 
-    // protected string $calendarView = 'resourceTimeGridWeek';
-
-    // public function getEventsProperty()
-    // {
-    //     return Reporting::with('user')->get();
-    // }
-
     protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationGroup = 'Daily';
