@@ -29,6 +29,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -345,6 +346,9 @@ class OutstandingResource extends Resource
                 ->selectablePlaceholder(false)
                 ->rules(['required'])
                 ->sortable(),
+            Tables\Columns\TextColumn::make('is_type_problem')
+                ->label('Tipe Problem')
+                ->badge(),
             Tables\Columns\TextColumn::make('outstandingunits.unit.name')
                 ->label('Unit')
                 ->badge(),
@@ -358,7 +362,19 @@ class OutstandingResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // Tables\Filters\TrashedFilter::make(),
+                SelectFilter::make('is_type_problem')
+                    ->label('Type Problem')
+                    ->options([
+                        '1' => 'H/W',
+                        '2' => 'S/W',
+                        '3' => 'H/W-Non',
+                        '4' => 'Sipil'
+                    ]),
+                SelectFilter::make('unit')
+                    ->label('Unit')
+                    ->relationship('units', 'name')
+                    ->searchable()
+                    ->preload()
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
