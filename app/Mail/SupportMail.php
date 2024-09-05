@@ -33,7 +33,7 @@ class SupportMail extends Mailable
         $location = $this->mailData['location'] ?? '';
         $title = $this->mailData['title'] ?? '';
 
-        $subject = "[Reporting] {$company} - {$location} : {$title}";
+        $subject = "[Internal] {$company} - {$location} : {$title}";
 
         return new Envelope(
             subject: $subject,
