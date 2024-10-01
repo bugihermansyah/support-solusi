@@ -48,7 +48,8 @@ class AppServiceProvider extends ServiceProvider
                 ->simple()
                 ->labels([
                     'admin' => 'Head',
-                    'support' => 'Support'
+                    'support' => 'Support',
+                    'monitoring' => 'Monitoring'
                 ])
                 // ->canSwitchPanels(fn (): bool => auth()->user()?->can('switch_panels'))
                 // ->excludes([
