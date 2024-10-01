@@ -51,9 +51,9 @@ class AppServiceProvider extends ServiceProvider
                     'support' => 'Support'
                 ])
                 // ->canSwitchPanels(fn (): bool => auth()->user()?->can('switch_panels'))
-                ->excludes([
-                    'monitoring'
-                ])
+                // ->excludes([
+                //     'monitoring'
+                // ])
                 ->visible(fn (): bool => auth()->check() && auth()->user()->hasAnyRole(['head']));
         });
         Restock::observe(RestockObserver::class);
