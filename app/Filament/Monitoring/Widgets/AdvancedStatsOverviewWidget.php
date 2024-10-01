@@ -14,7 +14,9 @@ class AdvancedStatsOverviewWidget extends BaseWidget
     {
         $today = Carbon::now()->toDateString();
 
-        $openOutstandings = DB::table('outstandings')->count();
+        $openOutstandings = DB::table('outstandings')
+            ->where('status', 0)
+            ->count();
 
         $implementationLocations = DB::table('locations')
             ->where('status', 'imple')
