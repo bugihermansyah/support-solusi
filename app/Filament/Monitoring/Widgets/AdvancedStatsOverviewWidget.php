@@ -65,14 +65,14 @@ class AdvancedStatsOverviewWidget extends BaseWidget
                 ->description("The progress in today")
                 ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('success')
-                ->iconColor('danger'),
+                ->iconColor('warning'),
             Stat::make('Implementations', $implementationLocations)->icon('heroicon-o-home')
                 ->progress(100)
                 ->progressBarColor('success')
                 ->iconPosition('start')
                 ->description('Location in implementation status')
                 ->descriptionIcon('heroicon-o-information-circle', 'before')
-                ->descriptionColor('primary')
+                ->descriptionColor('success')
                 ->iconColor('warning'),
             Stat::make('Notifications', $notif)->icon('heroicon-o-envelope')
                 ->progress(100)

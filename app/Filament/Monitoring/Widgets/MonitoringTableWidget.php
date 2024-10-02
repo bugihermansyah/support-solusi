@@ -34,7 +34,7 @@ class MonitoringTableWidget extends BaseWidget
             ->deferLoading()
             ->columns([
                 TextColumn::make('location.name')
-                    ->label('Lokasi')
+                    ->label('Location')
                     ->limit(15)
                     ->badge()
                     ->color(function ($record): string {
@@ -50,7 +50,7 @@ class MonitoringTableWidget extends BaseWidget
                         }
                     }),
                 TextColumn::make('title')
-                    ->label('Masalah')
+                    ->label('Outstanding')
                     ->badge()
                     ->color(function ($record): string {
                         $createdAt = Carbon::parse($record->date_in);
@@ -65,7 +65,7 @@ class MonitoringTableWidget extends BaseWidget
                         }
                     }),
                 TextColumn::make('date_in')
-                    ->label('Sejak')
+                    ->label('Since')
                     ->since()
                     ->badge()
                     ->color(function (string $state): string {
