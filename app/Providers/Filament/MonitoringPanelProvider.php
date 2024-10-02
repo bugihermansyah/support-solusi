@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Monitoring\Widgets\AdvancedStatsOverviewWidget;
 use App\Filament\Monitoring\Widgets\DailyChartWidget;
+use App\Filament\Monitoring\Widgets\MonitoringTableWidget;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -44,10 +45,9 @@ class MonitoringPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Monitoring/Widgets'), for: 'App\\Filament\\Monitoring\\Widgets')
             ->widgets([
-                // Widgets\AccountWidget::class,
-                // Widgets\FilamentInfoWidget::class,
                 AdvancedStatsOverviewWidget::class,
-                DailyChartWidget::class
+                DailyChartWidget::class,
+                MonitoringTableWidget::class
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -13,6 +13,8 @@ class AdvancedStatsOverviewWidget extends BaseWidget
     protected function getStats(): array
     {
         $today = Carbon::now()->toDateString();
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
 
         $openOutstandings = DB::table('outstandings')
             ->where('status', 0)
@@ -38,13 +40,21 @@ class AdvancedStatsOverviewWidget extends BaseWidget
             $percentage = 0; // Or set it to another default value as needed
         }
 
+        $notif = DB::table('reportings')
+            ->join('outstandings', 'outstandings.id', '=', 'reportings.outstanding_id')
+            ->where('reporter', 'client')
+            ->whereMonth('reportings.date_visit', $currentMonth)
+            ->whereYear('reportings.date_visit', $currentYear)
+            ->whereNull('send_mail_at')
+            ->count();
+
         return [
             Stat::make('Open Outstandings', $openOutstandings)->icon('heroicon-o-fire')
                 ->progress(100)
                 ->progressBarColor('danger')
                 ->chartColor('success')
                 ->iconPosition('start')
-                ->description('The users in this period')
+                ->description('The outstandings in all times')
                 ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('success')
                 ->iconColor('danger'),
@@ -52,8 +62,8 @@ class AdvancedStatsOverviewWidget extends BaseWidget
                 ->progress(round($percentage, 2))
                 ->progressBarColor('success')
                 ->iconPosition('start')
-                ->description("The comments in this period")
-                ->descriptionIcon('heroicon-o-chevron-down', 'before')
+                ->description("The progress in today")
+                ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('success')
                 ->iconColor('danger'),
             Stat::make('Implementations', $implementationLocations)->icon('heroicon-o-home')
@@ -61,23 +71,15 @@ class AdvancedStatsOverviewWidget extends BaseWidget
                 ->progressBarColor('success')
                 ->iconPosition('start')
                 ->description('Location in implementation status')
-                ->descriptionIcon('heroicon-o-paper-airplane', 'before')
+                ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('primary')
                 ->iconColor('warning'),
-            Stat::make('Daily Progress', $totalCount)->icon('heroicon-o-calendar-days')
-                ->progress(round($percentage, 2))
+            Stat::make('Notifications', $notif)->icon('heroicon-o-envelope')
+                ->progress(100)
                 ->progressBarColor('success')
                 ->iconPosition('start')
-                ->description("The comments in this period")
-                ->descriptionIcon('heroicon-o-chevron-down', 'before')
-                ->descriptionColor('success')
-                ->iconColor('danger'),
-            Stat::make('Daily Progress', $totalCount)->icon('heroicon-o-calendar-days')
-                ->progress(round($percentage, 2))
-                ->progressBarColor('success')
-                ->iconPosition('start')
-                ->description("The comments in this period")
-                ->descriptionIcon('heroicon-o-chevron-down', 'before')
+                ->description("Notification to client in this period")
+                ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('success')
                 ->iconColor('danger'),
         ];
@@ -91,6 +93,6 @@ class AdvancedStatsOverviewWidget extends BaseWidget
 
     protected function getColumns(): int
     {
-        return 3;
+        return 4;
     }
 }
