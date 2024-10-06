@@ -12,8 +12,19 @@ use Filament\Tables\Columns\TextColumn;
 
 class MonitoringTableWidget extends BaseWidget
 {
+    protected static ?string $heading = null;
+
+    protected int | string | array $columnSpan = '2';
+    protected static ?int $sort = 3;
+
     public function table(Table $table): Table
     {
+        $now = Carbon::now();
+        $interval = 15; // Interval polling dalam detik
+        $limit = 5;     // Jumlah data yang ditampilkan per polling
+
+        // Hitung offset berdasarkan waktu sekarang
+        $offset = (int) floor(($now->timestamp % ($interval * $limit)) / $interval) * $limit;
         $query = Outstanding::query()
                     ->where('outstandings.status', 0)
                     ->whereNot('is_implement', 1)
@@ -24,13 +35,17 @@ class MonitoringTableWidget extends BaseWidget
                         WHEN priority = 'low' THEN 3
                         ELSE 4
                     END
-                    ");
+                    ")
+                    ->offset($offset) // Offset dinamis
+                    ->limit($limit);  // Batas data per polling;
         return $table
-            // ->defaultPaginationPageOption(5)
+            ->paginated(false)
+            ->heading('')
+            ->defaultPaginationPageOption(5)
             ->query($query->select('outstandings.*'))
             ->defaultSort('date_in', 'asc')
             ->defaultSort('priority', 'asc')
-            ->poll('30s')
+            ->poll('15s')
             ->deferLoading()
             ->columns([
                 TextColumn::make('location.name')
@@ -87,12 +102,5 @@ class MonitoringTableWidget extends BaseWidget
                     })
                     ->boolean(),
             ]);
-            // ->actions([
-            //     Action::make('edit')
-            //         ->icon('heroicon-m-eye')
-            //         ->hiddenLabel()
-            //         ->url(fn (Outstanding $record): string => route('filament.admin.resources.outstandings.edit', $record->id))
-            //         ->openUrlInNewTab(),
-            // ]);
     }
 }

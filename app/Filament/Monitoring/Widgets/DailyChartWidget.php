@@ -9,6 +9,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class DailyChartWidget extends AdvancedChartWidget
 {
+    protected static ?int $sort = 2;
 
     protected static ?string $heading = null;
     protected static string $color = 'info';

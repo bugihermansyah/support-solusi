@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Monitoring\Widgets\AdvancedStatsOverviewWidget;
 use App\Filament\Monitoring\Widgets\DailyChartWidget;
 use App\Filament\Monitoring\Widgets\MonitoringTableWidget;
+use App\Filament\Monitoring\Widgets\Top5Units;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -37,7 +38,7 @@ class MonitoringPanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->defaultThemeMode(ThemeMode::Dark)
             ->font('Poppins')
-            ->brandName('Support Monitoring')
+            ->brandName('Support Monitoring | PT. SAP')
             ->discoverResources(in: app_path('Filament/Monitoring/Resources'), for: 'App\\Filament\\Monitoring\\Resources')
             ->discoverPages(in: app_path('Filament/Monitoring/Pages'), for: 'App\\Filament\\Monitoring\\Pages')
             ->pages([
@@ -47,7 +48,8 @@ class MonitoringPanelProvider extends PanelProvider
             ->widgets([
                 AdvancedStatsOverviewWidget::class,
                 DailyChartWidget::class,
-                MonitoringTableWidget::class
+                MonitoringTableWidget::class,
+                Top5Units::class
             ])
             ->middleware([
                 EncryptCookies::class,

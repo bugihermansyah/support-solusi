@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class AdvancedStatsOverviewWidget extends BaseWidget
 {
+    protected static ?int $sort = 1;
+
     protected function getStats(): array
     {
         $today = Carbon::now()->toDateString();
