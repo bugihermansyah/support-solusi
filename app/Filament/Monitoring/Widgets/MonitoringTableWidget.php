@@ -6,7 +6,7 @@ use App\Models\Outstanding;
 use Carbon\Carbon;
 use Filament\Tables;
 use Filament\Tables\Table;
-use EightyNine\FilamentAdvancedWidget\AdvancedTableWidget as BaseWidget;
+use Filament\Widgets\TableWidget as BaseWidget;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 
@@ -40,7 +40,7 @@ class MonitoringTableWidget extends BaseWidget
                     ->limit($limit);  // Batas data per polling;
         return $table
             ->paginated(false)
-            ->heading('')
+            ->heading('List Outstandings')
             ->defaultPaginationPageOption(5)
             ->query($query->select('outstandings.*'))
             ->defaultSort('date_in', 'asc')
