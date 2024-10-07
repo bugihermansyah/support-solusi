@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Monitoring\Widgets\AdvancedStatsOverview2Widget;
 use App\Filament\Monitoring\Widgets\AdvancedStatsOverviewWidget;
 use App\Filament\Monitoring\Widgets\DailyChartWidget;
 use App\Filament\Monitoring\Widgets\MonitoringTableWidget;
@@ -47,9 +48,10 @@ class MonitoringPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Monitoring/Widgets'), for: 'App\\Filament\\Monitoring\\Widgets')
             ->widgets([
                 AdvancedStatsOverviewWidget::class,
+                AdvancedStatsOverview2Widget::class,
                 DailyChartWidget::class,
                 MonitoringTableWidget::class,
-                Top5Units::class
+                Top5Units::class,
             ])
             ->middleware([
                 EncryptCookies::class,

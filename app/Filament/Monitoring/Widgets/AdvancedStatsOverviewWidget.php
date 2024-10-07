@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class AdvancedStatsOverviewWidget extends BaseWidget
 {
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 0;
+    
+    protected int | string | array $columnSpan = '4';
 
     protected function getStats(): array
     {
@@ -80,7 +82,7 @@ class AdvancedStatsOverviewWidget extends BaseWidget
                 ->progress(100)
                 ->progressBarColor('success')
                 ->iconPosition('start')
-                ->description("Notification to client in this period")
+                ->description("Outstanding notif to client this month")
                 ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('success')
                 ->iconColor('danger'),
