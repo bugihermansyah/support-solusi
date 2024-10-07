@@ -14,6 +14,8 @@ class AdvancedStatsOverview2Widget extends BaseWidget
     
     protected int | string | array $columnSpan = '1';
 
+    protected static ?string $pollingInterval = null;
+
     protected function getStats(): array
     {
         $allLocations = DB::table('locations')
@@ -27,7 +29,7 @@ class AdvancedStatsOverview2Widget extends BaseWidget
                 ->progressBarColor('success')
                 ->chartColor('success')
                 ->iconPosition('start')
-                ->description('The loations in all teams')
+                ->description('Rental loations in all teams')
                 ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('success')
                 ->iconColor('success'),
