@@ -28,6 +28,7 @@ class Outstanding extends Model implements HasMedia
         'product_id',
         'title',
         'reporter',
+        'reporter_name',
         'date_in',
         'date_visit',
         'date_finish',
