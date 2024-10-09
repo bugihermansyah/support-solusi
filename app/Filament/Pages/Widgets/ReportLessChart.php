@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Reporting;
 use App\Models\Team;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
@@ -24,18 +25,35 @@ class ReportLessChart extends ApexChartWidget
     protected function getFormSchema(): array
     {
         return [
-            Select::make('year')
-                ->options([
-                    '2024' => '2024',
-                    '2025' => '2025'
+            Fieldset::make('All')
+                ->schema([    
+                    Select::make('year')
+                        ->options([
+                            '2024' => '2024',
+                            '2025' => '2025'
+                        ])
+                        ->default('2024'),
+                    Select::make('team')
+                        ->placeholder('Select')
+                        ->options(Team::all()->pluck('name', 'id')),
+                    Select::make('lpm')
+                        ->options([
+                            '1' => 'Yes'
+                        ])
+                        ->columnSpanFull()
                 ])
-                ->default('2024'),
-            Select::make('team')
-                ->options(Team::all()->pluck('name', 'id')),
-            Select::make('lpm')
-                ->options([
-                    '1' => 'Yes'
+                ->columns('2'),
+            Fieldset::make('Outstanding')
+                ->schema([    
+                    Select::make('reporter')
+                        ->options([
+                            'client' => 'Client',
+                            'preventif' => 'Preventif',
+                            'support' => 'Support'
+                        ])
+                        ->default('client'),
                 ])
+                ->columns('2'),
         ];
     }
 
@@ -123,6 +141,7 @@ class ReportLessChart extends ApexChartWidget
         $year = $this->filterFormData['year'] ?? now()->year;
         $teamId = $this->filterFormData['team'] ?? null;
         $lpm = $this->filterFormData['lpm'] ?? null;
+        $reporter = $this->filterFormData['reporter'] ?? null;
 
         // Inisialisasi array data untuk 12 bulan
         $data = array_fill(0, 12, 0);
@@ -131,12 +150,19 @@ class ReportLessChart extends ApexChartWidget
         $query = Outstanding::query()
             ->selectRaw('MONTH(date_in) as month, COUNT(*) as total_outstanding')
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
-            ->where('lpm', $lpm)
             ->whereYear('date_in', $year);
 
         // Tambahkan filter team jika ada
         if ($teamId) {
             $query->where('locations.team_id', $teamId);
+        }
+
+        if ($lpm) {
+            $query->where('lpm', $lpm);
+        }
+
+        if ($reporter) {
+            $query->where('reporter', $reporter);
         }
 
         // Kelompokkan berdasarkan bulan dan urutkan
@@ -166,7 +192,9 @@ class ReportLessChart extends ApexChartWidget
         for ($month = 1; $month <= 12; $month++) {
             $query = Location::query()
                 ->whereYear('created_at', '<=', $year)
-                ->whereMonth('created_at', '<=', $month);
+                ->whereMonth('created_at', '<=', $month)
+                ->where('locations.type_contract', 'sewa')
+                ->whereNot('locations.status', 'dismantle');
 
             if ($teamId) {
                 $query->where('team_id', $teamId);
@@ -187,6 +215,7 @@ class ReportLessChart extends ApexChartWidget
     {
         $year = $this->filterFormData['year'] ?? now()->year;
         $teamId = $this->filterFormData['team'] ?? null;
+        $lpm = $this->filterFormData['lpm'] ?? null;
 
         // Inisialisasi array data dengan 0 untuk 12 bulan
         $data = array_fill(0, 12, 0);
@@ -200,6 +229,10 @@ class ReportLessChart extends ApexChartWidget
         // Tambahkan filter team jika ada
         if ($teamId) {
             $query->where('locations.team_id', $teamId);
+        }
+
+        if ($lpm) {
+            $query->where('lpm', $lpm);
         }
 
         // Kelompokkan berdasarkan bulan dan urutkan
@@ -221,6 +254,7 @@ class ReportLessChart extends ApexChartWidget
     {
         $teamId = $this->filterFormData['team'] ?? null;
         $year = $this->filterFormData['year'] ?? now()->year;
+        $lpm = $this->filterFormData['lpm'] ?? null;
 
         // Inisialisasi array data dengan 0 untuk 12 bulan
         $data = array_fill(0, 12, 0);
@@ -234,6 +268,10 @@ class ReportLessChart extends ApexChartWidget
 
         if ($teamId) {
             $query->where('locations.team_id', $teamId);
+        }
+
+        if ($lpm) {
+            $query->where('lpm', $lpm);
         }
 
         $visits = $query->groupByRaw('MONTH(reportings.date_visit)')->get();
@@ -280,6 +318,7 @@ class ReportLessChart extends ApexChartWidget
     {
         $teamId = $this->filterFormData['team'] ?? null;
         $year = $this->filterFormData['year'] ?? now()->year;
+        $lpm = $this->filterFormData['lpm'] ?? null;
 
         // Inisialisasi array data dengan 0 untuk 12 bulan
         $data = array_fill(0, 12, 0);
@@ -293,6 +332,9 @@ class ReportLessChart extends ApexChartWidget
             $query->where('locations.team_id', $teamId);
         }
 
+        if ($lpm) {
+            $query->where('lpm', $lpm);
+        }
         $slaVisits = $query->groupByRaw('MONTH(date_in)')->get();
 
         // Mengisi array dengan hasil query
