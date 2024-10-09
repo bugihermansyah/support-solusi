@@ -225,10 +225,10 @@ class ListOutstandings extends ListRecords
                         ];
 
                         if ($data['reporter'] === 'client') {
-                            $dataCreate = [
+                            $dataCreate = array_merge($dataCreate, [
                                 'reporter_name' => $data['reporter_name'],
                                 'lpm' => $data['lpm'],
-                            ];
+                            ]);
                         }
 
                         $outstanding = Outstanding::create($dataCreate);
