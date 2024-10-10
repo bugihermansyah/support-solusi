@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Filament\Forms\Components\Select;
 use Filament\Pages\Page;
 use Filament\Support\Enums\MaxWidth;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -24,6 +25,7 @@ use Filament\Tables\Filters\QueryBuilder\Constraints\SelectConstraint;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Columns\Column;
@@ -54,15 +56,20 @@ class ReportDetail extends Page implements HasTable
 
     public static function table(Table $table): Table
     {
+        $user = Auth::user();
+        $userTeam = $user ? $user->getTeamId() : null;
+
         return $table
             ->query(Reporting::query()
                     ->join('outstandings', 'outstandings.id', '=', 'reportings.outstanding_id')
+                    ->join('locations', 'locations.id', '=', 'outstandings.location_id')
+                    ->where('locations.team_id', $userTeam)
                     ->orderBy('outstandings.date_in', 'asc')
                     ->orderBy('outstandings.date_visit', 'asc')
                     ->select('reportings.*')
                 )
-            ->defaultSort('outstanding.date_in', 'asc')
-            ->defaultSort('date_visit', 'asc')
+            // ->defaultSort('outstanding.date_in', 'asc')
+            // ->defaultSort('outstandings.date_visit', 'asc')
             ->columns([
                 TextColumn::make('outstanding.number')
                     ->label('No. Tiket')
@@ -87,12 +94,12 @@ class ReportDetail extends Page implements HasTable
                 TextColumn::make('outstanding.date_in')
                     ->label('Lapor')
                     ->date(),
-                TextColumn::make('date_visit')
-                    ->label('Aksi')
+                TextColumn::make('outstanding.date_visit')
+                    ->label('SLA Visit')
                     ->date()
                     ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('outstanding.date_finish')
-                    ->label('Selesai')
+                    ->label('SLA Selesai')
                     ->date()
                     ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('users.firstname')
@@ -101,6 +108,9 @@ class ReportDetail extends Page implements HasTable
                     ->label('Tipe')
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->formatStateUsing(fn ($state) => ucfirst($state)),
+                TextColumn::make('date_visit')
+                    ->label('Visit')
+                    ->date(),
                 TextColumn::make('outstanding.title')
                     ->label('Masalah'),
                 TextColumn::make('cause')
@@ -124,9 +134,9 @@ class ReportDetail extends Page implements HasTable
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->html(),
             ])
-            ->persistSortInSession()
-            ->persistFiltersInSession()
-            ->filtersFormColumns(4)
+            // ->persistSortInSession()
+            // ->persistFiltersInSession()
+            // ->filtersFormColumns(4)
             ->filters([
                 Filter::make('sla_visit')
                     ->query(function (Builder $query, array $data) {
@@ -142,12 +152,13 @@ class ReportDetail extends Page implements HasTable
                     ->form([
                         Select::make('value')
                             ->label('SLA Visit')
+                            ->inlineLabel()
                             ->options([
                                 'sla1' => 'SLA 1 (0 - 1)',
                                 'sla2' => 'SLA 2 (2 - 3)',
                                 'sla3' => 'SLA 3 (> 3)',
                             ])
-                            ->columnSpanFull()
+                            // ->columnSpanFull()
                             ->required(),
                     ]),
                 Filter::make('sla_finish')
@@ -164,6 +175,7 @@ class ReportDetail extends Page implements HasTable
                     ->form([
                         Select::make('value')
                             ->label('SLA Finish')
+                            ->inlineLabel()
                             ->options([
                                 'sla1' => 'SLA 1 (0 - 3)',
                                 'sla2' => 'SLA 2 (4 - 7)',
@@ -172,53 +184,59 @@ class ReportDetail extends Page implements HasTable
                             ->columnSpanFull()
                             ->required(),
                     ]),
-                QueryBuilder::make()
-                    ->constraints([
-                        SelectConstraint::make('outstanding.location.company.alias')
-                            ->label('Group')
-                            ->icon('heroicon-o-building-office-2')
-                            ->options(Company::all()->pluck('alias', 'alias'))
-                            ->multiple()
-                            ->searchable(),
-                        SelectConstraint::make('outstanding.location.name')
-                            ->label('Lokasi')
-                            ->icon('heroicon-m-map-pin')
-                            ->options(Location::all()->pluck('name', 'name'))
-                            ->multiple()
-                            ->searchable(),
-                        SelectConstraint::make('outstanding.location.team.name')
-                            ->label('Team')
-                            ->icon('heroicon-m-rectangle-group')
-                            ->options(Team::all()->pluck('name', 'name'))
-                            ->multiple()
-                            ->searchable(),
-                        SelectConstraint::make('outstanding.product.name')
-                            ->label('Produk')
-                            ->icon('heroicon-m-star')
-                            ->options(Product::all()->pluck('name', 'name'))
-                            ->multiple()
-                            ->searchable(),
-                        SelectConstraint::make('users.firstname')
-                            ->label('Support')
-                            ->icon('heroicon-m-users')
-                            ->options(User::all()->pluck('firstname', 'firstname'))
-                            ->multiple()
-                            ->searchable(),
-                        SelectConstraint::make('outstanding.reporter')
-                            ->label('Pelapor')
-                            ->options([
-                                'client' => 'Client',
-                                'preventif' => 'Preventif',
-                                'support' => 'Support',
-                            ])
-                            ->icon('heroicon-m-chat-bubble-left')
-                            ->multiple(),
-                        DateConstraint::make('outstanding.date_in')
-                            ->label('Tanggal Lapor')
-                            ->icon('heroicon-m-calendar')
-                    ]),
+                // QueryBuilder::make()
+                //     ->constraints([
+                //         SelectConstraint::make('outstanding.location.company.alias')
+                //             ->label('Group')
+                //             ->icon('heroicon-o-building-office-2')
+                //             ->options(Company::all()->pluck('alias', 'alias'))
+                //             ->multiple()
+                //             ->searchable(),
+                //         SelectConstraint::make('outstanding.location.name')
+                //             ->label('Lokasi')
+                //             ->icon('heroicon-m-map-pin')
+                //             ->options(Location::all()->pluck('name', 'name'))
+                //             ->multiple()
+                //             ->searchable(),
+                //         SelectConstraint::make('outstanding.location.team.name')
+                //             ->label('Team')
+                //             ->icon('heroicon-m-rectangle-group')
+                //             ->options(Team::all()->pluck('name', 'name'))
+                //             ->multiple()
+                //             ->searchable(),
+                //         SelectConstraint::make('outstanding.product.name')
+                //             ->label('Produk')
+                //             ->icon('heroicon-m-star')
+                //             ->options(Product::all()->pluck('name', 'name'))
+                //             ->multiple()
+                //             ->searchable(),
+                //         SelectConstraint::make('users.firstname')
+                //             ->label('Support')
+                //             ->icon('heroicon-m-users')
+                //             ->options(User::all()->pluck('firstname', 'firstname'))
+                //             ->multiple()
+                //             ->searchable(),
+                //         SelectConstraint::make('outstanding.reporter')
+                //             ->label('Pelapor')
+                //             ->options([
+                //                 'client' => 'Client',
+                //                 'preventif' => 'Preventif',
+                //                 'support' => 'Support',
+                //             ])
+                //             ->icon('heroicon-m-chat-bubble-left')
+                //             ->multiple(),
+                //         DateConstraint::make('outstanding.date_in')
+                //             ->label('Tanggal Lapor')
+                //             ->icon('heroicon-m-calendar')
+                //     ]),
             ], layout: FiltersLayout::Modal)
-            ->filtersFormWidth(MaxWidth::ExtraLarge)
+            ->deferFilters()
+            ->filtersTriggerAction(
+                fn (Action $action) => $action
+                    ->button()
+                    ->label('Filter'),
+            )
+            // ->filtersFormWidth(MaxWidth::ExtraLarge)
             ->headerActions([
                 ExportAction::make()
                     ->label('Export XLS/XLSX/CSV')
@@ -235,7 +253,7 @@ class ReportDetail extends Page implements HasTable
                                 Column::make('outstanding.reporter')->heading('Pelapor')
                                     ->formatStateUsing(fn ($state) => ucfirst($state)),
                                 Column::make('outstanding.date_in')->heading('Lapor'),
-                                Column::make('date_visit')->heading('Aksi'),
+                                Column::make('outstanding.date_visit')->heading('Aksi'),
                                 Column::make('outstanding.date_finish')->heading('Selesai'),
                                 Column::make('outstanding.title')->heading('Masalah'),
                                 Column::make('cause')->heading('Sebab'),
