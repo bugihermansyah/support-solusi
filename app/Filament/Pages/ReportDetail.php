@@ -346,8 +346,6 @@ class ReportDetail extends Page implements HasTable
                                 Column::make('cause')->heading('Sebab'),
                                 Column::make('action')->heading('Aksi')
                                     ->formatStateUsing(fn ($state) => strip_tags($state)),
-                                Column::make('solution')->heading('Solusi')
-                                    ->formatStateUsing(fn ($state) => strip_tags($state)),
                                 Column::make('status')->heading('Status'),
                                 Column::make('outstanding.is_type_problem')->heading('Tipe Problem'),
                                 Column::make('outstanding.outstandingunits.unit.name')->heading('Unit'),
