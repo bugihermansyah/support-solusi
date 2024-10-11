@@ -2,32 +2,28 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\Company;
 use App\Models\Location;
 use App\Models\Product;
 use App\Models\Reporting;
-use App\Models\Team;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Fieldset;
 use Filament\Pages\Page;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\QueryBuilder;
-use Filament\Tables\Filters\QueryBuilder\Constraints\DateConstraint;
-use Filament\Tables\Filters\QueryBuilder\Constraints\SelectConstraint;
+use Filament\Tables\Filters\Indicator;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
@@ -68,8 +64,6 @@ class ReportDetail extends Page implements HasTable
                     ->orderBy('outstandings.date_visit', 'asc')
                     ->select('reportings.*')
                 )
-            // ->defaultSort('outstanding.date_in', 'asc')
-            // ->defaultSort('outstandings.date_visit', 'asc')
             ->columns([
                 TextColumn::make('outstanding.number')
                     ->label('No. Tiket')
@@ -134,102 +128,194 @@ class ReportDetail extends Page implements HasTable
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->html(),
             ])
-            // ->persistSortInSession()
-            // ->persistFiltersInSession()
-            // ->filtersFormColumns(4)
+            ->filtersFormColumns(2)
             ->filters([
-                Filter::make('sla_visit')
-                    ->query(function (Builder $query, array $data) {
-                        switch ($data['value']) {
-                            case 'sla1':
-                                return $query->whereRaw('DATEDIFF(date_in, outstandings.date_visit) BETWEEN 0 AND 1');
-                            case 'sla2':
-                                return $query->whereRaw('DATEDIFF(date_in, outstandings.date_visit) BETWEEN 2 AND 3');
-                            case 'sla3':
-                                return $query->whereRaw('DATEDIFF(date_in, outstandings.date_visit) > 3');
+                SelectFilter::make('company_id')
+                    ->label('Group')
+                    ->multiple()
+                    ->options(Location::where('team_id', $userTeam)->with('company')->get()->pluck('company.alias', 'company.id')),
+                SelectFilter::make('location_id')
+                    ->label('Loation')
+                    ->multiple()
+                    ->options(Location::where('team_id', $userTeam)->get()->pluck('name_alias', 'id')),
+                SelectFilter::make('product_id')
+                    ->label('Product')
+                    ->multiple()
+                    ->options(Product::all()->pluck('name', 'id')),
+                SelectFilter::make('user_id')
+                    ->label('Support')
+                    ->multiple()
+                    ->options(User::where('team_id', $userTeam)->pluck('firstname', 'id'))
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (!isset($data['values']) || empty($data['values'])) {
+                            return $query; 
                         }
-                    })
-                    ->form([
-                        Select::make('value')
-                            ->label('SLA Visit')
-                            ->inlineLabel()
-                            ->options([
-                                'sla1' => 'SLA 1 (0 - 1)',
-                                'sla2' => 'SLA 2 (2 - 3)',
-                                'sla3' => 'SLA 3 (> 3)',
-                            ])
-                            // ->columnSpanFull()
-                            ->required(),
+                        return $query->whereHas('users', function (Builder $query) use ($data) {
+                            $query->whereIn('users.id', $data['values']);
+                        });
+                    }),
+                SelectFilter::make('reporter')
+                    ->label('Reporter')
+                    ->multiple()
+                    ->options([
+                        'client' => 'Client',
+                        'preventif' => 'Preventive',
+                        'support' => 'Internal'
                     ]),
-                Filter::make('sla_finish')
-                    ->query(function (Builder $query, array $data) {
-                        switch ($data['value']) {
-                            case 'sla1':
-                                return $query->whereRaw('DATEDIFF(date_finish, outstandings.date_visit) BETWEEN 0 AND 3');
-                            case 'sla2':
-                                return $query->whereRaw('DATEDIFF(date_finish, outstandings.date_visit) BETWEEN 4 AND 7');
-                            case 'sla3':
-                                return $query->whereRaw('DATEDIFF(date_finish, outstandings.date_visit) > 7');
+                Filter::make('report_date')
+                    ->form([
+                        DatePicker::make('reported_from')
+                            ->label('Report From'),
+                        DatePicker::make('reported_until')
+                            ->label('Report Until')
+                            ->default(now()),
+                    ])
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                 
+                        if ($data['reported_from'] ?? null) {
+                            $indicators[] = Indicator::make('Reported from ' . Carbon::parse($data['reported_from'])->toFormattedDateString())
+                                ->removeField('reported_from');
                         }
+                 
+                        if ($data['reported_until'] ?? null) {
+                            $indicators[] = Indicator::make('Reported until ' . Carbon::parse($data['reported_until'])->toFormattedDateString())
+                                ->removeField('reported_until');
+                        }
+                 
+                        return $indicators;
                     })
-                    ->form([
-                        Select::make('value')
-                            ->label('SLA Finish')
-                            ->inlineLabel()
-                            ->options([
-                                'sla1' => 'SLA 1 (0 - 3)',
-                                'sla2' => 'SLA 2 (4 - 7)',
-                                'sla3' => 'SLA 3 (> 7)',
-                            ])
-                            ->columnSpanFull()
-                            ->required(),
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['reported_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('outstandings.date_in', '>=', $date),
+                            )
+                            ->when(
+                                $data['reported_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('outstandings.date_in', '<=', $date),
+                            );
+                    }),
+                TernaryFilter::make('lpm'),
+                TernaryFilter::make('is_implement')
+                    ->label('Implement'),
+                TernaryFilter::make('is_oncall')
+                    ->label('On Call'),
+                SelectFilter::make('sla_visit')
+                    ->options([
+                        'sla1' => 'SLA 1',
+                        'sla2' => 'SLA 2',
+                        'sla3' => 'SLA 3',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when($data['value'], function (Builder $query, $value) {
+                            switch ($value) {
+                                case 'sla1':
+                                    return $query->whereRaw('DATEDIFF(outstandings.date_visit, outstandings.date_in) <= 1');
+                                case 'sla2':
+                                    return $query->whereRaw('DATEDIFF(outstandings.date_visit, outstandings.date_in) BETWEEN 2 AND 3');
+                                case 'sla3':
+                                    return $query->whereRaw('DATEDIFF(outstandings.date_visit, outstandings.date_in) > 3');
+                            }
+                        });
+                    })
+                    ->label('SLA Visit'),
+                SelectFilter::make('sla_finish')
+                    ->options([
+                        'sla1' => 'SLA 1',
+                        'sla2' => 'SLA 2',
+                        'sla3' => 'SLA 3',
+                        'sla4' => 'null',
+                    ])
+                    ->default('')
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when($data['value'], function (Builder $query, $value) {
+                            switch ($value) {
+                                case 'sla1':
+                                    return $query->whereRaw('DATEDIFF(outstandings.date_finish, outstandings.date_in) <= 3');
+                                case 'sla2':
+                                    return $query->whereRaw('DATEDIFF(outstandings.date_finish, outstandings.date_in) BETWEEN 4 AND 7');
+                                case 'sla3':
+                                    return $query->whereRaw('DATEDIFF(outstandings.date_finish, outstandings.date_in) > 7');
+                                case 'sla4':
+                                    return $query->whereNull('outstandings.date_finish');
+                            }
+                        });
+                    })
+                    ->label('SLA Finish'),
+                SelectFilter::make('work')
+                    ->options([
+                        'visit' => 'Visit',
+                        'remote' => 'Remote'
                     ]),
-                // QueryBuilder::make()
-                //     ->constraints([
-                //         SelectConstraint::make('outstanding.location.company.alias')
-                //             ->label('Group')
-                //             ->icon('heroicon-o-building-office-2')
-                //             ->options(Company::all()->pluck('alias', 'alias'))
-                //             ->multiple()
-                //             ->searchable(),
-                //         SelectConstraint::make('outstanding.location.name')
-                //             ->label('Lokasi')
-                //             ->icon('heroicon-m-map-pin')
-                //             ->options(Location::all()->pluck('name', 'name'))
-                //             ->multiple()
-                //             ->searchable(),
-                //         SelectConstraint::make('outstanding.location.team.name')
-                //             ->label('Team')
-                //             ->icon('heroicon-m-rectangle-group')
-                //             ->options(Team::all()->pluck('name', 'name'))
-                //             ->multiple()
-                //             ->searchable(),
-                //         SelectConstraint::make('outstanding.product.name')
-                //             ->label('Produk')
-                //             ->icon('heroicon-m-star')
-                //             ->options(Product::all()->pluck('name', 'name'))
-                //             ->multiple()
-                //             ->searchable(),
-                //         SelectConstraint::make('users.firstname')
-                //             ->label('Support')
-                //             ->icon('heroicon-m-users')
-                //             ->options(User::all()->pluck('firstname', 'firstname'))
-                //             ->multiple()
-                //             ->searchable(),
-                //         SelectConstraint::make('outstanding.reporter')
-                //             ->label('Pelapor')
-                //             ->options([
-                //                 'client' => 'Client',
-                //                 'preventif' => 'Preventif',
-                //                 'support' => 'Support',
-                //             ])
-                //             ->icon('heroicon-m-chat-bubble-left')
-                //             ->multiple(),
-                //         DateConstraint::make('outstanding.date_in')
-                //             ->label('Tanggal Lapor')
-                //             ->icon('heroicon-m-calendar')
-                //     ]),
+                Filter::make('date_visit')
+                    ->form([
+                        DatePicker::make('visited_from')
+                            ->label('Visit From'),
+                        DatePicker::make('visited_until')
+                            ->label('Visit Until')
+                            ->default(now()),
+                    ])
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                 
+                        if ($data['visited_from'] ?? null) {
+                            $indicators[] = Indicator::make('Visited from ' . Carbon::parse($data['visited_from'])->toFormattedDateString())
+                                ->removeField('visited_from');
+                        }
+                 
+                        if ($data['visited_until'] ?? null) {
+                            $indicators[] = Indicator::make('Visited until ' . Carbon::parse($data['visited_until'])->toFormattedDateString())
+                                ->removeField('visited_until');
+                        }
+                 
+                        return $indicators;
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['visited_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('reportings.date_visit', '>=', $date),
+                            )
+                            ->when(
+                                $data['visited_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('reportings.date_visit', '<=', $date),
+                            );
+                    }),
             ], layout: FiltersLayout::Modal)
+            ->filtersFormSchema(fn (array $filters): array => [
+                Fieldset::make('Outstanding')
+                    ->schema([
+                        $filters['company_id'],
+                        $filters['location_id'],
+                        $filters['product_id'],
+                        $filters['reporter'],
+                        $filters['sla_visit'],
+                        $filters['sla_finish'],
+                        $filters['report_date'],
+                    ])
+                    ->inlineLabel()
+                    ->columns(2)
+                    ->columnSpanFull(),
+                Fieldset::make('Status')
+                    ->schema([
+                        $filters['lpm'],
+                        $filters['is_implement'],
+                        $filters['is_oncall'],
+                    ])
+                    // ->inlineLabel()
+                    ->columns(3)
+                    ->columnSpanFull(),
+                Fieldset::make('Reporting')
+                    ->schema([
+                        $filters['user_id'],
+                        $filters['work'],
+                        $filters['date_visit'],
+                    ])
+                    ->inlineLabel()
+                    ->columns(2)
+                    ->columnSpanFull(),
+            ])
             ->deferFilters()
             ->filtersTriggerAction(
                 fn (Action $action) => $action
@@ -252,9 +338,10 @@ class ReportDetail extends Page implements HasTable
                                 Column::make('outstanding.product.name')->heading('Produk'),
                                 Column::make('outstanding.reporter')->heading('Pelapor')
                                     ->formatStateUsing(fn ($state) => ucfirst($state)),
-                                Column::make('outstanding.date_in')->heading('Lapor'),
-                                Column::make('outstanding.date_visit')->heading('Aksi'),
-                                Column::make('outstanding.date_finish')->heading('Selesai'),
+                                // Column::make('outstanding.date_in')
+                                //     ->heading('Lapor'),
+                                // Column::make('outstanding.date_visit')->heading('Aksi'),
+                                // Column::make('outstanding.date_finish')->heading('Selesai'),
                                 Column::make('outstanding.title')->heading('Masalah'),
                                 Column::make('cause')->heading('Sebab'),
                                 Column::make('action')->heading('Aksi')
