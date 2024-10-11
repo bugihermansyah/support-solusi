@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\ReportStatus;
-use Guava\Calendar\ValueObjects\Event;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -42,13 +41,6 @@ class Reporting extends Model implements HasMedia
         'email_cc' => 'array'
     ];
 
-    // public function toEvent(): Event|array {
-    //     return Event::make($this)
-    //         ->title($this->cause)
-    //         ->start($this->date_visit)
-    //         ->end($this->date_visit);
-    // }
-
     public function users()
     {
         return $this->belongsToMany(User::class, 'reporting_users', 'reporting_id', 'user_id')
@@ -74,19 +66,4 @@ class Reporting extends Model implements HasMedia
     {
         return $this->hasMany(ReportingUser::class);
     }
-
-    // public function getTitle(): string
-    // {
-    //     return $this->status;
-    // }
-
-    // public function getStart(): string
-    // {
-    //     return $this->date_visit;
-    // }
-
-    // public function getEnd(): string
-    // {
-    //     return $this->date_visit;
-    // }
 }
