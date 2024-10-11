@@ -74,6 +74,11 @@ class Location extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function outstandings(): HasMany
+    {
+        return $this->hasMany(Outstanding::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
