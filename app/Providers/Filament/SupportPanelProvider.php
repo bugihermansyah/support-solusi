@@ -25,6 +25,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Kenepa\Banner\BannerPlugin;
 use Shanerbaner82\PanelRoles\PanelRoles;
 
 class SupportPanelProvider extends PanelProvider
@@ -88,6 +89,8 @@ class SupportPanelProvider extends PanelProvider
                     ->sort(4),
             ])
             ->plugins([
+                BannerPlugin::make()
+                    ->disableBannerManager(),
                 GravatarPlugin::make()
                     ->default('robohash')
                     ->size(200)

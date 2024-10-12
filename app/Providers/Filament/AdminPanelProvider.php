@@ -30,6 +30,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Kenepa\Banner\BannerPlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Shanerbaner82\PanelRoles\PanelRoles;
 
@@ -111,6 +112,12 @@ class AdminPanelProvider extends PanelProvider
                     ->default('robohash')
                     ->size(200)
                     ->rating('pg'),
+                BannerPlugin::make()
+                    ->persistsBannersInDatabase()
+                    ->navigationIcon('heroicon-o-megaphone')
+                    ->navigationLabel('Announcement')
+                    ->navigationGroup('Utility')
+                    ->navigationSort(1),
                 // QuickCreatePlugin::make()
                 //     ->sort(false)
                 //     ->includes([
