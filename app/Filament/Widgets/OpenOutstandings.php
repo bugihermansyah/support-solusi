@@ -2,13 +2,9 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\OutstandingResource;
 use App\Models\Outstanding;
-use App\Tables\Columns\SlaFinishColumn;
 use Carbon\Carbon;
-use Filament\Tables;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -17,11 +13,6 @@ use Illuminate\Support\Facades\Auth;
 
 class OpenOutstandings extends BaseWidget
 {
-    // public function getTableRecordKey($record): string
-    // {
-    //     return (string) $record->id;
-    // }
-
     protected static ?int $sort = 1;
 
     public function table(Table $table): Table
