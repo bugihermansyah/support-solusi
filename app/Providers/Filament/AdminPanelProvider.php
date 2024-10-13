@@ -5,23 +5,17 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\EmailVerification;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\RequestPasswordReset;
-use App\Filament\Resources\EvaluationResource;
-use App\Filament\Resources\OutstandingResource;
-use App\Filament\Resources\QuickOutstandingResource;
 use App\Livewire\MyProfileExtended;
 use App\Settings\GeneralSettings;
 use Awcodes\FilamentGravatar\GravatarPlugin;
 use Awcodes\FilamentGravatar\GravatarProvider;
-use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Enums\MaxWidth;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -51,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName(fn (GeneralSettings $settings) => $settings->brand_name)
             ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
             ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
+            ->maxContentWidth(MaxWidth::Full)
             ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
             ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->navigationGroups([
@@ -74,7 +69,6 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-swatch'),
             ])
             ->topNavigation()
-            ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->sidebarCollapsibleOnDesktop()
             ->viteTheme('resources/css/filament/admin/theme.css')
