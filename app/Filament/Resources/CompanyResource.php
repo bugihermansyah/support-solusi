@@ -9,8 +9,10 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CompanyResource extends Resource
@@ -50,8 +52,6 @@ class CompanyResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->maxLength(100)
                     ->required(),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
             ]);
     }
 
@@ -100,8 +100,7 @@ class CompanyResource extends Resource
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
                 Tables\Actions\DeleteAction::make()->hiddenLabel()->tooltip('Hapus'),
                 Tables\Actions\ForceDeleteAction::make()->hiddenLabel()->tooltip('Hapus selamanya'),
-                Tables\Actions\RestoreAction::make()->hiddenLabel()->tooltip('Kembalikan data'),
-
+                Tables\Actions\RestoreAction::make()->hiddenLabel()->tooltip('Kembalikan data')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
