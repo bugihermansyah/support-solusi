@@ -30,7 +30,7 @@ class StatsOverviewWidget extends BaseWidget
         $totalLocations = $locationQuery->count();
 
         // Get the count of locations with 'area_status' as 'out'
-        $areaLocations = $locationQuery->clone()->where('area_status', 'out')->count();
+        // $areaLocations = $locationQuery->clone()->where('area_status', 'out')->count();
 
         // Initialize the query for outstandings
         $outstandingQuery = DB::table('outstandings')
@@ -51,9 +51,9 @@ class StatsOverviewWidget extends BaseWidget
             Stat::make('Outstanding', $openOutstanding)
                 ->description('Outstanding berdasarkan filter')
                 ->color('primary'),
-            Stat::make('Luar kota', $areaLocations)
-                ->description('Reporting luar kota')
-                ->color('primary'),
+            // Stat::make('Luar kota', $areaLocations)
+            //     ->description('Reporting luar kota')
+            //     ->color('primary'),
         ];
     }
 }
