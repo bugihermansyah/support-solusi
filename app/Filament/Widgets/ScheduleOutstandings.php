@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class ScheduleOutstandings extends BaseWidget
 {
     protected static ?int $sort = 2;
+    protected int | string | array $columnSpan = '2';
 
     public function table(Table $table): Table
     {
@@ -38,10 +39,11 @@ class ScheduleOutstandings extends BaseWidget
                     ->label('Tanggal')
                     ->date(),
                 TextColumn::make('users.firstname')
-                    ->label('Support'),
+                    ->label('Support')
+                    ->limit(10),
                 TextColumn::make('outstanding.location.name_alias')
                     ->label('Lokasi')
-                    ->limit(15),
+                    ->limit(10),
                 TextColumn::make('outstanding.title')
                     ->label('Masalah'),
             ]);
