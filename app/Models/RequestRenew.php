@@ -14,7 +14,10 @@ class RequestRenew extends Model
     use HasUlids;
 
     protected $fillable = [
+        'contract_id',
         'location_id',
+        'renewal_date',
+        'renewal_periode',
         'description',
         'type',
         'status'
@@ -28,5 +31,10 @@ class RequestRenew extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function contract(): BelongsTo
+    {
+        return $this->belongsTo(Contract::class);
     }
 }
