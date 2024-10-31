@@ -136,6 +136,7 @@ class ReportDailyResource extends Resource
                 TextColumn::make('outstanding.location.name')
                     ->label('Lokasi')
                     ->limit(15)
+                    ->searchable()
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
@@ -146,9 +147,11 @@ class ReportDailyResource extends Resource
                     }),
                 TextColumn::make('outstanding.reporter')
                     ->label('Pelapor')
+                    ->searchable()
                     ->formatStateUsing(fn ($state) => ucwords($state)),
                 TextColumn::make('users.firstname')
                     ->label('Support')
+                    ->searchable()
                     ->listWithLineBreaks(),
                 TextColumn::make('date_visit')
                     ->label('Tgl Aksi')
@@ -156,6 +159,7 @@ class ReportDailyResource extends Resource
                 TextColumn::make('outstanding.title')
                     ->label('Masalah')
                     ->limit(15)
+                    ->searchable()
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
@@ -167,6 +171,7 @@ class ReportDailyResource extends Resource
                 TextColumn::make('cause')
                     ->label('Sebab')
                     ->limit(15)
+                    ->searchable()
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
@@ -179,6 +184,7 @@ class ReportDailyResource extends Resource
                 TextColumn::make('action')
                     ->label('Aksi')
                     ->lineClamp(4)
+                    ->searchable()
                     ->words(10)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
