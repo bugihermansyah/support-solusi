@@ -174,15 +174,35 @@ class ManageOutstandingReport extends ManageRelatedRecords
             ->recordTitleAttribute('cause')
             ->columns([
                 Tables\Columns\TextColumn::make('date_visit')
-                    ->label('Tanggal')
+                    ->label('Date')
                     ->date(),
                 Tables\Columns\TextColumn::make('users.firstname')
                     ->label('Support')
                     ->listWithLineBreaks()
                     ->limitList(1),
                     // ->expandableLimitedList(),
+                Tables\Columns\TextColumn::make('start_work')
+                    ->label('Start')
+                    ->dateTime(),
+                Tables\Columns\TextColumn::make('end_work')
+                    ->label('End')
+                    ->dateTime(),
+                Tables\Columns\TextColumn::make('work_duration')
+                    ->label('Duration')
+                    ->getStateUsing(function ($record) {
+                        if ($record->start_work && $record->end_work) {
+                            $start = Carbon::parse($record->start_work);
+                            $end = Carbon::parse($record->end_work);
+                            
+                            return $start->diffForHumans($end, [
+                                'parts' => 2, // Menampilkan 2 unit waktu, misalnya: "2 hours 30 minutes"
+                                'syntax' => Carbon::DIFF_ABSOLUTE, // Menghilangkan kata seperti "ago"
+                            ]);
+                        }
+                        return '-'; // Jika salah satu kolom tidak ada nilainya
+                    }),
                 Tables\Columns\TextColumn::make('work')
-                    ->label('Tipe')
+                    ->label('Type')
                     ->formatStateUsing(fn ($state) => ucwords($state)),
                 Tables\Columns\TextColumn::make('cause')
                     ->label('Sebab')
@@ -197,7 +217,7 @@ class ManageOutstandingReport extends ManageRelatedRecords
                     ->getStateUsing(function (Reporting $record){
                         return $record->getFirstMedia() ? true : false;
                     })
-                    ->label('Berkas')
+                    ->label('Photo')
                     ->boolean(),
             ])
             ->filters([
