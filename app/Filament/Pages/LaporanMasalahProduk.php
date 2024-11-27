@@ -24,7 +24,7 @@ class LaporanMasalahProduk extends Page implements HasTable
 
     protected static ?string $slug = 'reporting/monthly/masalah-produk';
 
-    protected static ?string $navigationLabel = 'Masalah Produk';
+    protected static ?string $navigationLabel = 'Problem Product';
 
     public function getTableRecordKey($record): string
     {
