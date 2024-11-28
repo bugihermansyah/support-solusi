@@ -1,4 +1,3 @@
 <x-filament-panels::page>
-    {{ $this->table }}
+    @livewire('list-location-details')
 </x-filament-panels::page>
-
