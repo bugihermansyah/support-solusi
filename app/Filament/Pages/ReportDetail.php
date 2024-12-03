@@ -36,7 +36,7 @@ class ReportDetail extends Page implements HasTable
 
     protected static ?string $slug = 'reporting/monthly/laporan-detail';
 
-    protected static ?string $navigationLabel = 'Laporan Detail';
+    protected static ?string $navigationLabel = 'Detail Report';
 
     protected static ?string $title = 'Laporan Detail';
 

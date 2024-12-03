@@ -26,8 +26,6 @@ class LaporanKerusakanUnit extends Page implements HasTable
 
     protected static ?string $navigationLabel = 'Problem Unit';
 
-    // protected static ?string $navigationIcon = 'heroicon-o-document-text';
-
     protected static string $view = 'filament.pages.laporan-kerusakan-unit';
 
     protected static ?string $navigationGroup = 'Reports';
@@ -140,7 +138,6 @@ class LaporanKerusakanUnit extends Page implements HasTable
                 TernaryFilter::make('lpm')
                     ->label('Laporan /1 masuk'),
             ])
-            // , layout: FiltersLayout::AboveContent)
             ->actions([
                 // ...
             ])
