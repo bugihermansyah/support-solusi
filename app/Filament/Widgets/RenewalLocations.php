@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class RenewalLocations extends BaseWidget
 {
     protected static ?int $sort = 3;
-    protected int | string | array $columnSpan = '3';
+    // protected int | string | array $columnSpan = '3';
 
     public function getTableRecordKey($record): string
     {

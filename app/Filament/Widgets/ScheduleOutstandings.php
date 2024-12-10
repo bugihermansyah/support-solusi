@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class ScheduleOutstandings extends BaseWidget
 {
     protected static ?int $sort = 2;
-    protected int | string | array $columnSpan = '2';
+    // protected int | string | array $columnSpan = '2';
 
     public function table(Table $table): Table
     {

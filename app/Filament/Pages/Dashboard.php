@@ -15,10 +15,10 @@ class Dashboard extends BaseDashboard
 
     protected ?string $heading = '';
 
-    public function getColumns(): int | string | array
-    {
-        return 7;
-    }
+    // public function getColumns(): int | string | array
+    // {
+    //     return 7;
+    // }
 
     // protected function getYearOptions(): array
     // {
