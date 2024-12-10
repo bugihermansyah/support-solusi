@@ -8,8 +8,8 @@ class Dashboard extends BaseDashboard
 {
     protected ?string $heading = '';
 
-    public function getColumns(): int | string | array
-    {
-        return 5;
-    }
+    // public function getColumns(): int | string | array
+    // {
+    //     return 4;
+    // }
 }

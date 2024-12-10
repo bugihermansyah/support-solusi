@@ -45,7 +45,7 @@ class MonitoringPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Monitoring/Widgets'), for: 'App\\Filament\\Monitoring\\Widgets')
             ->widgets([
                 AdvancedStatsOverviewWidget::class,
-                AdvancedStatsOverview2Widget::class,
+                // AdvancedStatsOverview2Widget::class,
                 DailyChartWidget::class,
                 MonitoringTableWidget::class,
                 Top5Units::class,

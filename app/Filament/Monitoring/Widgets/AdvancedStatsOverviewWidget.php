@@ -12,7 +12,7 @@ class AdvancedStatsOverviewWidget extends BaseWidget
 {
     protected static ?int $sort = 0;
     
-    protected int | string | array $columnSpan = '4';
+    // protected int | string | array $columnSpan = '4';
 
     protected function getStats(): array
     {
@@ -43,6 +43,11 @@ class AdvancedStatsOverviewWidget extends BaseWidget
         } else {
             $percentage = 0; // Or set it to another default value as needed
         }
+
+        $allLocations = DB::table('locations')
+            ->where('type_contract', 'sewa')
+            ->whereNot('status', 'dismantle')
+            ->count();
 
         $notif = DB::table('reportings')
             ->join('outstandings', 'outstandings.id', '=', 'reportings.outstanding_id')
@@ -78,14 +83,23 @@ class AdvancedStatsOverviewWidget extends BaseWidget
                 ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('success')
                 ->iconColor('warning'),
-            Stat::make('Notifications', $notif)->icon('heroicon-o-envelope')
+            // Stat::make('Notifications', $notif)->icon('heroicon-o-envelope')
+            //     ->progress(100)
+            //     ->progressBarColor('success')
+            //     ->iconPosition('start')
+            //     ->description("Outstanding notif to client this month")
+            //     ->descriptionIcon('heroicon-o-information-circle', 'before')
+            //     ->descriptionColor('success')
+            //     ->iconColor('danger'),
+            Stat::make('All Locations', $allLocations)->icon('heroicon-o-map-pin')
                 ->progress(100)
                 ->progressBarColor('success')
+                ->chartColor('success')
                 ->iconPosition('start')
-                ->description("Outstanding notif to client this month")
+                ->description('Rental loations in all teams')
                 ->descriptionIcon('heroicon-o-information-circle', 'before')
                 ->descriptionColor('success')
-                ->iconColor('danger'),
+                ->iconColor('success'),
         ];
     }
 
@@ -95,8 +109,8 @@ class AdvancedStatsOverviewWidget extends BaseWidget
         return Filament::getCurrentPanel() === Filament::getPanel('monitoring');
     }
 
-    protected function getColumns(): int
-    {
-        return 4;
-    }
+    // protected function getColumns(): int
+    // {
+    //     return 4;
+    // }
 }

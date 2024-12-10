@@ -14,7 +14,7 @@ class MonitoringTableWidget extends BaseWidget
 {
     protected static ?string $heading = null;
 
-    protected int | string | array $columnSpan = '2';
+    // protected int | string | array $columnSpan = '2';
     protected static ?int $sort = 3;
 
     public function table(Table $table): Table
