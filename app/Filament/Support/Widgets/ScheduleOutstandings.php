@@ -68,24 +68,24 @@ class ScheduleOutstandings extends BaseWidget
                 ->from('md'),
             ])
             ->actions([
-                Action::make('start')
-                    ->label('Start')
-                    ->action(function ($record) {
-                        // Update the `start_work` column with the current datetime
-                        $record->update([
-                            'start_work' => now(), // `now()` retrieves the current datetime
-                        ]);
-                    })
-                    ->icon('heroicon-m-play-circle')
-                    ->color('danger')
-                    ->visible(fn(Model $record)=> !$record->start_work)
-                    ->requiresConfirmation()
-                    ->modalHeading('Start work')
-                    ->modalDescription('Yakin anda akan memulai Outstanding ini?')
-                    ->modalSubmitActionLabel('Yes, starting'),
+                // Action::make('start')
+                //     ->label('Start')
+                //     ->action(function ($record) {
+                //         // Update the `start_work` column with the current datetime
+                //         $record->update([
+                //             'start_work' => now(), // `now()` retrieves the current datetime
+                //         ]);
+                //     })
+                //     ->icon('heroicon-m-play-circle')
+                //     ->color('danger')
+                //     ->visible(fn(Model $record)=> !$record->start_work)
+                //     ->requiresConfirmation()
+                //     ->modalHeading('Start work')
+                //     ->modalDescription('Yakin anda akan memulai Outstanding ini?')
+                //     ->modalSubmitActionLabel('Yes, starting'),
                 EditAction::make('updateReport')
                     ->label('Report')
-                    ->visible(fn(Model $record)=> $record->start_work)
+                    // ->visible(fn(Model $record)=> $record->start_work)
                     ->icon('heroicon-m-document-plus')
                     ->modalHeading('Buat Laporan')
                     ->mutateFormDataUsing(function (array $data): array {
