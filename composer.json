@@ -42,6 +42,7 @@
         "jeffgreco13/filament-breezy": "^2.2",
         "joshembling/image-optimizer": "^1.4",
         "kenepa/banner": "^0.0.9",
+        "kenepa/multi-widget": "^2.0",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
