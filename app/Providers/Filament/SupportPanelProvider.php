@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
+use App\Filament\Support\Widgets\SupportMultiWidget;
 use App\Livewire\MyProfileExtended;
 use App\Settings\GeneralSettings;
 use Awcodes\FilamentGravatar\GravatarPlugin;
@@ -61,6 +62,7 @@ class SupportPanelProvider extends PanelProvider
             ->widgets([
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
+                SupportMultiWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Support\Widgets;
+namespace App\Filament\Support\Pages\Widgets;
 
 use App\Filament\Support\Resources\OutstandingResource;
 use App\Models\Outstanding;
@@ -12,6 +12,7 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,19 +20,20 @@ class OpenOutstandings extends BaseWidget
 {
     protected static ?int $sort = 2;
 
-    // protected static string $relationship = 'reportings';
+    protected function getTableHeading(): string | Htmlable | null
+    {
+        return '';
+    }
+
+    public function getDisplayName(): string {
+        return "Outstandings";
+    }
 
     public function table(Table $table): Table
     {
         $user = Auth::user();
-        // $a = Outstanding::query()
-        // ->whereHas('location', function (Builder $query) use ($user) {
-        //     $query->where('location.user_id', $user->id)
-        //         ->where('outstanding.status', 0);
-        // });
-        // dd($a);
         return $table
-            ->defaultPaginationPageOption(5)
+        ->paginated(false)
             ->query(
                 Outstanding::query()
                     ->whereHas('location', function (Builder $query) use ($user) {
@@ -45,13 +47,11 @@ class OpenOutstandings extends BaseWidget
                         ->label('Lokasi')
                         ->icon('heroicon-m-map-pin')
                         ->weight(FontWeight::Bold)
-                        ->grow(false)
-                        ->searchable(),
+                        ->grow(false),
                     Tables\Columns\TextColumn::make('title')
                         ->label('Masalah')
-                        ->icon('heroicon-m-inbox-arrow-down')
-                        ->grow(false)
-                        ->searchable(),
+                        ->icon('heroicon-m-bell-alert')
+                        ->grow(false),
                     Tables\Columns\TextColumn::make('date_in')
                         ->label('Lapor')
                         ->icon('heroicon-m-clock')
@@ -91,9 +91,14 @@ class OpenOutstandings extends BaseWidget
                     ])
                     ->from('md'),
             ])
+            ->contentGrid([
+                'md' => 1,
+                'xl' => 1,
+            ])
             // ->defaultSort('title', 'asc')
             ->actions([
-                Tables\Actions\Action::make('Buka')
+                Tables\Actions\Action::make('Open')
+                    ->button()
                     ->url(fn (Outstanding $record): string => OutstandingResource::getUrl('edit', ['record' => $record])),
             ]);
     }

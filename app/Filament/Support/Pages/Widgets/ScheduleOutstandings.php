@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Support\Widgets;
+namespace App\Filament\Support\Pages\Widgets;
 
 use App\Enums\OutstandingTypeProblem;
 use App\Filament\Resources\OutstandingResource;
@@ -26,6 +26,7 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater as ComponentsTableRepeater;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
@@ -34,11 +35,20 @@ class ScheduleOutstandings extends BaseWidget
 {
     protected static ?int $sort = 1;
 
+    protected function getTableHeading(): string | Htmlable | null
+    {
+        return '';
+    }
+
+    public function getDisplayName(): string {
+        return "Schedules";
+    }
+
     public function table(Table $table): Table
     {
         $user = Auth::user();
         return $table
-            ->defaultPaginationPageOption(5)
+            ->paginated(false)
             ->query(
                 Reporting::whereHas('users', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
@@ -57,37 +67,40 @@ class ScheduleOutstandings extends BaseWidget
                         ->label('Lokasi')
                         ->icon('heroicon-m-map-pin')
                         ->weight(FontWeight::Bold)
-                        ->grow(false)
-                        ->searchable(),
+                        ->grow(false),
                     Tables\Columns\TextColumn::make('outstanding.title')
                         ->label('Masalah')
-                        ->icon('heroicon-m-inbox-arrow-down')
-                        ->searchable(),
+                        ->icon('heroicon-m-bell-alert')
                         ])->from('md')
                 ])
                 ->from('md'),
             ])
+            ->contentGrid([
+                'md' => 1,
+                'xl' => 1,
+            ])
             ->actions([
-                // Action::make('start')
-                //     ->label('Start')
-                //     ->action(function ($record) {
-                //         // Update the `start_work` column with the current datetime
-                //         $record->update([
-                //             'start_work' => now(), // `now()` retrieves the current datetime
-                //         ]);
-                //     })
-                //     ->icon('heroicon-m-play-circle')
-                //     ->color('danger')
-                //     ->visible(fn(Model $record)=> !$record->start_work)
-                //     ->requiresConfirmation()
-                //     ->modalHeading('Start work')
-                //     ->modalDescription('Yakin anda akan memulai Outstanding ini?')
-                //     ->modalSubmitActionLabel('Yes, starting'),
+                Action::make('start')
+                    ->label('Start')
+                    ->button()
+                    ->action(function ($record) {
+                        $record->update([
+                            'start_work' => now(),
+                        ]);
+                    })
+                    ->icon('heroicon-m-play-circle')
+                    ->color('danger')
+                    ->visible(fn(Model $record)=> !$record->start_work)
+                    ->requiresConfirmation()
+                    ->modalHeading('Start work')
+                    ->modalDescription('Yakin anda akan memulai Outstanding ini?')
+                    ->modalSubmitActionLabel('Yes, starting'),
                 EditAction::make('updateReport')
                     ->label('Report')
-                    // ->visible(fn(Model $record)=> $record->start_work)
+                    ->button()
+                    ->visible(fn(Model $record)=> $record->start_work)
                     ->icon('heroicon-m-document-plus')
-                    ->modalHeading('Buat Laporan')
+                    ->modalHeading('Reporting')
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['user_id'] = auth()->id();
                         $data['end_work'] = Carbon::now();
@@ -102,17 +115,19 @@ class ScheduleOutstandings extends BaseWidget
                     })
                     ->steps([
                         Step::make('Reporting')
-                            // ->description('Give the category a unique name')
                             ->schema([
                                 Forms\Components\DatePicker::make('date_visit')
                                     ->label('Tanggal Aksi')
+                                    ->hiddenLabel()
                                     ->default(Carbon::now())
                                     ->native(false)
+                                    ->prefix('Action')
                                     ->columnSpanFull()
                                     ->required(),
                                 Forms\Components\ToggleButtons::make('work')
                                     ->label('Jenis Aksi')
                                     ->inline()
+                                    ->hiddenLabel()
                                     ->options([
                                         'visit' => 'Visit',
                                         'remote' => 'Remote'
@@ -126,6 +141,8 @@ class ScheduleOutstandings extends BaseWidget
                                     ->required(),
                                 Forms\Components\TextInput::make('cause')
                                     ->label('Sebab')
+                                    ->hiddenLabel()
+                                    ->placeholder('Sebab')
                                     ->required(),
                                 Forms\Components\RichEditor::make('action')
                                     ->label('Aksi')
@@ -153,11 +170,11 @@ class ScheduleOutstandings extends BaseWidget
                                     ->columnSpanFull(),
                                     ]),
                         Step::make('Status')
-                            // ->description('Add some extra details')
                             ->schema([
                                 Forms\Components\ToggleButtons::make('status')
                                     ->inline()
                                     ->live()
+                                    ->hiddenLabel()
                                     ->options([
                                         '1' => 'Finish',
                                         '0' => 'Pending',
@@ -176,18 +193,22 @@ class ScheduleOutstandings extends BaseWidget
                                     ->required(),
                                 Forms\Components\DatePicker::make('revisit')
                                     ->label('Revisit')
+                                    ->hiddenLabel()
+                                    ->placeholder('Revisit')
                                     ->required()
                                     ->hidden(fn ($get) => $get('status') !== '0')
                                     ->native(false),
                                 Forms\Components\ToggleButtons::make('is_type_problem')
                                     ->label('Tipe Problem')
+                                    ->hiddenLabel()
                                     ->helperText(new HtmlString('Setiap <strong>tipe problem</strong> wajib menyertakan kerusakan unit'))
                                     ->required()
                                     ->options(OutstandingTypeProblem::class)
                                     ->formatStateUsing(fn (Model $record) => $record->outstanding->is_type_problem ?? 'NON')
                                     ->inline(),
                                 ComponentsTableRepeater::make('outstandingunits')
-                                    ->label('Peminjaman Unit')
+                                    ->label('Unit')
+                                    ->hiddenLabel()
                                     ->relationship()
                                     ->addActionLabel('Tambah unit')
                                     ->reorderable(false)
