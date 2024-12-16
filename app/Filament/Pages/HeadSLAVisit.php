@@ -17,87 +17,67 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class SlaFinish extends Page implements HasTable
+class HeadSLAVisit extends Page implements HasTable
 {
     use InteractsWithTable;
     use HasPageShield;
 
-    protected static ?string $slug = 'reporting/monthly/sla-finish';
+    protected static ?string $slug = 'reporting/monthly/head/sla-visit';
 
-    protected static ?string $navigationLabel = 'SLA Finish';
+    protected static ?string $navigationLabel = 'SLA Visit/Remote';
 
-    protected static ?string $title = 'Laporan SLA Selesai';
-
-    protected ?string $heading = 'Laporan SLA Selesai';
+    protected static ?string $title = 'Head SLA Visit/Remote';
 
     public function getTableRecordKey($record): string
     {
         return (string) $record->getKeyName();
     }
 
-    protected static string $view = 'filament.pages.sla-finish';
+    protected static string $view = 'filament.pages.sla-visit';
 
     protected static ?string $navigationGroup = 'Reports';
 
-    protected static function getCurrentFilters()
-    {
-        return array_filter(request()->query('filter', []), function ($value) {
-            return $value !== null && $value !== '';
-        });
-    }
-
     public static function table(Table $table): Table
     {
+        $user = Auth::user();
+        $userTeam = $user ? $user->getTeamId() : null ;
+
         return $table
             ->query(
             Product::query()
-                ->select('products.name')
+                    ->select('products.name')
                     ->selectRaw("
                         SUM(CASE
-                            WHEN DATEDIFF(outstandings.date_finish, outstandings.date_visit) BETWEEN 0 AND 3 THEN 1
+                            WHEN DATEDIFF(outstandings.date_visit, outstandings.date_in) BETWEEN 0 AND 1 THEN 1
                             ELSE 0
                         END) as sla1_count,
                         SUM(CASE
-                            WHEN DATEDIFF(outstandings.date_finish, outstandings.date_visit) BETWEEN 4 AND 7 THEN 1
+                            WHEN DATEDIFF(outstandings.date_visit, outstandings.date_in) BETWEEN 2 AND 3 THEN 1
                             ELSE 0
                         END) as sla2_count,
                         SUM(CASE
-                            WHEN DATEDIFF(outstandings.date_finish, outstandings.date_visit) > 7 THEN 1
+                            WHEN DATEDIFF(outstandings.date_visit, outstandings.date_in) > 3 THEN 1
                             ELSE 0
                         END) as sla3_count
                     ")
                     ->join('outstandings', 'products.id', '=', 'outstandings.product_id')
                     ->leftjoin('locations', 'locations.id', '=', 'outstandings.location_id')
-                    ->whereNotNull('outstandings.date_finish')
                     ->whereNotNull('outstandings.date_visit')
+                    ->where('locations.team_id', $userTeam)
                     ->groupBy('products.name')
-                    // ->orderBy('products.name')
-                )
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nama')
+                    ->label('Nama Produk')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('sla1_count')
-                    ->label('SLA 1 (0 - 3)')
-                    ->url(fn ($record) => route('filament.admin.resources.outstandings.index', array_merge(request()->query(), [
-                        'tableFilters[sla][value]' => 'sla1',
-                        'tableFilters[month][value]' => request()->input('filter.month.value'),
-                        'tableFilters[year][value]' => request()->input('filter.year.value'),
-                        'tableFilters[team][value]' => request()->input('filter.team.value'),
-                        'tableFilters[pelapor][value]' => request()->input('filter.pelapor.value'),
-                        'tableFilters[lpm][value]' => request()->input('filter.lpm.value'),
-                    ])))
-                    ->openUrlInNewTab()
+                    ->label('SLA 1 (0 - 1)')
                     ->summarize(Sum::make()->label('Total')),
                 Tables\Columns\TextColumn::make('sla2_count')
-                    ->label('SLA 2 (4 - 7)')
+                    ->label('SLA 2 (2 - 3)')
                     ->summarize(Sum::make()->label('Total')),
                 Tables\Columns\TextColumn::make('sla3_count')
-                    ->label('SLA 3 (> 7)')
-                    ->url(fn ($record) => route('filament.admin.resources.outstandings.index', array_merge(self::getCurrentFilters(), [
-                        'filter[sla][value]' => 'sla3',
-                    ])))
-                    ->openUrlInNewTab()
+                    ->label('SLA 3 (> 3)')
                     ->summarize(Sum::make()->label('Total')),
             ])
             ->defaultSort('sort', 'asc')
@@ -136,15 +116,6 @@ class SlaFinish extends Page implements HasTable
                             $query->whereYear('outstandings.date_in', $data['value']);
                         }
                     }),
-                SelectFilter::make('team')
-                    ->label('Tim')
-                    ->options(Team::all()->pluck('name', 'id'))
-                    ->default(Auth::user()->team_id)
-                    ->query(function (Builder $query, array $data) {
-                        if (!empty($data['value'])) {
-                            $query->where('locations.team_id', $data['value']);
-                        }
-                    }),
                 SelectFilter::make('pelapor')
                     ->label('Pelapor')
                     ->options([
@@ -152,7 +123,6 @@ class SlaFinish extends Page implements HasTable
                         'preventif' => 'Preventif',
                         'support' => 'Support'
                     ])
-                    ->default('client')
                     ->query(function (Builder $query, array $data) {
                         if (!empty($data['value'])) {
                             $query->where('outstandings.reporter', $data['value']);

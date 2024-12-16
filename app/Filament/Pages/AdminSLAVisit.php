@@ -17,23 +17,21 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class SlaVisit extends Page implements HasTable
+class AdminSLAVisit extends Page implements HasTable
 {
     use InteractsWithTable;
     use HasPageShield;
 
-    protected static ?string $slug = 'reporting/monthly/sla-visit';
+    protected static ?string $slug = 'reporting/monthly/admin/sla-visit';
 
     protected static ?string $navigationLabel = 'SLA Visit/Remote';
 
-    protected static ?string $title = 'Laporan SLA Visit/Remote';
+    protected static ?string $title = 'Admin SLA Visit/Remote';
 
     public function getTableRecordKey($record): string
     {
         return (string) $record->getKeyName();
     }
-
-    // protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.sla-visit';
 

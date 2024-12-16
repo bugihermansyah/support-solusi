@@ -167,8 +167,7 @@ class HeadReportDetail extends Page implements HasTable
                         DatePicker::make('reported_from')
                             ->label('Report From'),
                         DatePicker::make('reported_until')
-                            ->label('Report Until')
-                            ->default(now()),
+                            ->label('Report Until'),
                     ])
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
@@ -253,8 +252,7 @@ class HeadReportDetail extends Page implements HasTable
                         DatePicker::make('visited_from')
                             ->label('Visit From'),
                         DatePicker::make('visited_until')
-                            ->label('Visit Until')
-                            ->default(now()),
+                            ->label('Visit Until'),
                     ])
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];

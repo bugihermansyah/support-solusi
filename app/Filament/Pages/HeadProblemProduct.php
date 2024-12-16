@@ -39,6 +39,9 @@ class HeadProblemProduct extends Page implements HasTable
 
     public function table(Table $table): Table
     {
+        $user = Auth::user();
+        $userTeam = $user ? $user->getTeamId() : null ;
+
         return $table
             ->query(
                 Product::query()
@@ -46,8 +49,8 @@ class HeadProblemProduct extends Page implements HasTable
                     ->selectRaw('COUNT(outstandings.id) as outstanding_count')
                     ->join('outstandings', 'products.id', '=', 'outstandings.product_id')
                     ->leftjoin('locations', 'locations.id', '=', 'outstandings.location_id')
+                    ->where('locations.team_id', $userTeam)
                     ->groupBy('products.name')
-                    // ->orderBy('sort', 'asc') 2690
             )
             ->columns([
                 TextColumn::make('name')
@@ -95,15 +98,6 @@ class HeadProblemProduct extends Page implements HasTable
                             $query->whereYear('outstandings.date_in', $data['value']);
                         }
                     }),
-                SelectFilter::make('team')
-                    ->label('Tim')
-                    ->options(Team::all()->pluck('name', 'id'))
-                    ->default(Auth::user()->team_id)
-                    ->query(function (Builder $query, array $data) {
-                        if (!empty($data['value'])) {
-                            $query->where('locations.team_id', $data['value']);
-                        }
-                    }),
                 SelectFilter::make('pelapor')
                     ->label('Pelapor')
                     ->options([
@@ -111,7 +105,6 @@ class HeadProblemProduct extends Page implements HasTable
                         'preventif' => 'Preventif',
                         'support' => 'Support'
                     ])
-                    ->default('client')
                     ->query(function (Builder $query, array $data) {
                         if (!empty($data['value'])) {
                             $query->where('outstandings.reporter', $data['value']);
