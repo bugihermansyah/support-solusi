@@ -23,25 +23,24 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
-class ReportDetailAdmin extends Page implements HasTable
+class AdminReportDetail extends Page implements HasTable
 {
     use InteractsWithTable;
     use HasPageShield;
 
     protected static ?string $model = Reporting::class;
 
-    protected static ?string $slug = 'reporting/monthly/detail-report';
+    protected static ?string $slug = 'reporting/monthly/admin/detail-report';
 
-    protected static ?string $navigationLabel = 'Laporan Detail';
+    protected static ?string $navigationLabel = 'Report Detail';
 
-    protected static ?string $title = 'Laporan Detail Admin';
+    protected static ?string $title = 'Admin Report Detail';
 
-    protected ?string $heading = 'Laporan Detail';
+    protected ?string $heading = 'Report Detail';
 
     public function getTableRecordKey($record): string
     {

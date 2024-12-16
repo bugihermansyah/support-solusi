@@ -27,20 +27,20 @@ use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
-class ReportDetail extends Page implements HasTable
+class HeadReportDetail extends Page implements HasTable
 {
     use InteractsWithTable;
     use HasPageShield;
 
     protected static ?string $model = Reporting::class;
 
-    protected static ?string $slug = 'reporting/monthly/laporan-detail';
+    protected static ?string $slug = 'reporting/monthly/head/report-detail';
 
     protected static ?string $navigationLabel = 'Detail Report';
 
-    protected static ?string $title = 'Laporan Detail';
+    protected static ?string $title = 'Head Report Detail';
 
-    protected ?string $heading = 'Laporan Detail';
+    protected ?string $heading = 'Report Detail';
 
     public function getTableRecordKey($record): string
     {
