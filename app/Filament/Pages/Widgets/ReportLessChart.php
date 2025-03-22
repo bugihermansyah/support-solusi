@@ -150,6 +150,7 @@ class ReportLessChart extends ApexChartWidget
         $query = Outstanding::query()
             ->selectRaw('MONTH(date_in) as month, COUNT(*) as total_outstanding')
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
+            ->whereIn('reporter', ['client', 'support'])
             ->whereYear('date_in', $year);
 
         // Tambahkan filter team jika ada
@@ -184,31 +185,41 @@ class ReportLessChart extends ApexChartWidget
     {
         $year = $this->filterFormData['year'] ?? now()->year;
         $teamId = $this->filterFormData['team'] ?? null;
-
+    
         // Inisialisasi array data untuk 12 bulan
         $data = array_fill(0, 12, 0);
-
-        // Lakukan perulangan untuk setiap bulan dalam tahun yang dipilih
+    
+        // Hitung total lokasi sebelum tahun yang dipilih
+        $previousTotal = Location::query()
+            ->whereYear('created_at', '<', $year)
+            ->whereNot('locations.status', 'dismantle');
+    
+        if ($teamId) {
+            $previousTotal->where('team_id', $teamId);
+        }
+    
+        $previousTotal = $previousTotal->count(); // Total lokasi sebelum tahun yang dipilih
+    
+        // Perulangan untuk setiap bulan dalam tahun yang dipilih
         for ($month = 1; $month <= 12; $month++) {
             $query = Location::query()
-                ->whereYear('created_at', '<=', $year)
-                ->whereMonth('created_at', '<=', $month)
-                ->where('locations.type_contract', 'sewa')
+                ->whereBetween('created_at', ["$year-01-01", "$year-$month-31"]) // Hitung lokasi dalam tahun ini sampai bulan tertentu
                 ->whereNot('locations.status', 'dismantle');
-
+    
             if ($teamId) {
                 $query->where('team_id', $teamId);
             }
-
-            // Hitung total lokasi hingga bulan ini
+    
+            // Hitung total lokasi dalam tahun yang dipilih sampai bulan tertentu
             $totalLocations = $query->count();
-
-            // Simpan hasilnya di array
-            $data[$month - 1] = $totalLocations;
+    
+            // Akumulasi dengan total lokasi dari tahun sebelumnya
+            $data[$month - 1] = $previousTotal + $totalLocations;
         }
-
+    
         return $data;
     }
+   
 
     // Total Lokasi Masalah
     protected function getUniqueLocationsPerMonth(): array
