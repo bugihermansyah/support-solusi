@@ -220,13 +220,13 @@ class ReportLessChart extends ApexChartWidget
         return $data;
     }
    
-
     // Total Lokasi Masalah
     protected function getUniqueLocationsPerMonth(): array
     {
         $year = $this->filterFormData['year'] ?? now()->year;
         $teamId = $this->filterFormData['team'] ?? null;
         $lpm = $this->filterFormData['lpm'] ?? null;
+        $reporter = $this->filterFormData['reporter'] ?? null;
     
         // Inisialisasi array data dengan 0 untuk 12 bulan
         $data = array_fill(0, 12, 0);
@@ -235,6 +235,7 @@ class ReportLessChart extends ApexChartWidget
         $query = Outstanding::query()
             ->selectRaw('MONTH(date_visit) as month, COUNT(DISTINCT locations.id) as unique_locations_count')
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
+            ->whereIn('reporter', ['client', 'support'])
             ->whereYear('date_visit', $year);
     
         // Tambahkan filter team jika ada
@@ -242,6 +243,10 @@ class ReportLessChart extends ApexChartWidget
             $query->where('locations.team_id', $teamId);
         }
     
+        if ($reporter) {
+            $query->where('reporter', $reporter);
+        }
+        
         if ($lpm) {
             $query->where('lpm', $lpm);
         }
