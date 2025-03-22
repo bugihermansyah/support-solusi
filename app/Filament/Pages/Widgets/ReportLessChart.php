@@ -227,36 +227,36 @@ class ReportLessChart extends ApexChartWidget
         $year = $this->filterFormData['year'] ?? now()->year;
         $teamId = $this->filterFormData['team'] ?? null;
         $lpm = $this->filterFormData['lpm'] ?? null;
-
+    
         // Inisialisasi array data dengan 0 untuk 12 bulan
         $data = array_fill(0, 12, 0);
-
+    
         // Mulai query
         $query = Outstanding::query()
-            ->selectRaw('MONTH(date_visit) as month, COUNT(DISTINCT locations.name, DATE(date_visit)) as unique_locations_count')
+            ->selectRaw('MONTH(date_visit) as month, COUNT(DISTINCT locations.id) as unique_locations_count')
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
             ->whereYear('date_visit', $year);
-
+    
         // Tambahkan filter team jika ada
         if ($teamId) {
             $query->where('locations.team_id', $teamId);
         }
-
+    
         if ($lpm) {
             $query->where('lpm', $lpm);
         }
-
+    
         // Kelompokkan berdasarkan bulan dan urutkan
         $results = $query
             ->groupByRaw('MONTH(date_visit)')
             ->orderBy('month')
             ->get();
-
+    
         // Mengisi array dengan hasil query
         foreach ($results as $result) {
             $data[$result->month - 1] = $result->unique_locations_count;
         }
-
+    
         return $data;
     }
 
