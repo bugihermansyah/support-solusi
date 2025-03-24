@@ -61,7 +61,7 @@ class ReportLessChart extends ApexChartWidget
     {
         return [
             'chart' => [
-                'type' => 'bar',
+                'type' => 'line',
                 'height' => 550,
                 'stacked' => true,
                 'toolbar' => [
@@ -100,6 +100,10 @@ class ReportLessChart extends ApexChartWidget
                     'name' => 'Total Aksi Remote',
                     'data' => $this->getTotalRemoteData(),
                 ],
+                [
+                    'name' => 'Total Repeat Visit',
+                    'data' => $this->getTotalRepeatVisit(),
+                ],
             ],
             'dataLabels' => [
                 'enabled' => true,
@@ -132,6 +136,7 @@ class ReportLessChart extends ApexChartWidget
                 '#8b5cf6', // Total Laporan Awal Masuk
                 '#f97316', // Total SLA Visit
                 '#22d3ee', // Total Aksi Remote
+                '#f97316', // Total Repeat Visit
             ],
         ];
     }
@@ -403,5 +408,36 @@ class ReportLessChart extends ApexChartWidget
         return $data;
     }
 
+    // Total repeat visit
+    protected function getTotalRepeatVisit(): array
+    {
+        $teamId = $this->filterFormData['team'] ?? null;
+        $year = $this->filterFormData['year'] ?? now()->year;
+
+        // Inisialisasi array dengan 0 untuk 12 bulan
+        $data = array_fill(0, 12, 0);
+
+        // Ambil outstanding yang memiliki lebih dari 2 reporting dalam satu bulan
+        $query = Reporting::selectRaw('MONTH(outstandings.date_in) as month, COUNT(DISTINCT reportings.outstanding_id) as total_outstanding')
+            ->join('outstandings', 'reportings.outstanding_id', '=', 'outstandings.id')
+            ->join('locations', 'outstandings.location_id', '=', 'locations.id')
+            ->whereYear('outstandings.date_in', $year)
+            ->where('outstandings.is_implement', '!=', 1)
+            ->groupByRaw('MONTH(outstandings.date_in), reportings.outstanding_id')
+            ->havingRaw('COUNT(reportings.id) > 2'); // Hanya outstanding yang memiliki lebih dari 2 reporting
+
+        if ($teamId) {
+            $query->where('locations.team_id', $teamId);
+        }
+
+        $results = $query->get();
+
+        // Mengisi array dengan hasil query
+        foreach ($results as $item) {
+            $data[$item->month - 1] += 1; // Tambahkan jumlah outstanding yang memenuhi syarat
+        }
+
+        return $data;
+    }
 
 }
