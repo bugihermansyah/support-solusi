@@ -32,7 +32,7 @@ class ReportLessChart extends ApexChartWidget
                             '2024' => '2024',
                             '2025' => '2025'
                         ])
-                        ->default('2024'),
+                        ->default('2025'),
                     Select::make('team')
                         ->placeholder('Select')
                         ->options(Team::all()->pluck('name', 'id')),
@@ -49,7 +49,6 @@ class ReportLessChart extends ApexChartWidget
                         ->options([
                             'client' => 'Client',
                             'preventif' => 'Preventif',
-                            'support' => 'Support'
                         ])
                         ->default('client'),
                 ])
