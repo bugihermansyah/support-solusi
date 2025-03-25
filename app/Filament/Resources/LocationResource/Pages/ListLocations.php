@@ -30,13 +30,13 @@ class ListLocations extends ListRecords
         ];
     }
 
-    // public function getTabs(): array
-    // {
-    //     return [
-    //         null => Tab::make('All'),
-    //         'implementasi' => Tab::make()->query(fn ($query) => $query->where('status', 'imple')),
-    //         'new' => Tab::make()->query(fn ($query) => $query->where('status', 'new')),
-    //         'settle' => Tab::make()->query(fn ($query) => $query->where('status', 'settle')),
-    //     ];
-    // }
+    public function getTabs(): array
+    {
+        return [
+            null => Tab::make('All'),
+            'settle' => Tab::make()->query(fn ($query) => $query->where('status', 'settle')),
+            'implementasi' => Tab::make()->query(fn ($query) => $query->where('status', 'implementasi')),
+            'dismantle' => Tab::make()->query(fn ($query) => $query->where('status', 'dismantle')),
+        ];
+    }
 }
