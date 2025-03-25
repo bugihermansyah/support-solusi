@@ -136,7 +136,7 @@ class ReportLessChart extends ApexChartWidget
                 '#8b5cf6', // Total Laporan Awal Masuk
                 '#f97316', // Total SLA Visit
                 '#22d3ee', // Total Aksi Remote
-                '#f97316', // Total Repeat Visit
+                '#40ff83', // Total Repeat Visit
             ],
         ];
     }
