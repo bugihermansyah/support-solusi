@@ -35,7 +35,7 @@ class ListLocations extends ListRecords
         return [
             null => Tab::make('All'),
             'settle' => Tab::make()->query(fn ($query) => $query->where('status', 'settle')),
-            'implementasi' => Tab::make()->query(fn ($query) => $query->where('status', 'implementasi')),
+            'implementasi' => Tab::make()->query(fn ($query) => $query->where('status', 'imple')),
             'dismantle' => Tab::make()->query(fn ($query) => $query->where('status', 'dismantle')),
         ];
     }
