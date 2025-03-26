@@ -2,8 +2,7 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\Reporting;
-use App\Models\Team;
+use App\Models\User;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Pages\Page;
@@ -43,34 +42,36 @@ class HeadPerformanceStaff extends Page implements HasTable
 
         return $table
             ->query(
-                Reporting::query()
-                ->join('reporting_users', 'reportings.id', '=', 'reporting_users.reporting_id')
-                ->join('users', 'reporting_users.user_id', '=', 'users.id')
-                ->join('outstandings', 'reportings.outstanding_id', '=', 'outstandings.id')
-                ->leftJoin('locations', function ($join) {
-                    $join->on('outstandings.location_id', '=', 'locations.id')
-                         ->on('locations.user_id', '=', 'users.id'); // Lokasi milik support
-                })
-                ->where('outstandings.is_implement', '!=', 1)
-                ->where('locations.team_id', $userTeam) // Hanya lihat staff timnya
-                ->selectRaw("
-                    users.firstname AS support,
-                    (SELECT COUNT(DISTINCT locations.id)
-                     FROM locations 
-                     WHERE locations.user_id = users.id
-                     ) AS lokasi, -- Lokasi dihitung tanpa filter bulan/tahun
-                    SUM(CASE WHEN reportings.work = 'visit' THEN 1 ELSE 0 END) AS visit, -- Visit tetap dipengaruhi filter
-                    SUM(CASE WHEN reportings.work = 'remote' THEN 1 ELSE 0 END) AS remote, -- Remote tetap dipengaruhi filter
-                    COUNT(DISTINCT CASE WHEN locations.id IS NOT NULL THEN outstandings.id END) AS laporan_masalah -- Hanya hitung masalah dari lokasi support
-                ")
-                // ->when(request('month'), function ($query, $month) {
-                //     return $query->whereMonth('outstandings.date_in', $month);
-                // })
-                // ->when(request('year'), function ($query, $year) {
-                //     return $query->whereYear('outstandings.date_in', $year);
-                // })
-                ->groupBy('users.id', 'users.firstname')
-                ->orderByDesc('users.id')
+                User::query()
+                    ->leftJoin('reporting_users', 'users.id', '=', 'reporting_users.user_id') // LEFT JOIN agar semua support tetap muncul
+                    ->leftJoin('reportings', 'reporting_users.reporting_id', '=', 'reportings.id')
+                    ->leftJoin('outstandings', 'reportings.outstanding_id', '=', 'outstandings.id')
+                    ->leftJoin('locations', function ($join) {
+                        $join->on('locations.user_id', '=', 'users.id'); 
+                    })
+                    ->where('locations.team_id', auth()->user()->team_id) // Hanya menampilkan staff dalam tim
+                    ->selectRaw("
+                        users.firstname AS support,
+                        COUNT(DISTINCT locations.id) AS lokasi,
+                        COUNT(DISTINCT CASE WHEN reportings.work = 'visit' THEN reportings.id END) AS visit,
+                        COUNT(DISTINCT CASE WHEN reportings.work = 'remote' THEN reportings.id END) AS remote,
+                        COUNT(DISTINCT CASE WHEN outstandings.id IS NOT NULL THEN outstandings.id END) AS laporan_masalah
+                    ")
+                    ->when(request('month'), function ($query, $month) {
+                        return $query->where(function ($query) use ($month) {
+                            $query->whereMonth('reportings.date_visit', $month)
+                                ->orWhereMonth('outstandings.date_in', $month);
+                        });
+                    })
+                    ->when(request('year'), function ($query, $year) {
+                        return $query->where(function ($query) use ($year) {
+                            $query->whereYear('reportings.date_visit', $year)
+                                ->orWhereYear('outstandings.date_in', $year);
+                        });
+                    })
+                    ->groupBy('users.id', 'users.firstname')
+                    ->orderByDesc('laporan_masalah')
+
             )
             ->columns([
                 TextColumn::make('support')->label('Support')->sortable(),
