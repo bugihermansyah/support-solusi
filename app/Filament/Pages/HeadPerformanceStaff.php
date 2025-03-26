@@ -43,24 +43,34 @@ class HeadPerformanceStaff extends Page implements HasTable
 
         return $table
             ->query(
-                    Reporting::query()
-                    ->join('reporting_users', 'reportings.id', '=', 'reporting_users.reporting_id')
-                    ->join('users', 'reporting_users.user_id', '=', 'users.id')
-                    ->join('outstandings', 'reportings.outstanding_id', '=', 'outstandings.id')
-                    ->leftJoin('locations', function ($join) {
-                        $join->on('outstandings.location_id', '=', 'locations.id')
-                            ->on('locations.user_id', '=', 'users.id'); // Hanya lokasi milik support
-                    })
-                    ->where('locations.team_id', $userTeam)
-                    ->selectRaw("
-                        users.firstname AS support,
-                        COUNT(DISTINCT locations.id) AS lokasi, -- Hitung hanya lokasi milik support
-                        SUM(CASE WHEN reportings.work = 'visit' THEN 1 ELSE 0 END) AS visit, -- Tidak bergantung lokasi
-                        SUM(CASE WHEN reportings.work = 'remote' THEN 1 ELSE 0 END) AS remote, -- Tidak bergantung lokasi
-                        COUNT(DISTINCT CASE WHEN locations.id IS NOT NULL THEN outstandings.id END) AS laporan_masalah -- Hanya hitung masalah dari lokasi support
-                    ")
-                    ->groupBy('users.id', 'users.firstname')
-                    ->orderByDesc('laporan_masalah')
+                Reporting::query()
+                ->join('reporting_users', 'reportings.id', '=', 'reporting_users.reporting_id')
+                ->join('users', 'reporting_users.user_id', '=', 'users.id')
+                ->join('outstandings', 'reportings.outstanding_id', '=', 'outstandings.id')
+                ->leftJoin('locations', function ($join) {
+                    $join->on('outstandings.location_id', '=', 'locations.id')
+                         ->on('locations.user_id', '=', 'users.id'); // Lokasi milik support
+                })
+                ->where('outstandings.is_implement', '!=', 1)
+                ->where('locations.team_id', $userTeam) // Hanya lihat staff timnya
+                ->selectRaw("
+                    users.firstname AS support,
+                    (SELECT COUNT(DISTINCT locations.id)
+                     FROM locations 
+                     WHERE locations.user_id = users.id
+                     ) AS lokasi, -- Lokasi dihitung tanpa filter bulan/tahun
+                    SUM(CASE WHEN reportings.work = 'visit' THEN 1 ELSE 0 END) AS visit, -- Visit tetap dipengaruhi filter
+                    SUM(CASE WHEN reportings.work = 'remote' THEN 1 ELSE 0 END) AS remote, -- Remote tetap dipengaruhi filter
+                    COUNT(DISTINCT CASE WHEN locations.id IS NOT NULL THEN outstandings.id END) AS laporan_masalah -- Hanya hitung masalah dari lokasi support
+                ")
+                // ->when(request('month'), function ($query, $month) {
+                //     return $query->whereMonth('outstandings.date_in', $month);
+                // })
+                // ->when(request('year'), function ($query, $year) {
+                //     return $query->whereYear('outstandings.date_in', $year);
+                // })
+                ->groupBy('users.id', 'users.firstname')
+                ->orderByDesc('users.id')
             )
             ->columns([
                 TextColumn::make('support')->label('Support')->sortable(),
