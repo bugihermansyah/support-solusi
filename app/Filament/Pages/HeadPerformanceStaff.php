@@ -43,13 +43,11 @@ class HeadPerformanceStaff extends Page implements HasTable
         return $table
             ->query(
                 User::query()
-                    ->leftJoin('reporting_users', 'users.id', '=', 'reporting_users.user_id') // LEFT JOIN agar semua support tetap muncul
+                    ->leftJoin('reporting_users', 'users.id', '=', 'reporting_users.user_id')
                     ->leftJoin('reportings', 'reporting_users.reporting_id', '=', 'reportings.id')
                     ->leftJoin('outstandings', 'reportings.outstanding_id', '=', 'outstandings.id')
-                    ->leftJoin('locations', function ($join) {
-                        $join->on('locations.user_id', '=', 'users.id'); 
-                    })
-                    ->where('locations.team_id', auth()->user()->team_id) // Hanya menampilkan staff dalam tim
+                    ->leftJoin('locations', 'locations.user_id', '=', 'users.id') 
+                    ->where('users.team_id', $userTeam) // 🔥 Filter berdasarkan tim user
                     ->selectRaw("
                         users.firstname AS support,
                         COUNT(DISTINCT locations.id) AS lokasi,
@@ -70,8 +68,7 @@ class HeadPerformanceStaff extends Page implements HasTable
                         });
                     })
                     ->groupBy('users.id', 'users.firstname')
-                    ->orderByDesc('laporan_masalah')
-
+                    ->orderByDesc('users.id')
             )
             ->columns([
                 TextColumn::make('support')->label('Support')->sortable(),
