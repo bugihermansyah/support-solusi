@@ -2,12 +2,8 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\Company;
-use App\Models\Location;
 use App\Models\Outstanding;
-use App\Models\Product;
 use App\Models\Reporting;
-use App\Models\User;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
@@ -20,15 +16,10 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Indicator;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Columns\Column;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
-class AdminReportDetail extends Page implements HasTable
+class AdminRepeatVisit extends Page implements HasTable
 {
     use InteractsWithTable;
     use HasPageShield;
