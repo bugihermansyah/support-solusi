@@ -29,6 +29,7 @@ class Reporting extends Model implements HasMedia
         'status',
         'revisit',
         'note',
+        'signature',
         'start_work',
         'end_work',
         'send_mail_at',

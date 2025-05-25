@@ -3,22 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReportDailyResource\Pages;
-use App\Filament\Resources\ReportDailyResource\RelationManagers;
 use App\Models\Customer;
-use App\Models\Location;
 use App\Models\Reporting;
-use App\Models\Team;
-use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,8 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 
 class ReportDailyResource extends Resource
 {
@@ -70,6 +61,19 @@ class ReportDailyResource extends Resource
                                 Placeholder::make('mail')
                                     ->label('Mail')
                                     ->content(fn (Reporting $record): ?string => $record->send_mail_at),
+                                Placeholder::make('signature')
+                                    ->content(function (Reporting $record): HtmlString {
+                                        // Mengambil data base64 tanda tangan dari database
+                                        $signatureBase64 = $record->signature;
+
+                                        // Pastikan ada data base64 untuk tanda tangan
+                                        if ($signatureBase64) {
+                                            return new HtmlString('<img src="' . $signatureBase64 . '" alt="Tanda Tangan" style="max-width: 100%; height: auto;"/>');
+                                        }
+
+                                        // Jika tidak ada tanda tangan, tampilkan pesan alternatif
+                                        return new HtmlString('<p>No signature available</p>');
+                                    }),
                             ])
                             ->columnSpan(['lg' => 1])
                             ->hidden(fn (?Reporting $record) => $record === null),
@@ -80,15 +84,19 @@ class ReportDailyResource extends Resource
                         Select::make('email_to')
                             ->label('Email To')
                             ->multiple()
+                            ->required()
                             ->options(Customer::all()->pluck('name_email', 'email')),
                         Select::make('email_cc')
                             ->label('Email CC')
                             ->multiple()
+                            ->required()
                             ->options(Customer::all()->pluck('name_email', 'email')),
                         TextInput::make('cause')
+                            ->required()
                             ->label('Sebab'),
                         RichEditor::make('action')
                             ->label('Aksi')
+                            ->required()
                             ->toolbarButtons([
                                 'bold',
                                 'bulletList',

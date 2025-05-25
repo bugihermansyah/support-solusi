@@ -22,7 +22,10 @@ use Filament\Notifications\Notification;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\Layout\Panel;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater as ComponentsTableRepeater;
@@ -30,6 +33,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
+use Saade\FilamentAutograph\Forms\Components\SignaturePad;
 
 class ScheduleOutstandings extends BaseWidget
 {
@@ -58,26 +62,39 @@ class ScheduleOutstandings extends BaseWidget
                 Split::make([
                     Tables\Columns\TextColumn::make('date_visit')
                         ->label('Jadwal')
-                        ->icon('heroicon-m-briefcase')
+                        ->icon('heroicon-m-calendar-days')
+                        ->size(TextColumn\TextColumnSize::ExtraSmall)
                         ->weight(FontWeight::Bold)
                         ->grow(false)
-                        ->date(),
+                        ->date('d M Y'),
                         Split::make([
                     Tables\Columns\TextColumn::make('outstanding.location.name_alias')
                         ->label('Lokasi')
                         ->icon('heroicon-m-map-pin')
+                        ->size(TextColumn\TextColumnSize::ExtraSmall)
                         ->weight(FontWeight::Bold)
                         ->grow(false),
                     Tables\Columns\TextColumn::make('outstanding.title')
                         ->label('Masalah')
-                        ->icon('heroicon-m-bell-alert')
+                        ->icon('heroicon-m-briefcase')
+                        ->size(TextColumn\TextColumnSize::ExtraSmall)
                         ])->from('md')
                 ])
                 ->from('md'),
+                Panel::make([
+                    Stack::make([
+                        TextColumn::make('outstanding.reporter')
+                            ->size(TextColumn\TextColumnSize::ExtraSmall)
+                            ->icon('heroicon-m-phone'),
+                        TextColumn::make('outstanding.reporter_name')
+                            ->size(TextColumn\TextColumnSize::ExtraSmall)
+                            ->grow(false),
+                    ]),
+                ])->collapsible(),
             ])
             ->contentGrid([
-                'md' => 1,
-                'xl' => 1,
+                'md' => 2,
+                'xl' => 3,
             ])
             ->actions([
                 Action::make('start')
@@ -248,6 +265,14 @@ class ScheduleOutstandings extends BaseWidget
                                     ->preserveFilenames()
                                     ->columnSpanFull()
                                     ->previewable(false),
+                                SignaturePad::make('signature')
+                                    ->label(__('Sign'))
+                                    ->dotSize(0.5)
+                                    ->lineMinWidth(0.5)
+                                    ->lineMaxWidth(1.0)
+                                    ->throttle(16)
+                                    ->minDistance(5)
+                                    ->velocityFilterWeight(0.7)
                             ]),
                     ])
                     ->after(function (array $data, Model $record, array $arguments){
