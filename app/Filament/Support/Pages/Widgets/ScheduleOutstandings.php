@@ -392,7 +392,7 @@ class ScheduleOutstandings extends BaseWidget
                                     'date_visit' => $dateVisit,
                                     'work' => ucfirst($data['work']),
                                     'pelapor' => ucfirst($outstanding->reporter),
-                                    'nama_pelapor' => $outstanding->number,
+                                    'nama_pelapor' => ucfirst($outstanding->reporter_name),
                                     'support' => $supportNames,
                                     'masalah' => $outstanding->title,
                                     'sebab' => $data['cause'],
