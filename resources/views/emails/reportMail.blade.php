@@ -22,7 +22,7 @@
             padding: 0;
         }
         th, td {
-            padding: 5px;
+            /* padding: 5px; */
             text-align: left;
         }
         .top {
