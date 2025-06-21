@@ -108,7 +108,7 @@ class ListOutstandings extends ListRecords
                                         ->options([
                                             'client' => 'Client',
                                             'preventif' => 'Preventif',
-                                            'support' => 'Support',
+                                            'support' => 'Internal',
                                         ])
                                         ->default('client')
                                         ->live()
@@ -120,7 +120,7 @@ class ListOutstandings extends ListRecords
                                     TextInput::make('reporter_name')
                                         ->label('Nama Pelapor')
                                         ->inlineLabel()
-                                        ->visible(fn ($get) => $get('task') && $get('reporter') === 'client'),
+                                        ->visible(fn ($get) => $get('task')),
                                     DatePicker::make('date_in')
                                         ->label('Lapor')
                                         ->inlineLabel()
