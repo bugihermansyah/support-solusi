@@ -118,10 +118,10 @@ class ScheduleOutstandings extends BaseWidget
                     ->modalHeading('Start work')
                     ->modalDescription('Yakin anda akan memulai Outstanding ini?')
                     ->modalSubmitActionLabel('Yes, starting'),
-                Tables\Actions\Action::make('Open')
-                    ->label('Report v2')
-                    ->button()
-                    ->url(fn (Reporting $record): string => StaffReportResource::getUrl('edit', ['record' => $record])),
+                // Tables\Actions\Action::make('Open')
+                //     ->label('Report v2')
+                //     ->button()
+                //     ->url(fn (Reporting $record): string => StaffReportResource::getUrl('edit', ['record' => $record])),
                 EditAction::make('updateReport')
                     ->label('Report')
                     ->button()
