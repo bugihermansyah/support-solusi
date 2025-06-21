@@ -4,11 +4,13 @@ namespace App\Filament\Support\Pages\Widgets;
 
 use App\Enums\OutstandingTypeProblem;
 use App\Filament\Resources\OutstandingResource;
+use App\Filament\Support\Resources\StaffReportResource;
 use App\Jobs\SupportMailJob;
 use App\Models\Company;
 use App\Models\Location;
 use App\Models\Outstanding;
 use App\Models\Reporting;
+use App\Models\StaffReport;
 use App\Models\Unit;
 use App\Models\User;
 use App\Settings\MailSettings;
@@ -17,6 +19,9 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Wizard\Step;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Actions\Action as ActionsAction;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\FontWeight;
@@ -97,6 +102,7 @@ class ScheduleOutstandings extends BaseWidget
                 'xl' => 3,
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Action::make('start')
                     ->label('Start')
                     ->button()
@@ -112,6 +118,10 @@ class ScheduleOutstandings extends BaseWidget
                     ->modalHeading('Start work')
                     ->modalDescription('Yakin anda akan memulai Outstanding ini?')
                     ->modalSubmitActionLabel('Yes, starting'),
+                Tables\Actions\Action::make('Open')
+                    ->label('Report v2')
+                    ->button()
+                    ->url(fn (Reporting $record): string => StaffReportResource::getUrl('edit', ['record' => $record])),
                 EditAction::make('updateReport')
                     ->label('Report')
                     ->button()
@@ -382,6 +392,7 @@ class ScheduleOutstandings extends BaseWidget
                                     'date_visit' => $dateVisit,
                                     'work' => ucfirst($data['work']),
                                     'pelapor' => ucfirst($outstanding->reporter),
+                                    'nama_pelapor' => $outstanding->number,
                                     'support' => $supportNames,
                                     'masalah' => $outstanding->title,
                                     'sebab' => $data['cause'],
