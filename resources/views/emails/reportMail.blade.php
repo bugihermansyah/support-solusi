@@ -65,7 +65,7 @@
         </div>
         <div class="row">
             <div class="label">Pelapor:</div>
-            <div class="value">{{ $data['pelapor'] }} / {{ $data['nama_pelapor']}}</div>
+            <div class="value">{{ $data['pelapor'] }} / {{ $data['nama_pelapor'] ?? '' }}</div>
         </div>
         
         <div class="spacer"></div>
