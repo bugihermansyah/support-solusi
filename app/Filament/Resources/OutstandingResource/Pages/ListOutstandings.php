@@ -217,6 +217,7 @@ class ListOutstandings extends ListRecords
                             'location_id' => $data['location_id'],
                             'product_id' => $data['product_id'],
                             'reporter' => $data['reporter'],
+                            'reporter_name' => $data['reporter_name'],
                             'is_implement' => $data['is_implement'],
                             'is_oncall' => $data['is_oncall'],
                             'title' => $data['title'],
@@ -226,7 +227,7 @@ class ListOutstandings extends ListRecords
 
                         if ($data['reporter'] === 'client') {
                             $dataCreate = array_merge($dataCreate, [
-                                'reporter_name' => $data['reporter_name'],
+                                // 'reporter_name' => $data['reporter_name'],
                                 'lpm' => $data['lpm'],
                             ]);
                         }
