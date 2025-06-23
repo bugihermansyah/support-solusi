@@ -120,7 +120,8 @@ class ListOutstandings extends ListRecords
                                     TextInput::make('reporter_name')
                                         ->label('Nama Pelapor')
                                         ->inlineLabel()
-                                        ->visible(fn ($get) => $get('task')),
+                                        ->visible(fn ($get) => $get('task'))
+                                        ->required(),
                                     DatePicker::make('date_in')
                                         ->label('Lapor')
                                         ->inlineLabel()
