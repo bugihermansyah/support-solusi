@@ -92,6 +92,10 @@ class OutstandingResource extends Resource
                                 ])
                                 ->default('client')
                                 ->required(),
+                            Forms\Components\TextInput::make('reporter_name')
+                                ->label('Nama Pelapor')
+                                ->maxLength(100)
+                                ->required(),
                             Forms\Components\TextInput::make('title')
                                 ->label('Laporan masalah')
                                 ->maxLength(100)
