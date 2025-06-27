@@ -6,7 +6,6 @@ use App\Enums\LocationStatus;
 use App\Enums\TypeContract;
 use App\Filament\Resources\LocationResource\Pages;
 use App\Filament\Resources\LocationResource\RelationManagers;
-use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Location;
 use App\Models\Team;
@@ -335,6 +334,8 @@ class LocationResource extends Resource
     {
         return [
             RelationManagers\ContractsRelationManager::class,
+            RelationManagers\OutstadingsRelationManager::class,
+            RelationManagers\UnitsRelationManager::class,
         ];
     }
 
