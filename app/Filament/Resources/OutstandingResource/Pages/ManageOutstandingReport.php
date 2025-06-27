@@ -183,10 +183,10 @@ class ManageOutstandingReport extends ManageRelatedRecords
                     // ->expandableLimitedList(),
                 Tables\Columns\TextColumn::make('start_work')
                     ->label('Start')
-                    ->dateTime(),
+                    ->dateTime('H:i:s'),
                 Tables\Columns\TextColumn::make('end_work')
                     ->label('End')
-                    ->dateTime(),
+                    ->dateTime('H:i:s'),
                 Tables\Columns\TextColumn::make('work_duration')
                     ->label('Duration')
                     ->getStateUsing(function ($record) {
@@ -205,10 +205,10 @@ class ManageOutstandingReport extends ManageRelatedRecords
                     ->label('Type')
                     ->formatStateUsing(fn ($state) => ucwords($state)),
                 Tables\Columns\TextColumn::make('cause')
-                    ->label('Sebab')
+                    ->label('Reason')
                     ->html(),
                 Tables\Columns\TextColumn::make('action')
-                    ->label('Aksi')
+                    ->label('Action')
                     ->html(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
