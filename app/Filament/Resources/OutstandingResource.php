@@ -200,6 +200,11 @@ class OutstandingResource extends Resource
                                 ->label('Unit')
                                 ->collapsible()
                                 ->relationship()
+                                ->mutateRelationshipDataBeforeCreateUsing(function (array $data, $livewire): array {
+                                    $data['location_id'] = $livewire->getRecord()->location_id;
+
+                                    return $data;
+                                })
                                 ->headers([
                                     Header::make('nama')->width('200px'),
                                     Header::make('qty')->width('50px'),

@@ -13,6 +13,7 @@ class OutstandingUnit extends Model
     use HasUlids;
 
     protected $fillable = [
+        'location_id',
         'outstanding_id',
         'unit_id',
         'qty'

@@ -93,4 +93,9 @@ class Location extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
+    public function units()
+    {
+        return $this->belongsToMany(Unit::class, 'outstanding_units', 'location_id', 'unit_id');
+    }
 }

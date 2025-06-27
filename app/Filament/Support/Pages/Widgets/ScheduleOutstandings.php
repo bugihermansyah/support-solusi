@@ -241,6 +241,11 @@ class ScheduleOutstandings extends BaseWidget
                                     ->reorderable(false)
                                     ->defaultItems(1)
                                     ->minItems(1)
+                                    ->mutateRelationshipDataBeforeCreateUsing(function (array $data, Model $record): array {
+                                        $data['location_id'] = $record->outstanding?->location_id;
+
+                                        return $data;
+                                    })
                                     ->schema([
                                         Forms\Components\Select::make('unit_id')
                                             ->label('Unit')

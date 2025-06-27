@@ -34,4 +34,14 @@ class Unit extends Model
     {
         return $this->belongsTo(UnitCategory::class, 'unit_category_id');
     }
+
+    public function outstandings()
+    {
+        return $this->belongsToMany(Outstanding::class, 'outstanding_units', 'unit_id', 'outstanding_id');
+    }
+
+    public function locations()
+    {
+        return $this->belongsToMany(Location::class, 'outstanding_units', 'unit_id', 'locations_id');
+    }
 }
