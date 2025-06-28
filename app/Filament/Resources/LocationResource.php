@@ -129,11 +129,9 @@ class LocationResource extends Resource
                                 Forms\Components\Textarea::make('description')
                                     ->label('Deskripsi'),
                                 Forms\Components\TextInput::make('latitude')
-                                    ->hiddenLabel()
-                                    ->disabled(),
+                                    ->hiddenLabel(),
                                 Forms\Components\TextInput::make('longitude')
-                                    ->hiddenLabel()
-                                    ->disabled(),
+                                    ->hiddenLabel(),
                                 Map::make('location')
                                     ->label('Location')
                                     ->columnSpanFull()
@@ -148,8 +146,8 @@ class LocationResource extends Resource
                                     ->extraStyles([
                                         'min-height: 40vh'
                                     ])
-                                    // ->extraControl(['customControl' => true])
-                                    // ->extraTileControl(['customTileOption' => 'value'])
+                                    ->extraControl(['customControl' => true])
+                                    ->extraTileControl(['customTileOption' => 'value'])
                                     ->afterStateUpdated(function (Set $set, ?array $state): void {
                                         $set('latitude', $state['lat']);
                                         $set('longitude', $state['lng']);
