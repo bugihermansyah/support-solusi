@@ -4,16 +4,19 @@ namespace App\Filament\Resources;
 
 use App\Enums\LocationStatus;
 use App\Enums\TypeContract;
+use App\Filament\Resources\LocationResource\Api\Transformers\LocationTransformer;
 use App\Filament\Resources\LocationResource\Pages;
 use App\Filament\Resources\LocationResource\RelationManagers;
 use App\Models\Customer;
 use App\Models\Location;
 use App\Models\Team;
 use App\Models\User;
+use Dotswan\MapPicker\Fields\Map;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -32,6 +35,11 @@ class LocationResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
 
     protected static ?string $navigationGroup = 'Main';
+
+    public static function getApiTransformer()
+    {
+        return LocationTransformer::class;
+    }
 
     public static function form(Form $form): Form
     {
@@ -120,6 +128,40 @@ class LocationResource extends Resource
                                     ->label('Alamat'),
                                 Forms\Components\Textarea::make('description')
                                     ->label('Deskripsi'),
+                                Forms\Components\TextInput::make('latitude')
+                                    ->hiddenLabel()
+                                    ->disabled(),
+                                Forms\Components\TextInput::make('longitude')
+                                    ->hiddenLabel()
+                                    ->disabled(),
+                                Map::make('location')
+                                    ->label('Location')
+                                    ->columnSpanFull()
+                                    ->defaultLocation(latitude: -6.1361598453121, longitude: 106.8556022166)
+                                    ->draggable(true)
+                                    ->clickable(true) // click to move marker
+                                    ->zoom(15)
+                                    ->minZoom(0)
+                                    ->maxZoom(28)
+                                    ->tilesUrl("https://tile.openstreetmap.de/{z}/{x}/{y}.png")
+                                    ->detectRetina(true)
+                                    ->extraStyles([
+                                        'min-height: 40vh'
+                                    ])
+                                    // ->extraControl(['customControl' => true])
+                                    // ->extraTileControl(['customTileOption' => 'value'])
+                                    ->afterStateUpdated(function (Set $set, ?array $state): void {
+                                        $set('latitude', $state['lat']);
+                                        $set('longitude', $state['lng']);
+                                        $set('geojson', json_encode($state['geojson']));
+                                    })
+                                    ->afterStateHydrated(function ($state, $record, Set $set): void {
+                                        $set('location', [
+                                            'lat' => $record->latitude,
+                                            'lng' => $record->longitude,
+                                            'geojson' => json_decode(strip_tags($record->description))
+                                        ]);
+                                    })
                             ])
                             ->columns(2),
                     ])

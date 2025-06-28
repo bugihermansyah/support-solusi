@@ -30,7 +30,9 @@ class Location extends Model
         'description',
         'type_contract',
         'status',
-        'is_default'
+        'is_default',
+        'latitude',
+        'longitude'
     ];
 
     protected $casts = [

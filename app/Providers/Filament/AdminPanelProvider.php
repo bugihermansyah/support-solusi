@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Kenepa\Banner\BannerPlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
+use Rupadana\ApiService\ApiServicePlugin;
 use Shanerbaner82\PanelRoles\PanelRoles;
 
 class AdminPanelProvider extends PanelProvider
@@ -101,6 +102,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
+                ApiServicePlugin::make(),
                 FilamentApexChartsPlugin::make(),
                 GravatarPlugin::make()
                     ->default('robohash')
