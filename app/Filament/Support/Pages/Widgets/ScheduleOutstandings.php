@@ -88,9 +88,12 @@ class ScheduleOutstandings extends BaseWidget
                 ->from('md'),
                 Panel::make([
                     Stack::make([
+                        // TextColumn::make('outstanding.location.full_latitude')
+                        //     ->url(fn ($record) => "https://www.google.com/maps?q={$record->outstanding->location->full_latitude}")
+                        //     ->openUrlInNewTab(),
                         TextColumn::make('outstanding.reporter')
-                            ->size(TextColumn\TextColumnSize::ExtraSmall)
-                            ->icon('heroicon-m-phone'),
+                            ->size(TextColumn\TextColumnSize::ExtraSmall),
+                            // ->icon('heroicon-m-phone'),
                         TextColumn::make('outstanding.reporter_name')
                             ->size(TextColumn\TextColumnSize::ExtraSmall)
                             ->grow(false),
@@ -102,7 +105,43 @@ class ScheduleOutstandings extends BaseWidget
                 'xl' => 3,
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Action::make('openMap')
+                ->label('Rute')
+                ->icon('heroicon-m-map-pin')
+                ->button()
+                // ->disabled(fn ($record) => empty($record->outstanding?->location?->latitude) || empty($record->outstanding?->location?->longitude))
+                ->tooltip('Lihat di Google Maps')
+                ->color('success')
+                ->action(function ($record) {
+                    $lat = $record->outstanding?->location?->latitude;
+                    $lng = $record->outstanding?->location?->longitude;
+
+                    if (empty($lat) || empty($lng)) {
+                        Notification::make()
+                            ->title('Koordinat belum tersedia')
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
+                    // Arahkan ke Google Maps lewat browser (hanya bisa buka tab baru)
+                    redirect("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+                })
+                // ->url(function ($record) {
+                //     $location = $record->outstanding?->location;
+
+                //     // Jika latitude atau longitude kosong/null, jangan buat URL
+                //     if (
+                //         empty($location?->latitude) ||
+                //         empty($location?->longitude)
+                //     ) {
+                //         return null; // atau '#' jika ingin tetap jadi link mati
+                //     }
+
+                //     return "https://www.google.com/maps/search/?api=1&query={$location->latitude},{$location->longitude}";
+                // })
+                ->openUrlInNewTab(),
                 Action::make('start')
                     ->label('Start')
                     ->button()
