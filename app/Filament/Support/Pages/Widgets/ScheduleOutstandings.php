@@ -109,38 +109,22 @@ class ScheduleOutstandings extends BaseWidget
                 ->label('Rute')
                 ->icon('heroicon-m-map-pin')
                 ->button()
-                // ->disabled(fn ($record) => empty($record->outstanding?->location?->latitude) || empty($record->outstanding?->location?->longitude))
+                ->disabled(fn ($record) => empty($record->outstanding?->location?->latitude) || empty($record->outstanding?->location?->longitude))
                 ->tooltip('Lihat di Google Maps')
                 ->color('success')
-                ->action(function ($record) {
-                    $lat = $record->outstanding?->location?->latitude;
-                    $lng = $record->outstanding?->location?->longitude;
+                ->url(function ($record) {
+                    $location = $record->outstanding?->location;
 
-                    if (empty($lat) || empty($lng)) {
-                        Notification::make()
-                            ->title('Koordinat belum tersedia')
-                            ->danger()
-                            ->send();
-
-                        return;
+                    // Jika latitude atau longitude kosong/null, jangan buat URL
+                    if (
+                        empty($location?->latitude) ||
+                        empty($location?->longitude)
+                    ) {
+                        return null; // atau '#' jika ingin tetap jadi link mati
                     }
 
-                    // Arahkan ke Google Maps lewat browser (hanya bisa buka tab baru)
-                    redirect("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+                    return "https://www.google.com/maps/search/?api=1&query={$location->latitude},{$location->longitude}";
                 })
-                // ->url(function ($record) {
-                //     $location = $record->outstanding?->location;
-
-                //     // Jika latitude atau longitude kosong/null, jangan buat URL
-                //     if (
-                //         empty($location?->latitude) ||
-                //         empty($location?->longitude)
-                //     ) {
-                //         return null; // atau '#' jika ingin tetap jadi link mati
-                //     }
-
-                //     return "https://www.google.com/maps/search/?api=1&query={$location->latitude},{$location->longitude}";
-                // })
                 ->openUrlInNewTab(),
                 Action::make('start')
                     ->label('Start')
