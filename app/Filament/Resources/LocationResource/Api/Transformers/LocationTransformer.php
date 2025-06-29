@@ -26,7 +26,7 @@ class LocationTransformer extends JsonResource
         'latitude' => $this->latitude,
         'longitude' => $this->longitude,
 
-        'contracts' => $this->whenLoaded('contracts'),
+        // 'contracts' => $this->whenLoaded('contracts'),
         ];
     }
 }
