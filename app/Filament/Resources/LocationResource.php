@@ -149,16 +149,22 @@ class LocationResource extends Resource
                                     ->extraControl(['customControl' => true])
                                     ->extraTileControl(['customTileOption' => 'value'])
                                     ->afterStateUpdated(function (Set $set, ?array $state): void {
-                                        $set('latitude', $state['lat']);
-                                        $set('longitude', $state['lng']);
-                                        $set('geojson', json_encode($state['geojson']));
+                                        $lat = $state['lat'] ?? null;
+                                        $lng = $state['lng'] ?? null;
+                                        $geojson = isset($state['geojson']) ? json_encode($state['geojson']) : null;
+
+                                        $set('latitude', $lat);
+                                        $set('longitude', $lng);
+                                        $set('geojson', $geojson);
                                     })
                                     ->afterStateHydrated(function ($state, $record, Set $set): void {
-                                        $set('location', [
-                                            'lat' => $record->latitude,
-                                            'lng' => $record->longitude,
-                                            'geojson' => json_decode(strip_tags($record->description))
-                                        ]);
+                                        if ($record) {
+                                            $set('location', [
+                                                'lat' => $record->latitude,
+                                                'lng' => $record->longitude,
+                                                'geojson' => $record->geojson ? json_decode($record->geojson) : null,
+                                            ]);
+                                        }
                                     })
                             ])
                             ->columns(2),
