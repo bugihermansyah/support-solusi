@@ -100,4 +100,9 @@ class Location extends Model
     {
         return $this->belongsToMany(Unit::class, 'outstanding_units', 'location_id', 'unit_id');
     }
+
+    public function diskUsages()
+    {
+        return $this->hasMany(DiskUsage::class);
+    }
 }
