@@ -50,7 +50,7 @@ class DiskUsageResource extends Resource
                 TextColumn::make('size'),
                 TextColumn::make('used'),
                 TextColumn::make('available'),
-                TextColumn::make('usage_percent'),
+                TextColumn::make('usage_percent')->suffix('%'),
                 TextColumn::make('created_at')
                     ->label('Last Update')
                     ->dateTime(),
