@@ -20,6 +20,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -123,17 +124,31 @@ class OutstandingResource extends Resource
                     //     ])
                     //     ->columns(3),
 
-                    Forms\Components\Fieldset::make('Foto')
-                        ->schema([
-                            SpatieMediaLibraryFileUpload::make('image')
-                                ->hiddenLabel()
-                                ->image()
-                                ->imageEditor()
-                                ->resize(20)
-                                ->openable()
-                                ->collection('outstandings')
-                                ->columnSpanFull(),
-                                ]),
+                    // Forms\Components\Fieldset::make('Foto')
+                    //     ->schema([
+                    //         SpatieMediaLibraryFileUpload::make('image')
+                    //             ->hiddenLabel()
+                    //             ->image()
+                    //             ->imageEditor()
+                    //             ->resize(20)
+                    //             ->openable()
+                    //             ->collection('outstandings')
+                    //             ->columnSpanFull(),
+                    //             ]),
+                    RichEditor::make('note')
+                        ->label('Keterangan')
+                        ->toolbarButtons([
+                            'bold',
+                            'bulletList',
+                            'italic',
+                            'link',
+                            'orderedList',
+                            'underline',
+                        ])
+                        // ->extraInputAttributes([
+                        //     'style' => 'min-height: 100px;',
+                        // ])
+                        // ->columnSpanFull(),
                 ])
                 ->columnSpan(['lg' => 2]),
 

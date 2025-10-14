@@ -39,7 +39,8 @@ class Outstanding extends Model implements HasMedia
         'priority',
         'status',
         'user_id',
-        'create_user_id'
+        'create_user_id',
+        'note'
     ];
 
     protected $casts = [
