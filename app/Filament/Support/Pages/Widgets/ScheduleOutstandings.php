@@ -224,29 +224,38 @@ class ScheduleOutstandings extends BaseWidget
                                 Forms\Components\ToggleButtons::make('status')
                                     ->inline()
                                     ->live()
-                                    ->hiddenLabel()
+                                    // ->hiddenLabel()
                                     ->options([
                                         '1' => 'Finish',
-                                        '0' => 'Pending',
+                                        '0' => 'Pending SAP',
+                                        '2' => 'Pending Client',
+                                        '3' => 'Temporary',
+                                        '4' => 'Monitoring',
                                     ])
                                     ->icons([
                                         '1' => 'heroicon-o-check',
                                         '0' => 'heroicon-o-x-mark',
+                                        '2' => 'heroicon-o-clock',
+                                        '3' => 'heroicon-o-stop',
+                                        '4' => 'heroicon-o-eye',
                                     ])
                                     ->colors([
                                         '1' => 'success',
-                                        '0' => 'warning',
+                                        '0' => 'danger',
+                                        '2' => 'warning',
+                                        '3' => 'primary',
+                                        '4' => 'info',
                                     ])
                                     ->default('1')
-                                    ->helperText(new HtmlString('Jika <strong>Pending</strong> wajib isi Max Revisit'))
-                                    ->grouped()
+                                    ->helperText(new HtmlString('Jika selain <strong>Finish</strong> wajib isi next target'))
+                                    // ->grouped()
                                     ->required(),
                                 Forms\Components\DatePicker::make('revisit')
                                     ->label('Revisit')
                                     ->hiddenLabel()
-                                    ->placeholder('Revisit')
+                                    ->placeholder('Date next target')
                                     ->required()
-                                    ->hidden(fn ($get) => $get('status') !== '0')
+                                    ->visible(fn ($get) => $get('status') !== '1')
                                     ->native(false),
                                 Forms\Components\ToggleButtons::make('is_type_problem')
                                     ->label('Tipe Problem')
@@ -303,14 +312,14 @@ class ScheduleOutstandings extends BaseWidget
                                     ->preserveFilenames()
                                     ->columnSpanFull()
                                     ->previewable(false),
-                                SignaturePad::make('signature')
-                                    ->label(__('Sign'))
-                                    ->dotSize(0.5)
-                                    ->lineMinWidth(0.5)
-                                    ->lineMaxWidth(1.0)
-                                    ->throttle(16)
-                                    ->minDistance(5)
-                                    ->velocityFilterWeight(0.7)
+                                // SignaturePad::make('signature')
+                                //     ->label(__('Sign'))
+                                //     ->dotSize(0.5)
+                                //     ->lineMinWidth(0.5)
+                                //     ->lineMaxWidth(1.0)
+                                //     ->throttle(16)
+                                //     ->minDistance(5)
+                                //     ->velocityFilterWeight(0.7)
                             ]),
                     ])
                     ->after(function (array $data, Model $record, array $arguments){
