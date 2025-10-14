@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\EmailVerification;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\RequestPasswordReset;
+use App\Filament\Widgets\StatsOverviewWidget;
 use App\Livewire\MyProfileExtended;
 use App\Settings\GeneralSettings;
 use Awcodes\FilamentGravatar\GravatarPlugin;
@@ -85,6 +86,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 // Widgets\AccountWidget::class,
+                StatsOverviewWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([

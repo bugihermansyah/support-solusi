@@ -2,17 +2,15 @@
 
 namespace App\Filament\Widgets;
 
-use Carbon\Carbon;
-use Filament\Widgets\Concerns\InteractsWithPageFilters;
-use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
+// use Filament\Widgets\Concerns\InteractsWithPageFilters;
+// use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+// use Filament\Widgets\StatsOverviewWidget\Stat;
+use EightyNine\FilamentAdvancedWidget\AdvancedStatsOverviewWidget as BaseWidget;
+use EightyNine\FilamentAdvancedWidget\AdvancedStatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Number;
 
 class StatsOverviewWidget extends BaseWidget
 {
-    use InteractsWithPageFilters;
-
     protected static ?int $sort = 0;
 
     protected function getStats(): array
@@ -42,18 +40,54 @@ class StatsOverviewWidget extends BaseWidget
             $outstandingQuery->where('locations.team_id', $user->team_id);
         }
 
-        $openOutstanding = $outstandingQuery->count();
+        // $openOutstanding = $outstandingQuery->count();
+
+        $latestStatuses = DB::table('reportings as r1')
+            ->select('r1.outstanding_id', 'r1.status')
+            ->whereRaw('r1.created_at = (SELECT MAX(r2.created_at) FROM reportings r2 WHERE r2.outstanding_id = r1.outstanding_id)');
+
+        // Gabungkan ke outstandings dan locations agar bisa filter berdasarkan team_id
+        $countsQuery = DB::table(DB::raw("({$latestStatuses->toSql()}) as latest"))
+            ->mergeBindings($latestStatuses)
+            ->join('outstandings', 'outstandings.id', '=', 'latest.outstanding_id')
+            ->join('locations', 'locations.id', '=', 'outstandings.location_id')
+            ->where('outstandings.status', 0)
+            ->where('outstandings.date_in', '<=', now()->subDays(3))
+            ->where('outstandings.reporter', '!=', 'preventif')
+            ->selectRaw("
+                SUM(CASE WHEN latest.status = 0 THEN 1 ELSE 0 END) AS pending_sap,
+                SUM(CASE WHEN latest.status = 2 THEN 1 ELSE 0 END) AS pending_client,
+                SUM(CASE WHEN latest.status = 3 THEN 1 ELSE 0 END) AS temporary,
+                SUM(CASE WHEN latest.status = 4 THEN 1 ELSE 0 END) AS monitoring
+            ");
+
+        // Tambahkan kondisi filter berdasarkan team user
+        if ($user->team_id && !$user->hasRole('admin')) {
+            $countsQuery->where('locations.team_id', $user->team_id);
+        }
+
+        $counts = $countsQuery->first();
+
 
         return [
-            Stat::make('Lokasi', $totalLocations)
-                ->description('Jumlah lokasi tim area')
-                ->color('primary'),
-            Stat::make('Outstanding', $openOutstanding)
-                ->description('Outstanding berdasarkan filter')
-                ->color('primary'),
-            // Stat::make('Luar kota', $areaLocations)
-            //     ->description('Reporting luar kota')
-            //     ->color('primary'),
+            Stat::make('Location', $totalLocations)
+                ->icon('heroicon-o-map-pin'),
+            Stat::make('Pending SAP', $counts->pending_sap ?? 0)
+                ->icon('heroicon-o-clock'),
+            Stat::make('Pending Client', $counts->pending_client ?? 0)
+                ->icon('heroicon-o-user-group'),
+            Stat::make('Temporary', $counts->temporary ?? 0)
+                ->icon('heroicon-o-wrench')
+                ->extraAttributes([
+                    'class' => 'cursor-pointer hover:bg-gray-50',
+                    'onclick' => "window.open('/admin/reportings?status=temporary', '_blank')",
+                ]),
+            Stat::make('Monitoring', $counts->monitoring ?? 0)
+                ->icon('heroicon-o-eye')
+                ->extraAttributes([
+                    'class' => 'cursor-pointer hover:bg-gray-50',
+                    'onclick' => "window.open('/admin/reportings?status=monitoring', '_blank')",
+                ]),
         ];
     }
 }
