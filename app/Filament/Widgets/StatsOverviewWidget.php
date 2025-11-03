@@ -52,6 +52,7 @@ class StatsOverviewWidget extends BaseWidget
             ->join('outstandings', 'outstandings.id', '=', 'latest.outstanding_id')
             ->join('locations', 'locations.id', '=', 'outstandings.location_id')
             ->where('outstandings.status', 0)
+            ->where('outstandings.is_implement', 0)
             ->where('outstandings.date_in', '<=', now()->subDays(3))
             ->where('outstandings.reporter', '!=', 'preventif')
             ->selectRaw("
