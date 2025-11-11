@@ -128,44 +128,44 @@ class LocationResource extends Resource
                                     ->label('Alamat'),
                                 Forms\Components\Textarea::make('description')
                                     ->label('Deskripsi'),
-                                Forms\Components\TextInput::make('latitude')
-                                    ->hiddenLabel(),
-                                Forms\Components\TextInput::make('longitude')
-                                    ->hiddenLabel(),
-                                Map::make('location')
-                                    ->label('Location')
-                                    ->columnSpanFull()
-                                    ->defaultLocation(latitude: -6.1361598453121, longitude: 106.8556022166)
-                                    ->draggable(true)
-                                    ->clickable(true) // click to move marker
-                                    ->zoom(15)
-                                    ->minZoom(0)
-                                    ->maxZoom(28)
-                                    ->tilesUrl("https://tile.openstreetmap.de/{z}/{x}/{y}.png")
-                                    ->detectRetina(true)
-                                    ->extraStyles([
-                                        'min-height: 40vh'
-                                    ])
-                                    ->extraControl(['customControl' => true])
-                                    ->extraTileControl(['customTileOption' => 'value'])
-                                    ->afterStateUpdated(function (Set $set, ?array $state): void {
-                                        $lat = $state['lat'] ?? null;
-                                        $lng = $state['lng'] ?? null;
-                                        $geojson = isset($state['geojson']) ? json_encode($state['geojson']) : null;
+                                // Forms\Components\TextInput::make('latitude')
+                                //     ->hiddenLabel(),
+                                // Forms\Components\TextInput::make('longitude')
+                                //     ->hiddenLabel(),
+                                // Map::make('location')
+                                //     ->label('Location')
+                                //     ->columnSpanFull()
+                                //     ->defaultLocation(latitude: -6.1361598453121, longitude: 106.8556022166)
+                                //     ->draggable(true)
+                                //     ->clickable(true) // click to move marker
+                                //     ->zoom(15)
+                                //     ->minZoom(0)
+                                //     ->maxZoom(28)
+                                //     ->tilesUrl("https://tile.openstreetmap.de/{z}/{x}/{y}.png")
+                                //     ->detectRetina(true)
+                                //     ->extraStyles([
+                                //         'min-height: 40vh'
+                                //     ])
+                                //     ->extraControl(['customControl' => true])
+                                //     ->extraTileControl(['customTileOption' => 'value'])
+                                //     ->afterStateUpdated(function (Set $set, ?array $state): void {
+                                //         $lat = $state['lat'] ?? null;
+                                //         $lng = $state['lng'] ?? null;
+                                //         $geojson = isset($state['geojson']) ? json_encode($state['geojson']) : null;
 
-                                        $set('latitude', $lat);
-                                        $set('longitude', $lng);
-                                        $set('geojson', $geojson);
-                                    })
-                                    ->afterStateHydrated(function ($state, $record, Set $set): void {
-                                        if ($record) {
-                                            $set('location', [
-                                                'lat' => $record->latitude,
-                                                'lng' => $record->longitude,
-                                                'geojson' => $record->geojson ? json_decode($record->geojson) : null,
-                                            ]);
-                                        }
-                                    })
+                                //         $set('latitude', $lat);
+                                //         $set('longitude', $lng);
+                                //         $set('geojson', $geojson);
+                                //     })
+                                //     ->afterStateHydrated(function ($state, $record, Set $set): void {
+                                //         if ($record) {
+                                //             $set('location', [
+                                //                 'lat' => $record->latitude,
+                                //                 'lng' => $record->longitude,
+                                //                 'geojson' => $record->geojson ? json_decode($record->geojson) : null,
+                                //             ]);
+                                //         }
+                                //     })
                             ])
                             ->columns(2),
                     ])
