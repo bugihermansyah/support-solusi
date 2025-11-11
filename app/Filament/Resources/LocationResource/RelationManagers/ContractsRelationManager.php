@@ -69,7 +69,7 @@ class ContractsRelationManager extends RelationManager
                     ->label('Deskripsi'),
                 Tables\Columns\ToggleColumn::make('is_default')
                     ->label('Default'),
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\ToggleColumn::make('status')
                     ->label('Status'),
             ])
             ->filters([
