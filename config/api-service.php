@@ -4,9 +4,10 @@ return [
     'navigation' => [
         'token' => [
             'cluster' => null,
-            'group' => 'User',
-            'sort' => -1,
+            'group' => 'Utility',
+            'sort' => 99,
             'icon' => 'heroicon-o-key',
+            // 'should_register_navigation' => true,
         ],
     ],
     'models' => [

@@ -21,6 +21,8 @@ class DiskUsageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Utility';
+
     public static function getEloquentQuery(): Builder
 {
     // Ambil id terbaru (created_at paling akhir) untuk tiap location_id
