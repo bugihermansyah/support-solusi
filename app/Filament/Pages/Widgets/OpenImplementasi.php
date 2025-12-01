@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Pages\Widgets;
 
 use App\Models\Outstanding;
 use App\Models\Reporting;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -16,7 +15,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class OpenOutstandings extends BaseWidget
+class OpenImplementasi extends BaseWidget
 {
     protected static ?int $sort = 1;
     protected int | string | array $columnSpan = 'full';
@@ -35,7 +34,7 @@ class OpenOutstandings extends BaseWidget
             ->joinSub($latest, 'latest', fn($join) => $join->on('reportings.id', '=', 'latest.id'))
             ->join('outstandings', 'outstandings.id', '=', 'reportings.outstanding_id')
             ->where('outstandings.status', 0)
-            ->where('outstandings.is_implement', 0)
+            ->where('outstandings.is_implement', 1)
             ->where('outstandings.reporter', '!=', 'preventif')
             ->where('outstandings.date_in', '<=', now()->subDays(3))
             ->when($user->team_id && !$user->hasRole('admin'), function ($q) use ($user) {

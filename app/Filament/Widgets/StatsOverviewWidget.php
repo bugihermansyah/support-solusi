@@ -68,7 +68,17 @@ class StatsOverviewWidget extends BaseWidget
         }
 
         $counts = $countsQuery->first();
+        // Tambahan implementasi
+        $implementasiQuery = DB::table('outstandings')
+            ->join('locations', 'locations.id', '=', 'outstandings.location_id')
+            ->where('outstandings.is_implement', 1)
+            ->where('outstandings.status', '!=', 1); // status finish = 1
 
+        if ($user->team_id && !$user->hasRole('admin')) {
+            $implementasiQuery->where('locations.team_id', $user->team_id);
+        }
+
+        $totalImplementasi = $implementasiQuery->count();
 
         return [
             Stat::make('Location', $totalLocations)
@@ -88,6 +98,12 @@ class StatsOverviewWidget extends BaseWidget
                 ->extraAttributes([
                     'class' => 'cursor-pointer hover:bg-gray-50',
                     'onclick' => "window.open('/admin/reportings?status=monitoring', '_blank')",
+                ]),
+            Stat::make('Implementasi', $totalImplementasi)
+                ->icon('heroicon-o-arrow-trending-up')
+                ->extraAttributes([
+                    'class' => 'cursor-pointer hover:bg-gray-50',
+                    'onclick' => "window.open('/admin/reportings?status=implementasi', '_blank')",
                 ]),
         ];
     }
