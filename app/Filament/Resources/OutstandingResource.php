@@ -398,7 +398,21 @@ class OutstandingResource extends Resource
                     ->label('Unit')
                     ->relationship('units', 'name')
                     ->searchable()
-                    ->preload()
+                    ->preload(),
+                SelectFilter::make('date_finish')
+                    ->label('Status Finish')
+                    ->options([
+                        'all' => 'Semua',
+                        'null' => 'null',
+                    ])
+                    ->default('all')
+                    ->query(function (Builder $query, array $data) {
+                        return match ($data['value'] ?? 'all') {
+                            'null' => $query->whereNull('date_finish'),
+                            'not_null' => $query->whereNotNull('date_finish'),
+                            default => $query,
+                        };
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->hiddenLabel()->tooltip('Ubah'),
