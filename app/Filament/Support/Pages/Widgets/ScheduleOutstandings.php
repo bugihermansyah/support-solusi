@@ -351,6 +351,20 @@ class ScheduleOutstandings extends BaseWidget
                             }
                         }
 
+                        if ($report) {
+                            // status = 3 artinya TEMPORARY
+                            if ($data['status'] == 3) {
+                                $report->update([
+                                    'is_temporary' => 1,
+                                ]);
+                            } else {
+                                // optional: reset jika bukan temporary
+                                $report->update([
+                                    'is_temporary' => 0,
+                                ]);
+                            }
+                        }
+
                         if($location->user_id !== null){
                             Notification::make()
                                 ->title("{$user->firstname} {$user->lastname}")

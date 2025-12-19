@@ -36,6 +36,7 @@ class Outstanding extends Model implements HasMedia
         'is_implement',
         'is_type_problem',
         'is_oncall',
+        'is_temporary',
         'priority',
         'status',
         'user_id',
