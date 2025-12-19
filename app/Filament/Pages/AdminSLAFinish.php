@@ -64,11 +64,20 @@ class AdminSLAFinish extends Page implements HasTable
                         SUM(CASE
                             WHEN DATEDIFF(outstandings.date_finish, outstandings.date_visit) > 7 THEN 1
                             ELSE 0
-                        END) as sla3_count
+                        END) as sla3_count,
+                        SUM(CASE
+                            WHEN outstandings.date_finish IS NULL THEN 1
+                            ELSE 0
+                        END) as not_finish_count,
+                        SUM(CASE
+                            WHEN outstandings.date_finish IS NOT NULL
+                            AND outstandings.is_temporary = 1 THEN 1
+                            ELSE 0
+                        END) as temporary_count
                     ")
                     ->join('outstandings', 'products.id', '=', 'outstandings.product_id')
                     ->leftjoin('locations', 'locations.id', '=', 'outstandings.location_id')
-                    ->whereNotNull('outstandings.date_finish')
+                    // ->whereNotNull('outstandings.date_finish')
                     ->whereNotNull('outstandings.date_visit')
                     ->groupBy('products.name')
                     // ->orderBy('products.name')
@@ -98,6 +107,15 @@ class AdminSLAFinish extends Page implements HasTable
                         'filter[sla][value]' => 'sla3',
                     ])))
                     ->openUrlInNewTab()
+                    ->summarize(Sum::make()->label('Total')),
+                Tables\Columns\TextColumn::make('not_finish_count')
+                    ->label('Not Finish')
+                    ->color('danger')
+                    ->summarize(Sum::make()->label('Total')),
+
+                Tables\Columns\TextColumn::make('temporary_count')
+                    ->label('Temporary')
+                    ->color('warning')
                     ->summarize(Sum::make()->label('Total')),
             ])
             ->defaultSort('sort', 'asc')
