@@ -36,7 +36,7 @@ class AdminSLAFinishGroup extends Page implements HasTable
         return (string) $record->getKeyName();
     }
 
-    protected static string $view = 'filament.pages.sla-finish';
+    protected static string $view = 'filament.pages.sla-finish-group';
 
     protected static ?string $navigationGroup = 'Reports';
 
