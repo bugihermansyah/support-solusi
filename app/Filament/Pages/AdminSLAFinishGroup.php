@@ -53,7 +53,7 @@ class AdminSLAFinishGroup extends Page implements HasTable
             ->query(
                 Outstanding::query()
                     ->selectRaw("
-                        MONTH(outstandings.date_visit) as month,
+                        MONTH(outstandings.date_in) as month,
 
                         SUM(CASE
                             WHEN outstandings.date_finish IS NOT NULL
@@ -86,8 +86,8 @@ class AdminSLAFinishGroup extends Page implements HasTable
 
                     // ->whereIn('products.group', ['cass', 'manless', 'other'])
 
-                    ->groupByRaw('MONTH(outstandings.date_visit)')
-                    ->orderByRaw('MONTH(outstandings.date_visit)')
+                    ->groupByRaw('MONTH(outstandings.date_in)')
+                    ->orderByRaw('MONTH(outstandings.date_in)')
             )
             ->columns([
                 Tables\Columns\TextColumn::make('month')
