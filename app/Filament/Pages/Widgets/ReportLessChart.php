@@ -80,10 +80,6 @@ class ReportLessChart extends ApexChartWidget
             ],
             'series' => [
                 [
-                    'name' => 'Total Lokasi',
-                    'data' => $this->getCumulativeLocationsPerMonth(),
-                ],
-                [
                     'name' => 'Total Outstanding',
                     'data' => $this->getTotalOutstandingPerMonth(),
                 ],
@@ -111,6 +107,10 @@ class ReportLessChart extends ApexChartWidget
                     'name' => 'Total Repeat Visit',
                     'data' => $this->getTotalRepeatVisit(),
                 ],
+                [
+                    'name' => 'Total Lokasi',
+                    'data' => $this->getCumulativeLocationsPerMonth(),
+                ]
             ],
             'dataLabels' => [
                 'enabled' => true,
@@ -136,7 +136,6 @@ class ReportLessChart extends ApexChartWidget
                 ],
             ],
             'colors' => [
-                '#f59e0b', // Total Lokasi
                 '#10b981', // Total Outstanding
                 '#3b82f6', // Total Lokasi Masalah
                 '#ef4444', // Total Aksi Visit
@@ -144,6 +143,7 @@ class ReportLessChart extends ApexChartWidget
                 '#f97316', // Total SLA Visit
                 '#22d3ee', // Total Aksi Remote
                 '#40ff83', // Total Repeat Visit
+                '#f59e0b', // Total Lokasi
             ],
         ];
     }
@@ -165,7 +165,6 @@ class ReportLessChart extends ApexChartWidget
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
             ->join('contracts', 'contracts.location_id', '=', 'locations.id')
             ->join('products', 'products.id', '=', 'contracts.product_id')
-            ->whereIn('reporter', ['client', 'support'])
             ->whereYear('date_in', $year);
 
         // Tambahkan filter team jika ada
@@ -254,11 +253,9 @@ class ReportLessChart extends ApexChartWidget
     
         // Mulai query
         $query = Outstanding::query()
-            ->selectRaw('MONTH(date_visit) as month, COUNT(DISTINCT locations.id) as unique_locations_count')
-            ->join('locations', 'outstandings.location_id', '=', 'locations.id')
-            ->join('contracts', 'contracts.location_id', '=', 'locations.id')
-            ->join('products', 'products.id', '=', 'contracts.product_id')
-            ->whereIn('reporter', ['client', 'support'])
+            ->selectRaw('MONTH(date_visit) as month, COUNT(DISTINCT location_id) as unique_locations_count')
+            ->join('products', 'products.id', '=', 'outstandings.product_id')
+            // ->whereIn('reporter', ['client', 'support'])
             ->whereYear('date_visit', $year);
     
         // Tambahkan filter team jika ada
@@ -311,7 +308,7 @@ class ReportLessChart extends ApexChartWidget
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
             ->join('contracts', 'contracts.location_id', '=', 'locations.id')
             ->join('products', 'products.id', '=', 'contracts.product_id')
-            ->whereIn('reporter', ['client', 'support'])
+            // ->whereIn('reporter', ['client', 'support'])
             ->where('reportings.work', 'visit')
             ->whereYear('reportings.date_visit', $year);
 
@@ -347,6 +344,7 @@ class ReportLessChart extends ApexChartWidget
     {
         $teamId = $this->filterFormData['team'] ?? null;
         $year = $this->filterFormData['year'] ?? now()->year;
+        $reporter = $this->filterFormData['reporter'] ?? null;
         $productGroup = $this->filterFormData['product_group'] ?? null;
 
         // Inisialisasi array data dengan 0 untuk 12 bulan
@@ -354,10 +352,11 @@ class ReportLessChart extends ApexChartWidget
 
         // Ambil data laporan berdasarkan lpm=1, team, dan year
         $query = Outstanding::selectRaw('MONTH(date_in) as month, COUNT(*) as count')
+            ->where('outstandings.lpm', 1)
+            ->where('outstandings.reporter', 'client')
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
             ->join('contracts', 'contracts.location_id', '=', 'locations.id')
             ->join('products', 'products.id', '=', 'contracts.product_id')
-            ->where('outstandings.lpm', 1)
             ->whereYear('outstandings.date_in', $year);
 
         if ($teamId) {
@@ -396,7 +395,7 @@ class ReportLessChart extends ApexChartWidget
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
             ->join('contracts', 'contracts.location_id', '=', 'locations.id')
             ->join('products', 'products.id', '=', 'contracts.product_id')
-            ->whereIn('reporter', ['client', 'support'])
+            // ->whereIn('reporter', ['client', 'support'])
             ->whereYear('date_in', $year);
 
         if ($teamId) {
@@ -431,6 +430,7 @@ class ReportLessChart extends ApexChartWidget
     {
         $teamId = $this->filterFormData['team'] ?? null;
         $year = $this->filterFormData['year'] ?? now()->year;
+        $productGroup = $this->filterFormData['product_group'] ?? null;
 
         // Inisialisasi array data dengan 0 untuk 12 bulan
         $data = array_fill(0, 12, 0);
@@ -439,8 +439,15 @@ class ReportLessChart extends ApexChartWidget
         $query = Reporting::selectRaw('MONTH(reportings.date_visit) as month, COUNT(*) as count')
             ->join('outstandings', 'reportings.outstanding_id', '=', 'outstandings.id')
             ->join('locations', 'outstandings.location_id', '=', 'locations.id')
+            ->join('contracts', 'contracts.location_id', '=', 'locations.id')
+            ->join('products', 'products.id', '=', 'contracts.product_id')
             ->where('reportings.work', 'remote')
             ->whereYear('reportings.date_visit', $year);
+        
+        // filter group product
+        if ($productGroup) {
+            $query->where('products.group', $productGroup);
+        }
 
         if ($teamId) {
             $query->where('locations.team_id', $teamId);
