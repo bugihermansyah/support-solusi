@@ -113,10 +113,10 @@ class ListOutstandings extends ListRecords
                                         ->default('client')
                                         ->live()
                                         ->required(),
-                                    Toggle::make('lpm')
-                                        ->label('Laporan Pertama')
-                                        ->inlineLabel()
-                                        ->visible(fn ($get) => $get('task') && $get('reporter') === 'client'),
+                                    // Toggle::make('lpm')
+                                    //     ->label('Laporan Pertama')
+                                    //     ->inlineLabel()
+                                    //     ->visible(fn ($get) => $get('task') && $get('reporter') === 'client'),
                                     TextInput::make('reporter_name')
                                         ->label('Nama Pelapor')
                                         ->inlineLabel()
@@ -128,13 +128,13 @@ class ListOutstandings extends ListRecords
                                         ->visible(fn ($get) => $get('task'))
                                         ->default(Carbon::now())
                                         ->required()
-                                        ->native(false),
+                                        ->native(true),
                                     DatePicker::make('date_visit')
                                         ->label('Jadwal')
                                         ->inlineLabel()
                                         ->default(Carbon::now())
                                         ->required()
-                                        ->native(false),
+                                        ->native(true),
                                     Select::make('user_id')
                                         ->label('Support')
                                         ->inlineLabel()
@@ -217,6 +217,7 @@ class ListOutstandings extends ListRecords
                             'number' => $data['number'],
                             'location_id' => $data['location_id'],
                             'product_id' => $data['product_id'],
+                            'team_id' => Location::find($data['location_id'])->team_id,
                             'reporter' => $data['reporter'],
                             'reporter_name' => $data['reporter_name'],
                             'is_implement' => $data['is_implement'],
@@ -226,12 +227,20 @@ class ListOutstandings extends ListRecords
                             'date_visit' => $data['date_visit'],
                         ];
 
+                        $lpm = 0;
+
                         if ($data['reporter'] === 'client') {
-                            $dataCreate = array_merge($dataCreate, [
-                                // 'reporter_name' => $data['reporter_name'],
-                                'lpm' => $data['lpm'],
-                            ]);
+                            $dateIn = Carbon::parse($data['date_in'])->toDateString();
+
+                            $exists = Outstanding::where('location_id', $data['location_id'])
+                                ->whereDate('date_in', $dateIn)
+                                ->where('lpm', 1)
+                                ->exists();
+
+                            $lpm = $exists ? 0 : 1;
                         }
+
+                        $dataCreate['lpm'] = $lpm;
 
                         $outstanding = Outstanding::create($dataCreate);
 
